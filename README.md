@@ -1,5 +1,5 @@
 
-Some notes:
+Some development notes:
 
 * The PAYONE Platform and its connected systems are designed for IP addresses Version 4.
 * IP ranges: 213.178.72.196, 213.178.72.197, 217.70.200.0/24, 185.60.20.0/24
@@ -40,10 +40,10 @@ See Platform_Client_API.pdf A few good examples are listed of the front-end mark
 
 URLs
 
-Server API URL: https://api.pay1.de/post-gateway/
-URL classic: https://secure.pay1.de/frontend/
-iframe URL: https://frontend.pay1.de/frontend/v2/
-Client API URL (AJAX?): https://secure.pay1.de/client-api/
+* Server API URL: https://api.pay1.de/post-gateway/
+* URL classic: https://secure.pay1.de/frontend/
+* iframe URL: https://frontend.pay1.de/frontend/v2/
+* Client API URL (AJAX?): https://secure.pay1.de/client-api/
 
 It looks like basket items are mandatory, and each item must have a stock ID and a VAT record.
 

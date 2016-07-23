@@ -1,0 +1,35 @@
+{
+    "name": "aimeos/omnipay-payone",
+    "type": "library",
+    "description": "PAYONE gateway for the Omnipay payment processing library",
+    "keywords": [
+        "payone",
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment"
+    ],
+    "homepage": "https://github.com/aimeos/omnipay-payone",
+    "license": "LGPLv3",
+    "authors": [
+        {
+            "name": "Jason Judge",
+            "email": "jason@academe.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Omnipay\\Payone\\" : "src/" }
+    },
+    "require": {
+        "omnipay/common": "~2.0"
+    },
+    "require-dev": {
+        "omnipay/tests": "~2.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}

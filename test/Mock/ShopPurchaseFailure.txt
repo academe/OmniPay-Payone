@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Date: Sat, 16 Feb 2013 06:39:41 GMT
+Server: Microsoft-IIS/6.0
+P3P: CP="CUR"
+X-Powered-By: ASP.NET
+Content-Length: 249
+Content-Type: Text/Plain
+Set-Cookie: ASPSESSIONIDSEHSCTTR=CIMGGPBDFDIKICAGIIHCNFHJ; secure; path=/
+Cache-control: private
+
+status=ERROR
+errorcode=33
+errormessage=Expiry date invalid, incorrect or in the past
+
+customermessage=Invalid card expiry date. Please verify your card data.

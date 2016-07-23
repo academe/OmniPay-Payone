@@ -51,6 +51,10 @@ class ShopAuthorizeRequest extends AbstractRequest
 
         $data += $this->getDataShipping();
 
+        // Items/Cart details
+
+        $data += $this->getDataItems();
+
         return $data;
     }
 

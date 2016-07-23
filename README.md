@@ -1,12 +1,8 @@
 **This repository is very much in development but should be finised shortly. The notes below will be converted to proper documentation.**
 
-# Omnipay: PAYONE
+# Omnipay: [PAYONE](https://www.payone.de/)
 
 **PAYONE driver for the Omnipay PHP payment processing library**
-
-[![Build Status](https://travis-ci.org/thephpleague/omnipay-sagepay.png?branch=master)](https://travis-ci.org/thephpleague/omnipay-sagepay)
-[![Latest Stable Version](https://poser.pugx.org/omnipay/sagepay/version.png)](https://packagist.org/packages/omnipay/sagepay)
-[![Total Downloads](https://poser.pugx.org/omnipay/sagepay/d/total.png)](https://packagist.org/packages/omnipay/sagepay)
 
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
 processing library for PHP 5.3+. This package implements PAYONE support for Omnipay.
@@ -46,6 +42,59 @@ And run composer to update your dependencies:
 
     $ curl -s http://getcomposer.org/installer | php
     $ php composer.phar update
+
+## Basic Usage
+
+The following gateways are provided by this package:
+
+* Payone_Shop
+* Payone_ShopFrontend
+
+For general usage instructions, please see the main [Omnipay](https://github.com/thephpleague/omnipay)
+repository. You will find more specific details can be found below.
+
+### Gateway Background
+
+The [PAYONE API](https://www.payone.de/en/platform-integration/interfaces/) has three main access points
+of interest to e-commerce:
+
+* **Server API** - for interacting directly with server without user intervention.
+* **Front end** - for delivering hosted credit card (CC) forms to the user.
+* Client API - for interacting with a JavaScript front end.
+
+This package is interested in just the first two; Server API for capturing authorized payments and the Front end
+for setting up CC forms. You can also do authorisations and make payments using the Server API, so long as
+you are fully aware of the PCI implications.
+
+The Front end API also has a notification handler for receiving the payment results and captured user information
+from the PAYONE servers.
+
+### Extended Items (Order Lines)
+
+The PAYONE API supports two additional item properties that must be completed (`id` and `vat`). Since the OmniPay v2
+`Item` object cannot accept custom property values, this has been extended. The extended `Item` class can be found here:
+
+    \Omnipay\Payone\Extend\Item
+
+Creating an `Item` uses these fields:
+
+~~~php
+$lines[] = new \Omnipay\Payone\Extend\Item([
+    'id' => '{merchant-site-stock-ID}',
+    'description' => '{product-name}',
+    'quantity' => 2,
+    'price' => 1.23,
+    'vat' => 20,
+]);
+~~~
+
+The `price` is supplied in major currency units as a decimal. *TODO: support accepting the price in minor units.*
+
+The items are then added to the `ItemBag` in the normal way:
+
+~~~php
+$items = new \Omnipay\Common\ItemBag($lines);
+~~~
 
 ======
 
@@ -97,5 +146,5 @@ URLs
 * iframe URL: https://frontend.pay1.de/frontend/v2/
 * Client API URL (AJAX?): https://secure.pay1.de/client-api/
 
-It looks like basket items are mandatory, and each item must have a stock ID and a VAT record.
+It looks like basket items are mandatory (using the Frontend mode), and each item must have a stock ID and a VAT record.
 

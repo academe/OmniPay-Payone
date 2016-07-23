@@ -326,6 +326,46 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * Collect the items/cart/basket data to send to the Gateway.
+     */
+    public function getDataItems()
+    {
+        $data = [];
+
+        // Each item must be contingously numbered, starting from 1.
+        $item_count = 0;
+
+        foreach($this->getItems() as $item) {
+            $item_count++;
+
+            if (method_exists($item, 'getId')) {
+                $id = $item->getId();
+            } else {
+                $id = $this->defaultItemId;
+            }
+
+            if (method_exists($item, 'getVat')) {
+                $vat = $item->getVat();
+            } else {
+                $vat = 0;
+            }
+
+            // We are ASSUMING here that the price is in minor units.
+            // Since there is no validation or parsing of the Item
+            // price, we really cannot know for sure whether it contains
+            // €100 or 100c
+
+            $data['id['.$item_count.']'] = $id;
+            $data['pr['.$item_count.']'] = $item->getPrice();
+            $data['no['.$item_count.']'] = $item->getQuantity();
+            $data['de['.$item_count.']'] = $item->getDescription();
+            $data['va['.$item_count.']'] = $vat;
+        }
+
+        return $data;
+    }
+
+    /**
      * The response to sending the request is a text list of name=value pairs.
      * The output data is a mix of the sent data with the received data appended.
      */
@@ -337,7 +377,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $httpResponse = $httpRequest->send();
 
         // The body returned will be text of multiple lines, each containing {name}={value}
-        // CHECKME: what is the encoding? I suspect it may always be ISO 8859-1
+        // CHECKME: what is the encoding we get back? I suspect it may always be ISO 8859-1
 
         $body = (string)$httpResponse->getBody();
 

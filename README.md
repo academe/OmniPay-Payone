@@ -1,6 +1,8 @@
 
 **This repository is very much in development but should be finised shortly. The notes below will be converted to proper documentation.**
 
+![Alt text](docs/PAYONE_Logo_480.png?raw=true "PAYONE")
+
 Some development notes:
 
 * The PAYONE Platform and its connected systems are designed for IP addresses Version 4.

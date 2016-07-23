@@ -69,6 +69,21 @@ you are fully aware of the PCI implications.
 The Front end API also has a notification handler for receiving the payment results and captured user information
 from the PAYONE servers.
 
+### Shop and Access API Versions
+
+A payment portal is set up on PAYONE as one of two versions:
+
+* Shop
+* Access
+
+The `Shop` portal version is used for one-off payments. The `Access` portal version is used for subscriptions,
+invoicing, continuous renewals and services. Some of the payment methods are available just to the `Shop` version
+and some are available just to the `Access` version. Some methods are available to both versions, but accept
+slightly different sets of parameters.
+
+For now, this package will deal with the `Shop` version only. However, the naming of classes and services will
+allow for `Access` version methods to be added later if required.
+
 ### Extended Items (Order Lines)
 
 The PAYONE API supports two additional item properties that must be completed (`id` and `vat`). Since the OmniPay v2
@@ -100,6 +115,86 @@ $items = new \Omnipay\Common\ItemBag($lines);
 
 It does not appear tha the item prices are validated on the PAYONE servers. Some gateways will reject a payment
 if the cart items do not exactly add up to the order total. PAYONE appears to treat these items as information only.
+
+If you do not use the extended `Item` then default values will be substituted (`"000000"` for the `id` and `0` for the
+`vat` figure).
+
+## The Shop API Gateway
+
+Create a gateway object to access the Server API Shop version methods:
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_Shop');
+
+// Merchant Account ID
+$gateway->setMerchantId(12345);
+// Merchant Portal ID
+$gateway->setPortalId(1234567);
+// Sub-Acount ID
+$gateway->setSubAccountId(56789);
+// True to use test mode.
+$gateway->setTestMode(true);
+~~~
+
+### Server API Authorize Payment
+
+PAYONE calls this "pre-authorization". It authoprizes a payment to be captured later.
+
+To create an authorization request:
+
+~~~php
+$request = $gateway->authorize([
+    // Unique merchant site transaction ID
+    'transactionId' => 'ABC123',
+    // Amount as decimal.
+    'amount' => 0.00,
+    // Currency as ISO 4217 three-character code
+    'currency' => 'EUR',
+    // Pre-shared secret key used for hashing.
+    'portalKey' => 'Ab12Cd34Ef56Gh78',
+    // Card and personal details.
+    'card' => $card,
+    // Optional card type override.
+    //'cardType' => 'V',
+    // The ItemBag/Cart
+    'items' => $items,
+]);
+~~~
+
+The driver will attempt to work out the card type from the card number, but if it fails or
+you are using a card type not yet supported by the driver or by OmniPay, then you can supply
+your own card type letter.
+
+The `$card` details are populated like any other standard OmniPay card, with one exception detailed
+below. You can supply the details as an array or as a `\Omnipay\Common\CreditCard` object.
+
+These four fields normally define the details for a credit card:
+
+~~~php
+[
+    ...
+    'number' => '4111111111111111',
+    'expiryYear' => '2020',
+    'expiryMonth' => '12',
+    'cvv' => '123',
+];
+~~~
+
+PAYONE will also accept a "pseudo-card" number. This is a temporary token supplied by another
+process (e.g. a "creditcardcheck") and used in place of a card. If supplying a pseudo-card number,
+leave the remaining card fields blank or null. The gateway driver will then treat the card number
+as a pseudo-card:
+
+~~~php
+[
+    ...
+    'number' => '4111111111111111',
+    'expiryYear' => null,
+    'expiryMonth' => null,
+    'cvv' => null,
+];
+~~~
+
 
 ======
 

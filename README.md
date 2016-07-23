@@ -98,6 +98,9 @@ The items are then added to the `ItemBag` in the normal way:
 $items = new \Omnipay\Common\ItemBag($lines);
 ~~~
 
+It does not appear tha the item prices are validated on the PAYONE servers. Some gateways will reject a payment
+if the cart items do not exactly add up to the order total. PAYONE appears to treat these items as information only.
+
 ======
 
 ## Development Notes

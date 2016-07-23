@@ -1,9 +1,57 @@
-
 **This repository is very much in development but should be finised shortly. The notes below will be converted to proper documentation.**
+
+# Omnipay: PAYONE
+
+**PAYONE driver for the Omnipay PHP payment processing library**
+
+[![Build Status](https://travis-ci.org/thephpleague/omnipay-sagepay.png?branch=master)](https://travis-ci.org/thephpleague/omnipay-sagepay)
+[![Latest Stable Version](https://poser.pugx.org/omnipay/sagepay/version.png)](https://packagist.org/packages/omnipay/sagepay)
+[![Total Downloads](https://poser.pugx.org/omnipay/sagepay/d/total.png)](https://packagist.org/packages/omnipay/sagepay)
+
+[Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
+processing library for PHP 5.3+. This package implements PAYONE support for Omnipay.
 
 ![Alt text](docs/PAYONE_Logo_480.png?raw=true "PAYONE")
 
-Some development notes:
+## Installation
+
+Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply add it
+to your `composer.json` file:
+
+```json
+{
+    "require": {
+        "aimeos/omnipay-payone": "~2.0"
+    }
+}
+```
+
+While in development, it can be obtained from this repository:
+
+```json
+{
+    "require": {
+        "aimeos/omnipay-payone": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/academe/OmniPay-Payone.git"
+        }
+    ]
+}
+```
+
+And run composer to update your dependencies:
+
+    $ curl -s http://getcomposer.org/installer | php
+    $ php composer.phar update
+
+======
+
+## Development Notes
+
+Some development notes yet to be incorporated into the code or documentation:
 
 * The PAYONE Platform and its connected systems are designed for IP addresses Version 4.
 * IP ranges: 213.178.72.196, 213.178.72.197, 217.70.200.0/24, 185.60.20.0/24

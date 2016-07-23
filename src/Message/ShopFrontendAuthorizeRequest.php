@@ -23,7 +23,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
      * Default values for the auto-created Item if none are supplied.
      */
     protected $defaultItemId = '000000';
-    protected $defaultItemDescription = 'Items';
+    protected $defaultItemName = 'Items';
 
     /**
      * The data is used to generate the POST form to send the user
@@ -61,7 +61,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
                 'id' => $this->defaultItemId,
                 'price' => $this->getAmountInteger(),
                 'quantity' => 1,
-                'description' => $this->defaultItemDescription,
+                'name' => $this->defaultItemName,
                 'vat' => 0,
             ]);
 
@@ -94,7 +94,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['id['.$item_count.']'] = $id;
             $data['pr['.$item_count.']'] = $item->getPrice();
             $data['no['.$item_count.']'] = $item->getQuantity();
-            $data['de['.$item_count.']'] = $item->getDescription();
+            $data['de['.$item_count.']'] = $item->getName();
             $data['va['.$item_count.']'] = $vat;
         }
 

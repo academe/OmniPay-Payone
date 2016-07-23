@@ -358,7 +358,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $data['id['.$item_count.']'] = $id;
             $data['pr['.$item_count.']'] = $item->getPrice();
             $data['no['.$item_count.']'] = $item->getQuantity();
-            $data['de['.$item_count.']'] = $item->getDescription();
+            $data['de['.$item_count.']'] = $item->getName();
             $data['va['.$item_count.']'] = $vat;
         }
 

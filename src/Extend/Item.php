@@ -20,7 +20,8 @@ class Item extends CommonItem
     }
 
     /**
-     * Set the item name
+     * Set the item VAT.
+     * See notes on PAYONE site for usage (values <100 and >100 have different meanings).
      */
     public function setVat($value)
     {
@@ -36,7 +37,7 @@ class Item extends CommonItem
     }
 
     /**
-     * Set the item name
+     * Set the item stock ID
      */
     public function setId($value)
     {

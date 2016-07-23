@@ -81,14 +81,16 @@ Creating an `Item` uses these fields:
 ~~~php
 $lines[] = new \Omnipay\Payone\Extend\Item([
     'id' => '{merchant-site-stock-ID}',
-    'description' => '{product-name}',
+    'name' => '{product-name}',
     'quantity' => 2,
-    'price' => 1.23,
+    'price' => 123,
     'vat' => 20,
 ]);
 ~~~
 
-The `price` is supplied in major currency units as a decimal. *TODO: support accepting the price in minor units.*
+The `price` is supplied in *minor currency units* as an integer. These are passed as supplied direct to the gateway.
+Note that OmniPay does not specify, parse nor validate the price units of an Item, so we make the decision
+on how to handle it here. *This may change if the units can be clarified.*
 
 The items are then added to the `ItemBag` in the normal way:
 

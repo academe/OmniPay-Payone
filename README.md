@@ -134,6 +134,8 @@ $gateway->setPortalId(1234567);
 $gateway->setSubAccountId(56789);
 // True to use test mode.
 $gateway->setTestMode(true);
+// Default language is "en" and determines the language of forms and error messages.
+$gateway->setOLanguage("de");
 ~~~
 
 ### Server API Authorize Payment
@@ -195,6 +197,37 @@ as a pseudo-card:
 ];
 ~~~
 
+Also to note about the card data is that countries must be supplied as ISO 3166 tw-letter codes:
+
+~~~php
+    'billingCountry' => 'US',
+~~~
+
+and states must be supplied as ISO 3166-2 codes (various formats, depending on the country):
+
+~~~php
+    'billingCountry' => 'US',
+    'billingState' => 'AL',
+~~~
+
+Send this request to PAYONE to get the response:
+
+~~~php
+$response = $request->send();
+~~~
+
+The standard OmniPay documentation shows how to handle the response. In addition, in the event
+of an error, there will be the normal loggable error message, and an error message that is safe
+to put in front of an end user:
+
+~~~php
+if (!$response->isSuccessful()) {
+    echo $response->getMessage();
+    // e.g. "Expiry date invalid, incorrect or in the past"
+    echo $response->getCustomerMessage();
+    // e.g. "Invalid card expiry date. Please verify your card data."
+}
+~~~
 
 ======
 
@@ -204,12 +237,9 @@ Some development notes yet to be incorporated into the code or documentation:
 
 * The PAYONE Platform and its connected systems are designed for IP addresses Version 4.
 * IP ranges: 213.178.72.196, 213.178.72.197, 217.70.200.0/24, 185.60.20.0/24
-* A "Pseudo card number" is supported by PAYONE, which appears to be a saved token system.
-* Maybe the "Pseudo card number" is for a JavaScript tokenisation approac, so WILL need to be supported.
 * The 3D Secure process needs to be fully implemnented.
-* When sending 3D Secure details, do we need to leave off the personal details?
-* The currency is ISO 4217
-* The countty is ISO 3166
+* When sending 3D Secure details, do we need to leave off the personal details or resend everything again?
+* The country is ISO 3166
 * The state is ISO 3166-2 and only for countries: US, CA, CN, JP, MX, BR, AR, ID, TH, IN
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
 * The "Access" API is not supported at all yet, with some share transaction types and some unique to that API, e.g. customer,

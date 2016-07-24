@@ -475,7 +475,7 @@ transaction details must be retained in the session.
 
 ## Front End Purchase
 
-Works the same as Front End Authorize
+Works the same as Front End Authorize, but will require a separate Server API Capture.
 
 
 

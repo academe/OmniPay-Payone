@@ -101,6 +101,10 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['va['.$item_count.']'] = $vat;
         }
 
+        if ($this->getDisplayName()) {
+            $data['display_name'] = $this->getDisplayName();
+        }
+
         // Create the hash.
         // First we sort the parameters into alphabetic name order.
 
@@ -142,7 +146,6 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
         $this->response->setRedirectMethod($this->getRedirectMethod());
 
         return $this->response;
-        // TODO: throw exception.
     }
 
     /**
@@ -156,6 +159,27 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
     public function getAccessMethod()
     {
         return $this->getParameter('accessMethod') ?: static::ACCESS_METHOD_CLASSIC;
+    }
+
+    /**
+     * Indicates whether to display the firstname/lastname/company name fields in the
+     * hosted form.
+     * Values are "yes" and "no".
+     */
+    public function setDisplayName($value)
+    {
+        if ($value === true) {
+            $value = 'yes';
+        } elseif ($value === false) {
+            $value = 'no';
+        }
+
+        $this->setParameter('displayName', $value);
+    }
+
+    public function getDisplayName()
+    {
+        return $this->getParameter('displayName');
     }
 
     /**

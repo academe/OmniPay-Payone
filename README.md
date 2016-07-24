@@ -368,7 +368,7 @@ List of $server_request data methods:
 * getReceivable() - decimal in major currency units
 * getReceivableInteger() - integer in minor currency units
 
-(Additional fields to be added)
+(TODO: Additional fields to be added. TODO: Encoding to be taken into account.)
 
 ======
 
@@ -383,13 +383,7 @@ Some development notes yet to be incorporated into the code or documentation:
 * The country is ISO 3166
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
 * The PAYONE server may send transaction status messages to the merchant server (from 185.60.20.0/24) for ALL transactions.
-  * It would be nice to have a handler for incoming messages. It is quite a long and flexible message.
   * They are also always ISO-8859-1 encoded, which is a little crazy, but optional conversion would be good.
-  * Some of these messages inform the merchant site of reversals or cancellation of transactions, so it is important
-  to include them.
-  * Some of these messages seem to include credit card numbers, which does not seem right.
-  * We need to handle these to find out what happens to PENDING transactions.
-* The "param" parameter looks like a custom field that can be used for details like invoice ID. We should support it.
 * Other gateway types exist: iframe, "classic" (remote redirect?), JavaScript, one-click purchasing.
 
 ## Hosted iframe Mode

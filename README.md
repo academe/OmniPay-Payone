@@ -413,11 +413,15 @@ $request = $gateway->authorize([
     'transactionId' => $transactionId,
     'amount' => 3.99,
     'accessMethod' => 'iframe',
+    'redirectMethod' => 'POST',
     'items' => $items,
 ]);
 ~~~
 
-The `accessMethod` will be `"classic"` or `"iframe"`. The `items` are optional, but if you
+The `accessMethod` will be `"classic"` or `"iframe"`, defaulting to "classic".
+The `redirectMethod` will be `"GET"` or `"POST"`, defaulting to "POST".
+
+The `items` are optional, but if you
 do not supply at least one item, then a dummy item will be created for you; the cart is
 mandatory for the Frontend API, unlike the Server API.
 
@@ -427,7 +431,9 @@ The response message (from OmniPay) for performing the next action is:
 $response = $request->send();
 ~~~
 
-The response will be a redirect response. For the `classic` method it will be a GET response.
+The response will be a redirect response, either GET or POST, according to the `redirectMethod`
+parameter.
+
 You can retrieve the GET URL and redirect in your application, or leave OmniPay to do the redirect:
 
 ~~~php
@@ -438,15 +444,15 @@ $url = $response->getRedirectUrl();
 $response->redirect();
 ~~~
 
-For the `iframe` method the default redireect will be POST. Again, you can just let OmnoPay do the
-POST redirect, but you will probably want to build your own form and `target` it at an iframe
+For the `POST` redirectMethod, again, you can just let OmnoPay do the redirect,
+but you will probably want to build your own form and `target` it at an iframe
 in the page. The two things you need to build the form is the target URL, and the form items.
 The form items are supplied as name/value pairs.
 
 ~~~php
 // This form needs to be set to auto-submit.
 echo '<form action="' . $response->getRedirectUrl() . '" method="POST" target="target-iframe">';
-foreach($response->getData() as $name => $value) {
+foreach($response->getRedirectData() as $name => $value) {
     echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
 }
 echo '</form>';
@@ -470,6 +476,8 @@ Two big things that appear to not work as I understand it in the documentation:
 * Frontend forms - trying to pre-populate them with names and address fields just results in a "no data here" error.
   This is the same error we get if you don't provide at least one cart item, which also seems not to be mentioned
   in the docs. So I suspect I may be missing something here.
+  It is possible to disable the the name ane company name fields on the CVC form using "display_name"="no", so there
+  *must* be some way to supply the names.
 
 Some development notes yet to be incorporated into the code or documentation:
 
@@ -491,6 +499,9 @@ config.cardtype defines available card types (from list in package)
 See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.
 
 TODO: override success/failure/cancel URLs?
+
+TODO: I think whether a Frontend redirect does a POST or GET, and which URL it uses (Classic of ifram) are
+actually independent. Any pair will work: POST to an iframe, an iframe with a GET parameter etc.
 
 URLs
 

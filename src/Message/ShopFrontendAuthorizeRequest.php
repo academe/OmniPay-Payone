@@ -19,6 +19,9 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
     const ACCESS_METHOD_CLASSIC = 'classic';
     const ACCESS_METHOD_IFRAME = 'iframe';
 
+    const ENDPOINT_CLASSIC = 'https://secure.pay1.de/frontend/';
+    const ENDPOINT_IFRAME = 'https://frontend.pay1.de/frontend/v2/';
+
     /**
      * Default values for the auto-created Item if none are supplied.
      */
@@ -126,19 +129,25 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
      */
     protected function createResponse($data)
     {
+        $this->response = new ShopFrontendAuthorizeResponse($this, $data);
+
         if ($this->getAccessMethod() == static::ACCESS_METHOD_CLASSIC) {
-            // Classic redirect (GET, send user to remote site).
-            return $this->response = new ShopFrontendClassicAuthorizeResponse($this, $data);
+            $this->response->setEndpoint(static::ENDPOINT_CLASSIC);
         }
 
         if ($this->getAccessMethod() == static::ACCESS_METHOD_IFRAME) {
-            // Classic redirect (GET, send user to remote site).
-            return $this->response = new ShopFrontendIframeAuthorizeResponse($this, $data);
+            $this->response->setEndpoint(static::ENDPOINT_IFRAME);
         }
 
+        $this->response->setRedirectMethod($this->getRedirectMethod());
+
+        return $this->response;
         // TODO: throw exception.
     }
 
+    /**
+     * Access method: classic or iframe
+     */
     public function setAccessMethod($value)
     {
         $this->setParameter('accessMethod', $value);
@@ -147,5 +156,22 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
     public function getAccessMethod()
     {
         return $this->getParameter('accessMethod') ?: static::ACCESS_METHOD_CLASSIC;
+    }
+
+    /**
+     * Redirect method: GET or POST.
+     */
+    public function setRedirectMethod($value)
+    {
+        if ($value != 'GET' && $value != 'POST') {
+            // TODO: exception
+        }
+
+        $this->setParameter('redirectMethod', $value);
+    }
+
+    public function getRedirectMethod()
+    {
+        return $this->getParameter('redirectMethod') ?: 'GET';
     }
 }

@@ -701,6 +701,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * The nerchant site invoice ID (optional).
+     */
+    public function setInvoiceId($value)
+    {
+        return $this->setParameter('invoiceId', $value);
+    }
+
+    public function getInvoiceId()
+    {
+        return $this->getParameter('invoiceId');
+    }
+
+    /**
      * The ecommerce mode - relates to the risk of the card transaction
      * being fraudulent.
      */

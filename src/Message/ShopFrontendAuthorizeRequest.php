@@ -105,6 +105,10 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['display_name'] = $this->getDisplayName();
         }
 
+        if ($this->getInvoiceId()) {
+            $data['invoiceid'] = $this->getInvoiceId();
+        }
+
         // Create the hash.
         // First we sort the parameters into alphabetic name order.
 

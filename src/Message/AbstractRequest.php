@@ -285,9 +285,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     {
         $data = array();
 
-        // CHECKME: does the "ecommercemode" need to be set? Values "internet" and "3dsecure".
-        // The "pseudocardpan" can replace all these other CC details (a saved token, I guess)
-
         $data['clearingtype'] = $this->getClearingType();
 
         if ($card = $this->getCard()) {
@@ -332,6 +329,28 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                     $data['cardissuenumber'] = $issue_number;
                 }
             }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Collect URL overrides.
+     */
+    public function getDataUrl()
+    {
+        $data = [];
+
+        if (!empty($this->getSuccessUrl())) {
+            $data['successurl'] = $this->getSuccessUrl();
+        }
+
+        if (!empty($this->getErrorUrl())) {
+            $data['errorurl'] = $this->getErrorUrl();
+        }
+
+        if (!empty($this->getBackUrl())) {
+            $data['backurl'] = $this->getBackUrl();
         }
 
         return $data;
@@ -640,6 +659,45 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function getVatNumber()
     {
         return $this->getParameter('vatNumber');
+    }
+
+    /**
+     * The success URL (optional).
+     */
+    public function setSuccessUrl($successUrl)
+    {
+        return $this->setParameter('successUrl', $successUrl);
+    }
+
+    public function getSuccessUrl()
+    {
+        return $this->getParameter('successUrl');
+    }
+
+    /**
+     * The error URL (optional).
+     */
+    public function setErrorUrl($errorUrl)
+    {
+        return $this->setParameter('errorUrl', $errorUrl);
+    }
+
+    public function getErrorUrl()
+    {
+        return $this->getParameter('errorUrl');
+    }
+
+    /**
+     * The back (cancel) URL (optional).
+     */
+    public function setBackUrl($backUrl)
+    {
+        return $this->setParameter('backUrl', $backUrl);
+    }
+
+    public function getBackUrl()
+    {
+        return $this->getParameter('backUrl');
     }
 
     /**

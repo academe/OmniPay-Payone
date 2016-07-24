@@ -46,6 +46,8 @@ class ShopAuthorizeResponse extends AbstractResponse implements RedirectResponse
 
     /**
      * 3D Secure requires a POST redirect.
+     * 3D Secure works using a GET redirect in test mode, but requires POST for most
+     * live banks.
      */
     public function getRedirectMethod()
     {

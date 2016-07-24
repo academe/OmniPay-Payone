@@ -47,6 +47,10 @@ class ShopAuthorizeRequest extends AbstractRequest
             $data['vatid'] = $this->getVatNumber();
         }
 
+        // URL orverrides.
+
+        $data += $this->getDataUrl();
+
         // Shipping details.
 
         $data += $this->getDataShipping();

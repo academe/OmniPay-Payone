@@ -135,7 +135,7 @@ $gateway->setSubAccountId(56789);
 // True to use test mode.
 $gateway->setTestMode(true);
 // Default language is "en" and determines the language of forms and error messages.
-$gateway->setOLanguage("de");
+$gateway->setLanguage("de");
 // Currency as ISO 4217 three-character code
 $gateway->setCurrency('EUR');
 ~~~
@@ -160,6 +160,8 @@ $request = $gateway->authorize([
     //'cardType' => 'V',
     // The ItemBag/Cart
     'items' => $items,
+    // Optional ecommerce mode declares risk
+    'ecommerceMode' => '3dsecure',
 ]);
 ~~~
 
@@ -169,6 +171,12 @@ your own card type letter.
 
 The `$card` details are populated like any other standard OmniPay card, with one exception detailed
 below. You can supply the details as an array or as a `\Omnipay\Common\CreditCard` object.
+
+The `ecommerceMode` overrides the 3D Secure configuration in the portal. Values include `internet`
+to turn off 3D Secure, `3dsecure` to turn on 3D Secure and `moto` for telephone and email payments.
+Note: when capturing an authorized payment, the *same ecommerceMode must be used* or the capture
+will be rejected. However, it looks like PAYONE may actually wrap the bank's 3D Secure form on its
+own site, because it provides no additional POST data to send.
 
 These four fields normally define the details for a credit card:
 
@@ -397,7 +405,7 @@ $gateway->setSubAccountId(56789);
 // True to use test mode.
 $gateway->setTestMode(true);
 // Default language is "en" and determines the language of forms and error messages.
-$gateway->setOLanguage("de");
+$gateway->setLanguage("de");
 // Currency as ISO 4217 three-character code
 $gateway->setCurrency('EUR');
 // The pre-shared secret, used for hashing.
@@ -465,6 +473,21 @@ will be sent back to your merchant site, and then the user will be returned to e
 "success" page or the "failure" page. No data will be carried with that redirect, so the
 transaction details must be retained in the session.
 
+## Front End Purchase
+
+Works the same as Front End Authorize
+
+
+
+
+
+
+
+
+
+
+
+
 
 ======
 
@@ -499,16 +522,4 @@ config.cardtype defines available card types (from list in package)
 See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.
 
 TODO: override success/failure/cancel URLs?
-
-TODO: I think whether a Frontend redirect does a POST or GET, and which URL it uses (Classic of ifram) are
-actually independent. Any pair will work: POST to an iframe, an iframe with a GET parameter etc.
-
-URLs
-
-* Server API URL: https://api.pay1.de/post-gateway/
-* URL classic: https://secure.pay1.de/frontend/
-* iframe URL: https://frontend.pay1.de/frontend/v2/
-* Client API URL (AJAX?): https://secure.pay1.de/client-api/
-
-It looks like basket items are mandatory (using the Frontend mode), and each item must have a stock ID and a VAT record.
 

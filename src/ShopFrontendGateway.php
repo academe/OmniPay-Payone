@@ -25,4 +25,12 @@ class ShopFrontendGateway extends ShopGateway
     {
         return $this->createRequest('\Omnipay\Payone\Message\ShopFrontendAuthorizeRequest', $parameters);
     }
+
+    /**
+     * The purchase transaction.
+     */
+    public function purchase(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Payone\Message\ShopFrontendPurchaseRequest', $parameters);
+    }
 }

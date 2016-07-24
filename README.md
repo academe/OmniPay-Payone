@@ -304,8 +304,6 @@ The notification Server Request (i.e. *incoming* request to your server) is capt
 ~~~php
 $gateway = Omnipay\Omnipay::create('Payone_Shop');
 
-$server_request = $gateway->completeStatus();
-// or
 $server_request = $gateway->acceptNotification();
 
 // The raw data sent is available:

@@ -222,19 +222,19 @@ class ShopGateway extends AbstractGateway
 
     /**
      * For capturing incoming (ServerRequest) Transaction Status messages from PAYONE.
+     * Alias for acceptNotification()
      */
     public function completeStatus(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
+        return $this->acceptNotification($parameters);
     }
 
     /**
-     * Alias for completeStatus(), to follow naming convention documented here:
-     * https://github.com/thephpleague/omnipay
+     * Accept an incoming notification (a ServerRequest).
      */
     public function acceptNotification(array $parameters = array())
     {
-        return $this->completeStatus($parameters);
+        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
     }
 
     /**

@@ -50,6 +50,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     );
 
     /**
+     * The credit card e-commerce mode.
+     * moto = mail or telephone (card not present)
+     */
+    const ECOMMERCE_MODE_INTERNET   = 'internet';
+    const ECOMMERCE_MODE_3DSECURE   = '3dsecure';
+    const ECOMMERCE_MODE_MOTO       = 'moto';
+
+    /**
      * A list of countries for which state codes may be given.
      */
     protected $countries_with_states = array(
@@ -296,6 +304,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             if (empty($card->getExpiryYear()) && empty($card->getExpiryMonth()) && $card->getCvv() === null) {
                 $data['pseudocardpan'] = $card->getNumber();
             } else {
+                if ($this->getEcommerceMode()) {
+                    $data['ecommercemode'] = $this->getEcommerceMode();
+                }
+
                 $data['cardpan'] = $card->getNumber();
 
                 $data['cardtype'] = $this->getCardType();
@@ -628,6 +640,29 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function getVatNumber()
     {
         return $this->getParameter('vatNumber');
+    }
+
+    /**
+     * The ecommerce mode - relates to the risk of the card transaction
+     * being fraudulent.
+     */
+    public function setEcommerceMode($ecommerceMode)
+    {
+        if (
+            isset($ecommerceMode)
+            && $ecommerceMode != static::ECOMMERCE_MODE_INTERNET
+            && $ecommerceMode != static::ECOMMERCE_MODE_3DSECURE
+            && $ecommerceMode != static::ECOMMERCE_MODE_MOTO
+        ) {
+            throw new InvalidRequestException('ecommerceMode is invalid.');
+        }
+
+        return $this->setParameter('ecommerceMode', $ecommerceMode);
+    }
+
+    public function getEcommerceMode()
+    {
+        return $this->getParameter('ecommerceMode');
     }
 
     public function getRequestCode()

@@ -9,6 +9,7 @@ namespace Omnipay\Payone\Message;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\NotificationInterface;
+use Omnipay\Payone\ShopGateway;
 use Omnipay\Common\Currency;
 use DateTime;
 
@@ -17,8 +18,8 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     /**
      * Transaction status values.
      */
-    const TRANSACTION_STATUS_COMPLETED = 'completed';
-    const TRANSACTION_STATUS_PENDING = 'pending';
+    const TRANSACTION_STATUS_COMPLETED  = 'completed';
+    const TRANSACTION_STATUS_PENDING    = 'pending';
 
     /**
      * Clearing type values.
@@ -26,7 +27,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     // Debit payment
     const CLEARING_TYPE_ELV = 'elv';
     // Credit card
-    const CLEARING_TYPE_CC = 'cc';
+    const CLEARING_TYPE_CC  = 'cc';
     // Prepayment
     const CLEARING_TYPE_VOR = 'vor';
     // Invoice
@@ -34,7 +35,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     // Cash on delivery
     const CLEARING_TYPE_COD = 'cod';
     // Online bank transfer
-    const CLEARING_TYPE_SB = 'sb';
+    const CLEARING_TYPE_SB  = 'sb';
     // e-Wallet
     const CLEARING_TYPE_WLT = 'wlt';
     // Financing
@@ -43,28 +44,28 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     /**
      * Event (txaction) values.
      */
-    const EVENT_APPOINTED = 'appointed';
-    const EVENT_CAPTURE = 'capture';
-    const EVENT_UNDERPAID = 'underpaid';
-    const EVENT_PAID = 'paid';
-    const EVENT_CANCELATION = 'cancelation';
-    const EVENT_REFUND = 'refund';
-    const EVENT_DEBIT = 'debit';
-    const EVENT_REMINDER = 'reminder';
-    const EVENT_VAUTHORIZATION = 'vauthorization';
-    const EVENT_VSETTLEMENT = 'vsettlement';
-    const EVENT_TRANSFER = 'transfer';
-    const EVENT_INVOICE = 'invoice';
-    const EVENT_FAILED = 'failed';
+    const EVENT_APPOINTED       = 'appointed';
+    const EVENT_CAPTURE         = 'capture';
+    const EVENT_UNDERPAID       = 'underpaid';
+    const EVENT_PAID            = 'paid';
+    const EVENT_CANCELATION     = 'cancelation';
+    const EVENT_REFUND          = 'refund';
+    const EVENT_DEBIT           = 'debit';
+    const EVENT_REMINDER        = 'reminder';
+    const EVENT_VAUTHORIZATION  = 'vauthorization';
+    const EVENT_VSETTLEMENT     = 'vsettlement';
+    const EVENT_TRANSFER        = 'transfer';
+    const EVENT_INVOICE         = 'invoice';
+    const EVENT_FAILED          = 'failed';
 
     protected $data;
 
     /**
-     * Returns just the response message.
+     * No text messages to return.
      */
     public function getMessage()
     {
-        return 'TBC';
+        return null;
     }
 
     /**
@@ -78,40 +79,6 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
             return $this->data;
         }
 
-return $this->data = array
-(
-    'key' => '92c9fc714a0464b4f8733414cfb41bf4',
-    'txaction' => 'appointed',
-    'portalid' => '2024178',
-    'aid' => '33683',
-    'clearingtype' => 'cc',
-    'notify_version' => '7.4',
-    'txtime' => '1469193345',
-    'currency' => 'EUR',
-    'userid' => '86017070',
-    'accessname' => '',
-    'accesscode' => '',
-    'param' => '',
-    'mode' => 'test',
-    'price' => '3.99',
-    'txid' => '196486455',
-    'reference' => 'M53717315',
-    'sequencenumber' => '0',
-    'company' => 'AAAAAA',
-    'firstname' => 'Jason',
-    'lastname' => 'Judge',
-    'street' => '123 Street Name',
-    'zip' => 'NE262NP',
-    'city' => 'tttttt',
-    'email' => 'jason.judge@academe.co.uk',
-    'country' => 'GB',
-    'cardexpiredate' => '2012',
-    'cardtype' => 'V',
-    'cardpan' => '411111xxxxxx1111',
-    'transaction_status' => 'completed',
-    'balance' => '0.00',
-    'receivable' => '0.00',
-);
         return $this->data = $this->httpRequest->request->all();
     }
 
@@ -139,7 +106,14 @@ return $this->data = array
     protected function getValue($name, $default = null)
     {
         $data = $this->getData();
-        return array_key_exists($name, $data) ? $data[$name] : $default;
+        $value = array_key_exists($name, $data) ? $data[$name] : $default;
+
+        if ($this->getEncoding() == ShopGateway::ENCODING_UTF8) {
+            // We want UTF-8 back, so the ISO-8859 needs to be converted.
+            // TODO...maybe this should be moved to getData() so the whole lot is done at once?
+        }
+
+        return $value;
     }
 
     /**
@@ -496,6 +470,28 @@ return $this->data = array
     public function getReceivableInteger()
     {
         return $this->convertAmountInteger($this->getValue('receivable'));
+    }
+
+    /**
+     * The encoding that we want to get back, i.e. that the merchant site uses.
+     */
+    public function setEncoding($encoding)
+    {
+        if ($encoding != ShopGateway::ENCODING_UTF8 && $encoding != ShopGateway::ENCODING_ISO8859) {
+            throw new InvalidRequestException(sprintf(
+                'Encoding invalid. Must be "%s" or "%s".',
+                ShopGateway::ENCODING_UTF8,
+                ShopGateway::ENCODING_ISO8859
+            ));
+        }
+
+        return $this->setParameter('encoding', $encoding);
+    }
+
+    public function getEncoding()
+    {
+        // Default to UTF-8 as that is what most merchant sites will be using these days.
+        return $this->getParameter('encoding') ?: ShopGateway::ENCODING_UTF8;
     }
 
     // TODO: delivery data (name, address)

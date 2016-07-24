@@ -12,7 +12,7 @@ use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Common\Currency;
 use DateTime;
 
-class ShopCompleteTxnStatusServerRequest extends OmnipayAbstractRequest implements NotificationInterface
+class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implements NotificationInterface
 {
     /**
      * Transaction status values.
@@ -130,7 +130,7 @@ return $this->data = array
      */
     protected function createResponse($data)
     {
-        return $this->response = new ShopCompleteTxnStatusServerResponse($this, $data);
+        return $this->response = new ShopTransactionStatusServerResponse($this, $data);
     }
 
     /**

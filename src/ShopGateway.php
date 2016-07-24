@@ -225,7 +225,16 @@ class ShopGateway extends AbstractGateway
      */
     public function completeStatus(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopCompleteTxnStatusServerRequest', $parameters);
+        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
+    }
+
+    /**
+     * Alias for completeStatus(), to follow naming convention documented here:
+     * https://github.com/thephpleague/omnipay
+     */
+    public function acceptNotification(array $parameters = array())
+    {
+        return $this->completeStatus($parameters);
     }
 
     /**
@@ -248,7 +257,6 @@ class ShopGateway extends AbstractGateway
 
     /**
      * To fetch a single transaction.
-     * Fetch by transactionId or orderId. Both will be unique.
      */
     public function DISABLED_fetchTransaction(array $parameters = array())
     {

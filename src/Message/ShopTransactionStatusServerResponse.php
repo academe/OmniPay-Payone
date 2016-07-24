@@ -9,7 +9,7 @@ namespace Omnipay\Payone\Message;
 use Omnipay\Common\Message\AbstractResponse as OmnipayAbstractResponse;
 use Omnipay\Common\Exception\InvalidResponseException;
 
-class ShopCompleteTxnStatusServerResponse extends OmnipayAbstractResponse
+class ShopTransactionStatusServerResponse extends OmnipayAbstractResponse
 {
     protected $responseMessage = 'TSOK';
 
@@ -28,7 +28,7 @@ class ShopCompleteTxnStatusServerResponse extends OmnipayAbstractResponse
      */
     public function acknowledge($exit = true)
     {
-        echo $this->responseMessage;
+        echo $this->responseMessage . "\n";
 
         if ($exit) {
             exit;

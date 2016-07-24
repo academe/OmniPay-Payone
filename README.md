@@ -291,6 +291,9 @@ notification URL. This URL is specified in the PAYONE account configuration. For
 Server API methods it is a convenience. For the Frontend methods it is essential, being the
 only way of getting a notification that a transaction has completed.
 
+The notification comes from IP address 185.60.20.0/24 (185.60.20.1 to 185.60.20.254).
+This driver does not make any attempt to validate that.
+
 Your application must response to the notification within ten seconds, because when a Frontend
 hosted form is used, the user will be waiting on the PAYONE site for the asknowledgement - just
 save the data to storage and end.
@@ -302,6 +305,8 @@ The notification Server Request (i.e. *incoming* request to your server) is capt
 $gateway = Omnipay\Omnipay::create('Payone_Shop');
 
 $server_request = $gateway->completeStatus();
+// or
+$server_request = $gateway->acceptNotification();
 
 // The raw data sent is available:
 $data = $server_request->getData();
@@ -370,6 +375,17 @@ List of $server_request data methods:
 
 (TODO: Additional fields to be added. TODO: Encoding to be taken into account.)
 
+### completeAuthorize and completePurchase Methods
+
+Although the Frontend purchase and authorize take the user offsite (either in full screen
+mode or in an iframe), no data is returned with the user coming back to the site.
+as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
+
+CHECKME: it is not yet enturely clear how 3D Secure flows in this gateway when using the
+Server API methods only, so it may turn out some additional "complete" handling is needed
+for that when more is known.
+
+
 ======
 
 ## Development Notes
@@ -382,8 +398,9 @@ Some development notes yet to be incorporated into the code or documentation:
 * When sending 3D Secure details, do we need to leave off the personal details or resend everything again?
 * The country is ISO 3166
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
-* The PAYONE server may send transaction status messages to the merchant server (from 185.60.20.0/24) for ALL transactions.
-  * They are also always ISO-8859-1 encoded, which is a little crazy, but optional conversion would be good.
+* Notifications are also always ISO-8859-1 encoded, which is a little crazy, but optional conversion would be good.
+* The response to notifications: "SSOK" for SessionStatus Access portal version and "TSOK" for the TransactionStatus
+  Shop portal version.
 * Other gateway types exist: iframe, "classic" (remote redirect?), JavaScript, one-click purchasing.
 
 ## Hosted iframe Mode

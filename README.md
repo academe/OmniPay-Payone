@@ -284,7 +284,91 @@ $rssponse = $request->send();
 
 The `void` method will response with a `ShopCaptureResponse` response when sent to ONEPAY.
 
+## Notification Callback
 
+For most - if not all - transactions, PAYONE will send details of that transaction to your
+notification URL. This URL is specified in the PAYONE account configuration. For most of the
+Server API methods it is a convenience. For the Frontend methods it is essential, being the
+only way of getting a notification that a transaction has completed.
+
+Your application must response to the notification within ten seconds, because when a Frontend
+hosted form is used, the user will be waiting on the PAYONE site for the asknowledgement - just
+save the data to storage and end.
+
+The notification Server Request (i.e. *incoming* request to your server) is captured by the
+`completeStatus`
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_Shop');
+
+$server_request = $gateway->completeStatus();
+
+// The raw data sent is available:
+$data = $server_request->getData();
+~~~
+
+Individual data items can also be extracted from the server request (see list below).
+
+Once the data is saved, respond to the remote gateway to indicate that you have received
+the notification:
+
+~~~php
+$server_response = $server_request->send();
+// Your application will exit on the next command by default.
+// You can prevent that by passiong in `false` as a single parameter, but
+// do make sure no further stdout is issued.
+$server_response->acknowledge();
+~~~
+
+List of $server_request data methods:
+
+* getPaymentPortalKey() - MD5 or SHA2 384, depending on portal account configuration
+* getPaymentPortalId()
+* getSubAccountId()
+* getEvent() - the name of the reason the notification was sent.
+  Includes "appointed", "capture", "paid", "underpaid", "cancelation", "refund", "debit", "reminder", "vauthorization", "vsettlement", "transfer", "invoice", "failed"
+* getAccessName()
+* getAccessCode()
+* getTxStatus() - the raw status code
+* getTransactionStatus() - OmniPay transaction status codes
+* getTransactionId()
+* getTransactionReference()
+* getNotifyVersion()
+* getParam()
+* getMode() - test or live
+* getSequenceNumber()
+* getClearingType() - should always be 'cc'
+* getTxTimestamp() - raw unix timestamp
+* getTxTime() - timestamp as a \DateTime object
+* getCompany()
+* getCurrency() -  ISO three-letter code
+* getCurrencyObject() - as an OmniPay `Currency` object
+* getDebtorId()
+* getCustomerId()
+* getNumber() - the CC number with hidden middle digits e.g. 411111xxxxxx1111"
+* getNumberLastFour() - e.g. "1111"
+* getCardType() - PAYONE single-letter code, e.g. "V", "M", "D".
+* getBrand() - OmniPay name for the card type, e.g. "visa", "mastercard", "diners".
+* getExpireDate() - YYMM format, as supplied
+* getExpireDateObject() - expiry date returned as a \DateTime object
+* getCardholder() - documented, but seems to be blank most of the time
+* getFirstName()
+* getLastName()
+* getName()
+* getStreet()
+* getAddress1() - alias of getStreet()
+* getCity()
+* getPostcode()
+* getCountry() - ISO code
+* getEmail()
+* getPrice() - decimal in major currency units
+* getPriceInteger() - integer in minor currency units
+* getBalance() - decimal in major currency units
+* getBalanceInteger() - integer in minor currency units
+* getReceivable() - decimal in major currency units
+* getReceivableInteger() - integer in minor currency units
+
+(Additional fields to be added)
 
 ======
 
@@ -300,7 +384,6 @@ Some development notes yet to be incorporated into the code or documentation:
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
 * The PAYONE server may send transaction status messages to the merchant server (from 185.60.20.0/24) for ALL transactions.
   * It would be nice to have a handler for incoming messages. It is quite a long and flexible message.
-  * It needs a TSOK response to stop it repeating every six hours. This response is different for different interface types, e.g. SSOK.
   * They are also always ISO-8859-1 encoded, which is a little crazy, but optional conversion would be good.
   * Some of these messages inform the merchant site of reversals or cancellation of transactions, so it is important
   to include them.
@@ -316,9 +399,6 @@ JS to include on page: https://secure.pay1.de/client-api/js/v1/payone_hosted_min
 This JS includes "classic" client-API mode functions supported by "AJAX mode" and "Redirect mode" (also worth following up)
 
 config.cardtype defines available card types (from list in package)
-
-A hash is used in this process, based on all the parameters used to set up the iframe form.
-Either md5($fields) or hash_hmac("sha384", $fields)
 
 See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.
 

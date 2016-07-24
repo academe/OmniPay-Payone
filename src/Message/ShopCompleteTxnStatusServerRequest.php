@@ -17,7 +17,7 @@ class ShopCompleteTxnStatusServerRequest extends OmnipayAbstractRequest implemen
     /**
      * Transaction status values.
      */
-    const TRANSACTION_STATUS_COMPLETE = 'completed';
+    const TRANSACTION_STATUS_COMPLETED = 'completed';
     const TRANSACTION_STATUS_PENDING = 'pending';
 
     /**
@@ -185,7 +185,7 @@ return $this->data = array
      */
     public function getTransactionStatus()
     {
-        if ($this->getTxStatus() == static::TRANSACTION_STATUS_COMPLETE) {
+        if ($this->getTxStatus() == static::TRANSACTION_STATUS_COMPLETED) {
             return static::STATUS_COMPLETED;
         }
 
@@ -245,11 +245,6 @@ return $this->data = array
         return $this->getValue('txtime');
     }
 
-    public function getCompany()
-    {
-        return $this->getValue('company');
-    }
-
     /**
      * @returns DateTime
      * The timezone will be according to your local settings, and should
@@ -259,6 +254,11 @@ return $this->data = array
     {
         $date = new DateTime();
         return $date->setTimestamp($this->getTxTimestamp());
+    }
+
+    public function getCompany()
+    {
+        return $this->getValue('company');
     }
 
     /**

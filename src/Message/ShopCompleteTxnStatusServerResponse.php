@@ -34,4 +34,12 @@ class ShopCompleteTxnStatusServerResponse extends OmnipayAbstractResponse
             exit;
         }
     }
+
+    /**
+     * Alias of acknowledge as a more consistent OmniPay lexicon.
+     */
+    public function send($exit = true)
+    {
+        return $this->acknowledge($exit);
+    }
 }

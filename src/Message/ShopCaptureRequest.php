@@ -3,11 +3,18 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Authorize Request
+* PAYONE Shop Capture Request
 */
 
 class ShopCaptureRequest extends AbstractRequest
 {
+    /**
+     * Values for the settleAccount parameter.
+     */
+    const SETTLE_ACCOUNT_YES = 'yes';
+    const SETTLE_ACCOUNT_NO = 'no';
+    const SETTLE_ACCOUNT_AUTO = 'auto';
+
     /**
      * The "request" parameter.
      */
@@ -37,6 +44,10 @@ class ShopCaptureRequest extends AbstractRequest
             $data['narrative_text'] = substr($this->getDescription(), 0, 80);
         }
 
+        if ($this->getSettleAccount()) {
+            $data['settleaccount'] = $this->getSettleAccount();
+        }
+
         return $data;
     }
 
@@ -62,4 +73,34 @@ class ShopCaptureRequest extends AbstractRequest
         return $this->getParameter('sequenceNumber');
     }
 
+
+    /**
+     * Sets whether you want to settle the account or not.
+     */
+    public function setSettleAccount($settleAccount)
+    {
+        // Allow tre/false/null for convenience.
+        if ($settleAccount === true) {
+            $settleAccount = static::SETTLE_ACCOUNT_YES;
+        } elseif ($settleAccount === false) {
+            $settleAccount = static::SETTLE_ACCOUNT_NO;
+        } elseif (!isset($settleAccount)) {
+            $settleAccount = static::SETTLE_ACCOUNT_AUTO;
+        }
+
+        if (
+            $settleAccount != static::SETTLE_ACCOUNT_YES
+            && $settleAccount != static::SETTLE_ACCOUNT_NO
+            && $settleAccount != static::SETTLE_ACCOUNT_AUTO
+        ) {
+            throw new InvalidRequestException('Invalid value for settleAccount.');
+        }
+
+        return $this->setParameter('settleAccount', $settleAccount);
+    }
+
+    public function getSettleAccount()
+    {
+        return $this->getParameter('settleAccount');
+    }
 }

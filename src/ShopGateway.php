@@ -228,15 +228,15 @@ class ShopGateway extends AbstractGateway
         return $this->createRequest('\Omnipay\Payone\Message\ShopCompleteTxnStatusServerRequest', $parameters);
     }
 
-// Below: TODO
-
     /**
      * For handling a void action.
      */
-    public function DISABLED_void(array $parameters = array())
+    public function void(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Payone\Message\ShopVoidRequest', $parameters);
     }
+
+// Below: TODO
 
     /**
      * For handling a refund action.
@@ -244,14 +244,6 @@ class ShopGateway extends AbstractGateway
     public function DISABLED_refund(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Payone\Message\ShopRefundRequest', $parameters);
-    }
-
-    /**
-     * For handling a createCard action.
-     */
-    public function DISABLED_createCard(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopCreateCardRequest', $parameters);
     }
 
     /**

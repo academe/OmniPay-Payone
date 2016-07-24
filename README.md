@@ -136,6 +136,8 @@ $gateway->setSubAccountId(56789);
 $gateway->setTestMode(true);
 // Default language is "en" and determines the language of forms and error messages.
 $gateway->setOLanguage("de");
+// Currency as ISO 4217 three-character code
+$gateway->setCurrency('EUR');
 ~~~
 
 ### Server API Authorize Payment
@@ -150,9 +152,7 @@ $request = $gateway->authorize([
     'transactionId' => 'ABC123',
     // Amount as decimal.
     'amount' => 0.00,
-    // Currency as ISO 4217 three-character code
-    'currency' => 'EUR',
-    // Pre-shared secret key used for hashing.
+    // Pre-shared secret key used for hashing and authentication.
     'portalKey' => 'Ab12Cd34Ef56Gh78',
     // Card and personal details.
     'card' => $card,
@@ -203,7 +203,7 @@ Also to note about the card data is that countries must be supplied as ISO 3166 
     'billingCountry' => 'US',
 ~~~
 
-and states must be supplied as ISO 3166-2 codes (various formats, depending on the country):
+and states must be supplied as ISO 3166-2 sub-division codes (various formats, depending on the country):
 
 ~~~php
     'billingCountry' => 'US',
@@ -229,6 +229,62 @@ if (!$response->isSuccessful()) {
 }
 ~~~
 
+### Server API Purchase
+
+PAYONE calls this "authorization". It authoprizes and captures a payment immediately.
+
+It is used and responses in the same way as `authorize`. The request message is created:
+
+~~~php
+$request = $gateway->purchase([...]);
+~~~
+
+### Server API Capture
+
+Once a payment has been authorised, it may be captured. This is done using this minimal message:
+
+~~~php
+$request = $gateway->capture([
+    // The reference for the original authorize transaction.
+    'transactionReference' => '123456789',
+    // Amount as decimal.
+    'amount' => 1.23,
+    // Pre-shared secret key used for authentication, if not already set on $gateway.
+    'portalKey' => 'Ab12Cd34Ef56Gh78',
+]);
+~~~
+
+That will capture the amount specified and settle the account. If you want to leave the
+account open for capturing the total in multiple stages, then specify for the account to
+be left unsettled:
+
+~~~php
+    'sedquenceNumber' => $sequence,
+    'settleAccount' => false,
+~~~
+
+The sequence number starts at 1 for the first capture, and must be incremented for each
+subsequent capture.
+
+### Server API Void
+
+To void an authorized payment:
+
+~~~php
+$request = $gateway->void([
+    // The reference for the original authorize transaction.
+    'transactionReference' => '123456789',
+    // Amount as decimal.
+    'amount' => 1.23,
+    // Pre-shared secret key used for authentication, if not already set on $gateway.
+    'portalKey' => 'Ab12Cd34Ef56Gh78',
+]);
+$rssponse = $request->send();
+~~~
+
+
+
+
 ======
 
 ## Development Notes
@@ -240,10 +296,7 @@ Some development notes yet to be incorporated into the code or documentation:
 * The 3D Secure process needs to be fully implemnented.
 * When sending 3D Secure details, do we need to leave off the personal details or resend everything again?
 * The country is ISO 3166
-* The state is ISO 3166-2 and only for countries: US, CA, CN, JP, MX, BR, AR, ID, TH, IN
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
-* The "Access" API is not supported at all yet, with some share transaction types and some unique to that API, e.g. customer,
-  access, contract and invoice management.
 * The PAYONE server may send transaction status messages to the merchant server (from 185.60.20.0/24) for ALL transactions.
   * It would be nice to have a handler for incoming messages. It is quite a long and flexible message.
   * It needs a TSOK response to stop it repeating every six hours. This response is different for different interface types, e.g. SSOK.
@@ -252,9 +305,8 @@ Some development notes yet to be incorporated into the code or documentation:
   to include them.
   * Some of these messages seem to include credit card numbers, which does not seem right.
   * We need to handle these to find out what happens to PENDING transactions.
-* The "param" parameter looks like a custom field tat can be used for details like invoice ID. We should support it.
+* The "param" parameter looks like a custom field that can be used for details like invoice ID. We should support it.
 * Other gateway types exist: iframe, "classic" (remote redirect?), JavaScript, one-click purchasing.
-* A basket is supported with array parameters.
 
 ## Hosted iframe Mode
 

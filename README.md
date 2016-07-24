@@ -449,9 +449,9 @@ echo '<form action="' . $response->getRedirectUrl() . '" method="POST" target="t
 foreach($response->getData() as $name => $value) {
     echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
 }
-echo "</form>";
+echo '</form>';
 
-echo "<iframe name="target-iframe"></iframe>";
+echo '<iframe name="target-iframe" width="400" height="650"></iframe>';
 ~~~
 
 After the user has completed their details on the PAYONE site, a notification of the result
@@ -463,6 +463,13 @@ transaction details must be retained in the session.
 ======
 
 ## Development Notes
+
+Two big things that appear to not work as I understand it in the documentation:
+
+* 3D Secure - there is no simple map of the process.
+* Frontend forms - trying to pre-populate them with names and address fields just results in a "no data here" error.
+  This is the same error we get if you don't provide at least one cart item, which also seems not to be mentioned
+  in the docs. So I suspect I may be missing something here.
 
 Some development notes yet to be incorporated into the code or documentation:
 
@@ -482,6 +489,8 @@ This JS includes "classic" client-API mode functions supported by "AJAX mode" an
 config.cardtype defines available card types (from list in package)
 
 See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.
+
+TODO: override success/failure/cancel URLs?
 
 URLs
 

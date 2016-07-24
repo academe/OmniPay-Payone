@@ -79,7 +79,17 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
             return $this->data;
         }
 
-        return $this->data = $this->httpRequest->request->all();
+        $data = $this->httpRequest->request->all();
+
+        if ($this->getEncoding() == ShopGateway::ENCODING_UTF8) {
+            // We want UTF-8 back, so the ISO-8859 needs to be converted.
+
+            array_walk($data, function(&$item) {
+                $item = utf8_encode($item);
+            });
+        }
+
+        return $this->data = $data;
     }
 
     /**
@@ -107,11 +117,6 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     {
         $data = $this->getData();
         $value = array_key_exists($name, $data) ? $data[$name] : $default;
-
-        if ($this->getEncoding() == ShopGateway::ENCODING_UTF8) {
-            // We want UTF-8 back, so the ISO-8859 needs to be converted.
-            // TODO...maybe this should be moved to getData() so the whole lot is done at once?
-        }
 
         return $value;
     }

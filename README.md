@@ -282,6 +282,7 @@ $request = $gateway->void([
 $rssponse = $request->send();
 ~~~
 
+The `void` method will response with a `ShopCaptureResponse` response when sent to ONEPAY.
 
 
 

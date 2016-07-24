@@ -3,8 +3,9 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Void Request
-*/
+ * PAYONE Shop Void Request.
+ * Returns a ShopCaptureResponse on sending.
+ */
 
 class ShopVoidRequest extends ShopCaptureRequest
 {

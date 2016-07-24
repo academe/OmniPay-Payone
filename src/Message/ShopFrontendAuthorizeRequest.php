@@ -23,6 +23,16 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
     const ENDPOINT_IFRAME = 'https://frontend.pay1.de/frontend/v2/';
 
     /**
+     * Permitted values for targetWindow.
+     */
+    const TARGET_WINDOW_WINDOW  = 'window';
+    const TARGET_WINDOW_OPENER  = 'opener';
+    const TARGET_WINDOW_TOP     = 'top';
+    const TARGET_WINDOW_PARENT  = 'parent';
+    const TARGET_WINDOW_BLANK   = 'blank';
+    const TARGET_WINDOW_SELF    = 'self';
+
+    /**
      * Default values for the auto-created Item if none are supplied.
      */
     protected $defaultItemId = '000000';
@@ -105,8 +115,16 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['display_name'] = $this->getDisplayName();
         }
 
+        if ($this->getDisplayAddress()) {
+            $data['display_address'] = $this->getDisplayAddress();
+        }
+
         if ($this->getInvoiceId()) {
             $data['invoiceid'] = $this->getInvoiceId();
+        }
+
+        if ($this->getTargetWindow()) {
+            $data['targetwindow'] = $this->getTargetWindow();
         }
 
         // Create the hash.
@@ -184,6 +202,42 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
     public function getDisplayName()
     {
         return $this->getParameter('displayName');
+    }
+
+    /**
+     * Indicates whether to display the address fields in the
+     * hosted form.
+     * Values are "yes" and "no".
+     */
+    public function setDisplayAddress($value)
+    {
+        if ($value === true) {
+            $value = 'yes';
+        } elseif ($value === false) {
+            $value = 'no';
+        }
+
+        $this->setParameter('displayAddress', $value);
+    }
+
+    public function getDisplayAddress()
+    {
+        return $this->getParameter('displayAddress');
+    }
+
+    /**
+     * The target window for breaking out of the iframe at the end.
+     * See constants static::TARGET_WINDOW_* for permitted values.
+     * Defaults to 'window'.
+     */
+    public function setTargetWindow($value)
+    {
+        $this->setParameter('targetWindow', $value);
+    }
+
+    public function getTargetWindow()
+    {
+        return $this->getParameter('targetWindow');
     }
 
     /**

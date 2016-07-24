@@ -85,7 +85,9 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
             // We want UTF-8 back, so the ISO-8859 needs to be converted.
 
             array_walk($data, function(&$item) {
-                $item = utf8_encode($item);
+                if (!empty($item)) {
+                    $item = utf8_encode($item);
+                }
             });
         }
 

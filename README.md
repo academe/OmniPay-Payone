@@ -383,6 +383,82 @@ CHECKME: it is not yet enturely clear how 3D Secure flows in this gateway when u
 Server API methods only, so it may turn out some additional "complete" handling is needed
 for that when more is known.
 
+## Front End Authorize
+
+The Front End API methods are encapsulated into a separate gateway class:
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_ShopFrontend');
+
+// Merchant Portal ID
+$gateway->setPortalId(1234567);
+// Sub-Acount ID
+$gateway->setSubAccountId(56789);
+// True to use test mode.
+$gateway->setTestMode(true);
+// Default language is "en" and determines the language of forms and error messages.
+$gateway->setOLanguage("de");
+// Currency as ISO 4217 three-character code
+$gateway->setCurrency('EUR');
+// The pre-shared secret, used for hashing.
+$gateway->setPortalKey('Ab12Cd34Ef56Gh78');
+~~~
+
+Sending an authorization involves setting up the request message:
+
+~~~php
+$transactionId = {merchant-site-transaction-ID}
+
+$request = $gateway->authorize([
+    'transactionId' => $transactionId,
+    'amount' => 3.99,
+    'accessMethod' => 'iframe',
+    'items' => $items,
+]);
+~~~
+
+The `accessMethod` will be `"classic"` or `"iframe"`. The `items` are optional, but if you
+do not supply at least one item, then a dummy item will be created for you; the cart is
+mandatory for the Frontend API, unlike the Server API.
+
+The response message (from OmniPay) for performing the next action is:
+
+~~~php
+$response = $request->send();
+~~~
+
+The response will be a redirect response. For the `classic` method it will be a GET response.
+You can retrieve the GET URL and redirect in your application, or leave OmniPay to do the redirect:
+
+~~~php
+// Get the URL.
+$url = $response->getRedirectUrl();
+
+// Just do the redirect.
+$response->redirect();
+~~~
+
+For the `iframe` method the default redireect will be POST. Again, you can just let OmnoPay do the
+POST redirect, but you will probably want to build your own form and `target` it at an iframe
+in the page. The two things you need to build the form is the target URL, and the form items.
+The form items are supplied as name/value pairs.
+
+~~~php
+// This form needs to be set to auto-submit.
+echo '<form action="' . $response->getRedirectUrl() . '" method="POST" target="target-iframe">';
+foreach($response->getData() as $name => $value) {
+    echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+}
+echo "</form>";
+
+echo "<iframe name="target-iframe"></iframe>";
+~~~
+
+After the user has completed their details on the PAYONE site, a notification of the result
+will be sent back to your merchant site, and then the user will be returned to either the 
+"success" page or the "failure" page. No data will be carried with that redirect, so the
+transaction details must be retained in the session.
+
 
 ======
 
@@ -390,13 +466,9 @@ for that when more is known.
 
 Some development notes yet to be incorporated into the code or documentation:
 
-* The PAYONE Platform and its connected systems are designed for IP addresses Version 4.
-* IP ranges: 213.178.72.196, 213.178.72.197, 217.70.200.0/24, 185.60.20.0/24
 * The 3D Secure process needs to be fully implemnented.
 * When sending 3D Secure details, do we need to leave off the personal details or resend everything again?
-* The country is ISO 3166
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
-* Notifications are also always ISO-8859-1 encoded, which is a little crazy, but optional conversion would be good.
 * The response to notifications: "SSOK" for SessionStatus Access portal version and "TSOK" for the TransactionStatus
   Shop portal version.
 * Other gateway types exist: iframe, "classic" (remote redirect?), JavaScript, one-click purchasing.

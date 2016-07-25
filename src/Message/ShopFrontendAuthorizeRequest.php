@@ -25,6 +25,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
 
     /**
      * Permitted values for targetWindow.
+     * This is for breaking out of the iframe.
      */
     const TARGET_WINDOW_WINDOW  = 'window';
     const TARGET_WINDOW_OPENER  = 'opener';
@@ -70,13 +71,15 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
         if (empty($items) || $items->count() == 0) {
             // No items in the basket, so we will have to make
             // one up.
+            // The basket MUST add up to the total payment amount, so
+            // be aware of that.
 
             $item = new ExtendItem([
                 'id' => $this->defaultItemId,
                 'price' => $this->getAmountInteger(),
                 'quantity' => 1,
                 'name' => $this->defaultItemName,
-                'vat' => 0,
+                'vat' => null,
             ]);
 
             $items = new ItemBag;

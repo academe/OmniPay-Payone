@@ -7,6 +7,7 @@ namespace Omnipay\Payone\Message;
  */
 
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
+use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Payone\ShopGateway;
 use Omnipay\Common\CreditCard;
@@ -369,15 +370,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         foreach($this->getItems() as $item) {
             $item_count++;
 
-            if (method_exists($item, 'getId')) {
+            if ($item instanceof ExtendItemInterface) {
                 $id = $item->getId();
-            } else {
-                $id = $this->defaultItemId;
-            }
-
-            if (method_exists($item, 'getVat')) {
                 $vat = $item->getVat();
             } else {
+                $id = $this->defaultItemId;
                 $vat = 0;
             }
 

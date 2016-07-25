@@ -22,6 +22,7 @@ class Item extends CommonItem
     /**
      * Set the item VAT.
      * See notes on PAYONE site for usage (values <100 and >100 have different meanings).
+     * value < 100 = percent; value > 99 = basis points
      */
     public function setVat($value)
     {
@@ -29,8 +30,8 @@ class Item extends CommonItem
     }
 
    /**
-     * {@inheritDoc}
-     */
+    * The stock item ID.
+    */
     public function getId()
     {
         return $this->getParameter('id');
@@ -38,6 +39,7 @@ class Item extends CommonItem
 
     /**
      * Set the item stock ID
+     * Permitted characters: 0-9 a-z A-Z ()[]{} +-_#/:
      */
     public function setId($value)
     {

@@ -137,6 +137,19 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
 
         $data['hash'] = $this->hashString(implode('', $sorted), $this->getPortalKey());
 
+        // Some fields are added after the hash.
+
+        if ($card = $this->getCard()) {
+            $data['firstname'] = $card->getFirstName();
+            $data['lastname'] = $card->getLastName();
+            $data['company'] = $card->getCompany();
+            $data['street'] = $card->getBillingAddress1();
+            $data['zip'] = $card->getBillingPostcode();
+            $data['city'] = $card->getBillingCity();
+            $data['country'] = $card->getBillingCountry();
+            $data['email'] = $card->getEmail();
+        }
+
         return $data;
     }
 

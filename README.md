@@ -423,6 +423,11 @@ $request = $gateway->authorize([
     'accessMethod' => 'iframe',
     'redirectMethod' => 'POST',
     'items' => $items,
+    'card' => [
+        'firstName' => 'Firstname',
+        'billingAddress1' => 'Street Name',
+        ...
+    ]
 ]);
 ~~~
 
@@ -432,6 +437,11 @@ The `redirectMethod` will be `"GET"` or `"POST"`, defaulting to "POST".
 The `items` are optional, but if you
 do not supply at least one item, then a dummy item will be created for you; the cart is
 mandatory for the Frontend API, unlike the Server API.
+
+The `card` billing details can be used to pre-populate the payment form.
+If the personal details have been checked and known to be valid (another API is able to
+do that) then the name and address fields can be hidden on the payment form using
+`'showName' => false` and `'showAddress' => false`.
 
 The response message (from OmniPay) for performing the next action is:
 
@@ -493,15 +503,6 @@ Works the same as Front End Authorize, but will require a separate Server API Ca
 
 ## Development Notes
 
-Two big things that appear to not work as I understand it in the documentation:
-
-* 3D Secure - there is no simple map of the process.
-* Frontend forms - trying to pre-populate them with names and address fields just results in a "no data here" error.
-  This is the same error we get if you don't provide at least one cart item, which also seems not to be mentioned
-  in the docs. So I suspect I may be missing something here.
-  It is possible to disable the the name ane company name fields on the CVC form using "display_name"="no", so there
-  *must* be some way to supply the names.
-
 Some development notes yet to be incorporated into the code or documentation:
 
 * The 3D Secure process needs to be fully implemnented.
@@ -520,6 +521,3 @@ This JS includes "classic" client-API mode functions supported by "AJAX mode" an
 config.cardtype defines available card types (from list in package)
 
 See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.
-
-TODO: override success/failure/cancel URLs?
-

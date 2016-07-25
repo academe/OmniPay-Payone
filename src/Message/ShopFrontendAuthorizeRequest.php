@@ -7,6 +7,7 @@ namespace Omnipay\Payone\Message;
  * the PAYONE site).
  */
 
+use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Payone\ShopFrontendGateway;
 use Omnipay\Common\ItemBag;
@@ -87,15 +88,11 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
         foreach($items as $item) {
             $item_count++;
 
-            if (method_exists($item, 'getId')) {
+            if ($item instanceof ExtendItemInterface) {
                 $id = $item->getId();
-            } else {
-                $id = $this->defaultItemId;
-            }
-
-            if (method_exists($item, 'getVat')) {
                 $vat = $item->getVat();
             } else {
+                $id = $this->defaultItemId;
                 $vat = 0;
             }
 

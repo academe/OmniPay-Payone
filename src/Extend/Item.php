@@ -9,7 +9,7 @@ namespace Omnipay\Payone\Extend;
 
 use Omnipay\Common\Item as CommonItem;
 
-class Item extends CommonItem
+class Item extends CommonItem implements ItemInterface
 {
    /**
      * {@inheritDoc}

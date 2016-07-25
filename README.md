@@ -379,7 +379,7 @@ List of $server_request data methods:
 * getReceivable() - decimal in major currency units
 * getReceivableInteger() - integer in minor currency units
 
-(TODO: Additional fields to be added. TODO: Encoding to be taken into account.)
+(TODO: Additional fields to be added, e.g. shipping details.)
 
 ### completeAuthorize and completePurchase Methods
 
@@ -510,7 +510,7 @@ Some development notes yet to be incorporated into the code or documentation:
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
 * The response to notifications: "SSOK" for SessionStatus Access portal version and "TSOK" for the TransactionStatus
   Shop portal version.
-* Other gateway types exist: iframe, "classic" (remote redirect?), JavaScript, one-click purchasing.
+* Other gateway types exist: JavaScript, one-click purchasing.
 
 ## Hosted iframe Mode
 

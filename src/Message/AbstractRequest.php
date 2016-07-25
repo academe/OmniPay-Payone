@@ -367,27 +367,29 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // Each item must be contingously numbered, starting from 1.
         $item_count = 0;
 
-        foreach($this->getItems() as $item) {
-            $item_count++;
+        if (!empty($this->getItems())) {
+            foreach($this->getItems() as $item) {
+                $item_count++;
 
-            if ($item instanceof ExtendItemInterface) {
-                $id = $item->getId();
-                $vat = $item->getVat();
-            } else {
-                $id = $this->defaultItemId;
-                $vat = 0;
+                if ($item instanceof ExtendItemInterface) {
+                    $id = $item->getId();
+                    $vat = $item->getVat();
+                } else {
+                    $id = $this->defaultItemId;
+                    $vat = 0;
+                }
+
+                // We are ASSUMING here that the price is in minor units.
+                // Since there is no validation or parsing of the Item
+                // price, we really cannot know for sure whether it contains
+                // €100 or 100c
+
+                $data['id['.$item_count.']'] = $id;
+                $data['pr['.$item_count.']'] = $item->getPrice();
+                $data['no['.$item_count.']'] = $item->getQuantity();
+                $data['de['.$item_count.']'] = $item->getName();
+                $data['va['.$item_count.']'] = $vat;
             }
-
-            // We are ASSUMING here that the price is in minor units.
-            // Since there is no validation or parsing of the Item
-            // price, we really cannot know for sure whether it contains
-            // €100 or 100c
-
-            $data['id['.$item_count.']'] = $id;
-            $data['pr['.$item_count.']'] = $item->getPrice();
-            $data['no['.$item_count.']'] = $item->getQuantity();
-            $data['de['.$item_count.']'] = $item->getName();
-            $data['va['.$item_count.']'] = $vat;
         }
 
         return $data;

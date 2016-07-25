@@ -146,6 +146,29 @@ class ShopGatewayTest extends GatewayTestCase
         }
     }
 
+    /**
+     * Override parent test.
+     * See here for details, and remove when fixed:
+     * https://github.com/thephpleague/omnipay-tests/issues/10
+     */
+    public function testVoidParameters()
+    {
+        if ($this->gateway->supportsVoid()) {
+            foreach ($this->gateway->getDefaultParameters() as $key => $default) {
+                // set property on gateway
+                $getter = 'get'.ucfirst($key);
+                $setter = 'set'.ucfirst($key);
+                $value = $this->makeUnique($default);
+                $this->gateway->$setter($value);
+
+                // request should have matching property, with correct value
+                $request = $this->gateway->void();
+                $this->assertSame($value, $request->$getter());
+            }
+        }
+    }
+
+
     public function testAuthorizeSuccess()
     {
         // TransactionReference = 196569999

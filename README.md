@@ -328,7 +328,7 @@ $server_response = $server_request->send();
 // Your application will exit on the next command by default.
 // You can prevent that by passiong in `false` as a single parameter, but
 // do make sure no further stdout is issued.
-$server_response->acceptNotification();
+$server_response->acknowledge(); // or send()
 ~~~
 
 List of $server_request data methods:

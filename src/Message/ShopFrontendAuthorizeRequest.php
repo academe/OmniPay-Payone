@@ -10,6 +10,7 @@ namespace Omnipay\Payone\Message;
 use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Payone\AbstractShopGateway;
+use Omnipay\Common\Currency;
 use Omnipay\Common\ItemBag;
 
 class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
@@ -91,12 +92,16 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
         foreach($items as $item) {
             $item_count++;
 
+            $currency_digits = Currency::find($this->getCurrency())->getDecimals();
+
             if ($item instanceof ExtendItemInterface) {
                 $id = $item->getId();
                 $vat = $item->getVat();
+                $price = $item->getPriceInteger($currency_digits);
             } else {
                 $id = $this->defaultItemId;
-                $vat = 0;
+                $vat = null;
+                $price = ExtendItem::convertPriceInteger($item->getPrice(), $currency_digits);
             }
 
             // We are ASSUMING here that the price is in minor units.
@@ -105,7 +110,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             // €100 or 100c
 
             $data['id['.$item_count.']'] = $id;
-            $data['pr['.$item_count.']'] = $item->getPrice();
+            $data['pr['.$item_count.']'] = $price;
             $data['no['.$item_count.']'] = $item->getQuantity();
             $data['de['.$item_count.']'] = $item->getName();
             $data['va['.$item_count.']'] = $vat;

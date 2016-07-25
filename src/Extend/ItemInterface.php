@@ -33,4 +33,9 @@ interface ItemInterface extends CommonItemInterface
     * The stock item ID.
     */
     public function getId();
+
+    /**
+     * Get the price in minor units, making some assumptions.
+     */
+    public function getPriceInteger();
 }

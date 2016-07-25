@@ -20,9 +20,7 @@ class Item extends CommonItem implements ItemInterface
     }
 
     /**
-     * Set the item VAT.
-     * See notes on PAYONE site for usage (values <100 and >100 have different meanings).
-     * value < 100 = percent; value > 99 = basis points
+     * {@inheritDoc}
      */
     public function setVat($value)
     {
@@ -30,19 +28,54 @@ class Item extends CommonItem implements ItemInterface
     }
 
    /**
-    * The stock item ID.
-    */
+     * {@inheritDoc}
+        */
     public function getId()
     {
         return $this->getParameter('id');
     }
 
     /**
-     * Set the item stock ID
-     * Permitted characters: 0-9 a-z A-Z ()[]{} +-_#/:
+     * {@inheritDoc}
      */
     public function setId($value)
     {
         return $this->setParameter('id', $value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPriceInteger($currency_digits = 2)
+    {
+        return static::convertPriceInteger($this->getPrice(), $currency_digits);
+    }
+
+    /**
+     * Return a price as minor unit integer, naking some assumptioms:
+     * - If $price is an integer, assume it already is minor units.
+     * - If a float, then assume it is major units.
+     * - If a string with a decimal point in, then assume it is major units.
+     */
+    public static function convertPriceInteger($price, $currency_digits = 2)
+    {
+        if (is_string($price) && strpos($price, '.') !== false) {
+            $price = (float)$price;
+        }
+
+        if (is_string($price) && strpos($price, '.') === false) {
+            $price = (integer)$price;
+        }
+
+        if (is_integer($price)) {
+            return $price;
+        }
+
+        if (is_float($price)) {
+            return $price * pow(10, $currency_digits);
+        }
+
+        // Don't know what to do with it.
+        return $price;
     }
 }

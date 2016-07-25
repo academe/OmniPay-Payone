@@ -3,7 +3,7 @@
 namespace Omnipay\Payone;
 
 /**
- * ONEPAY Shop (single payments) driver for Omnipay
+ * ONEPAY Shop (single payments) Frontend (hosted form redirect or iframe) driver for Omnipay
  */
 
 use Omnipay\Common\Exception\InvalidRequestException;

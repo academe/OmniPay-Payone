@@ -9,7 +9,7 @@ namespace Omnipay\Payone\Message;
 
 use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Payone\Extend\Item as ExtendItem;
-use Omnipay\Payone\ShopFrontendGateway;
+use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\ItemBag;
 
 class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
@@ -52,8 +52,8 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             'portalid' => $this->getPortalId(),
             'aid' => $this->getSubAccountId(),
             'mode' => $this->getTestMode()
-                ? ShopFrontendGateway::MODE_TEST
-                : ShopFrontendGateway::MODE_LIVE,
+                ? AbstractShopGateway::MODE_TEST
+                : AbstractShopGateway::MODE_LIVE,
             'request' => $this->getRequestCode(),
             'clearingtype' => $this->getClearingType(),
             'reference' => $this->getTransactionId(),

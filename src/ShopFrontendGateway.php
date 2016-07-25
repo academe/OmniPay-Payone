@@ -7,9 +7,8 @@ namespace Omnipay\Payone;
  */
 
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Common\AbstractGateway;
 
-class ShopFrontendGateway extends ShopGateway
+class ShopFrontendGateway extends AbstractShopGateway
 {
     protected $endpoint = 'https://secure.pay1.de/frontend/';
 

@@ -9,7 +9,7 @@ namespace Omnipay\Payone\Message;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\NotificationInterface;
-use Omnipay\Payone\ShopGateway;
+use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\Currency;
 use DateTime;
 
@@ -81,7 +81,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
 
         $data = $this->httpRequest->request->all();
 
-        if ($this->getEncoding() == ShopGateway::ENCODING_UTF8) {
+        if ($this->getEncoding() == AbstractShopGateway::ENCODING_UTF8) {
             // We want UTF-8 back, so the ISO-8859 needs to be converted.
 
             array_walk($data, function(&$item) {
@@ -156,6 +156,10 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         return $this->getValue('accesscode');
     }
 
+    /**
+     * Only relevant when a transaction is being notified, so can often be blank.
+     * e.g. will not be set for a "capture" notification.
+     */
     public function getTxStatus()
     {
         return $this->getValue('transaction_status');
@@ -484,11 +488,11 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
      */
     public function setEncoding($encoding)
     {
-        if ($encoding != ShopGateway::ENCODING_UTF8 && $encoding != ShopGateway::ENCODING_ISO8859) {
+        if ($encoding != AbstractShopGateway::ENCODING_UTF8 && $encoding != AbstractShopGateway::ENCODING_ISO8859) {
             throw new InvalidRequestException(sprintf(
                 'Encoding invalid. Must be "%s" or "%s".',
-                ShopGateway::ENCODING_UTF8,
-                ShopGateway::ENCODING_ISO8859
+                AbstractShopGateway::ENCODING_UTF8,
+                AbstractShopGateway::ENCODING_ISO8859
             ));
         }
 
@@ -498,7 +502,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     public function getEncoding()
     {
         // Default to UTF-8 as that is what most merchant sites will be using these days.
-        return $this->getParameter('encoding') ?: ShopGateway::ENCODING_UTF8;
+        return $this->getParameter('encoding') ?: AbstractShopGateway::ENCODING_UTF8;
     }
 
     // TODO: delivery data (name, address)

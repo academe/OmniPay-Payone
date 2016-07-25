@@ -387,7 +387,7 @@ Although the Frontend purchase and authorize take the user offsite (either in fu
 mode or in an iframe), no data is returned with the user coming back to the site.
 as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
 
-CHECKME: it is not yet enturely clear how 3D Secure flows in this gateway when using the
+TODO: it is not yet entirely clear how 3D Secure flows in this gateway when using the
 Server API methods only, so it may turn out some additional "complete" handling is needed
 for that when more is known.
 

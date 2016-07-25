@@ -103,9 +103,14 @@ $lines[] = new \Omnipay\Payone\Extend\Item([
 ]);
 ~~~
 
-The `price` is supplied in *minor currency units* as an integer. These are passed as supplied direct to the gateway.
-Note that OmniPay does not specify, parse nor validate the price units of an Item, so we make the decision
-on how to handle it here. *This may change if the units can be clarified.*
+The `price` can be supplied in *minor currency units* or *major currency units*.
+The following `Item` prices are equivalent in dollars or Euros (currencies with
+two decimal places):
+
+* 123
+* 1.23
+* "123"
+* "1.23"
 
 The items are then added to the `ItemBag` in the normal way:
 
@@ -113,11 +118,13 @@ The items are then added to the `ItemBag` in the normal way:
 $items = new \Omnipay\Common\ItemBag($lines);
 ~~~
 
-It does not appear tha the item prices are validated on the PAYONE servers. Some gateways will reject a payment
-if the cart items do not exactly add up to the order total. PAYONE appears to treat these items as information only.
+The total price of the `ItemBag` does not appear to need to add up to the order total
+for the `Shop Server API` methods. It MUST however sum to the order total for the `Shop Frontend`
+methods.
 
-If you do not use the extended `Item` then default values will be substituted (`"000000"` for the `id` and `0` for the
-`vat` figure).
+If you do not use the extended `Item` then default values will be substituted (`"000000"` for the `id` and `null` for the
+`vat` figure). If you do not supply any items at all for the `Shop Frontend` methods, then a
+default item for the full price will be created automatically.
 
 ## The Shop API Gateway
 

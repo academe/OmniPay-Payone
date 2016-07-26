@@ -37,9 +37,11 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
 
     /**
      * Default values for the auto-created Item if none are supplied.
+     * If you don't want to use these defaults, then make sure you always
+     * pass an ItemBag into the transaction.
      */
     protected $defaultItemId = '000000';
-    protected $defaultItemName = 'Items';
+    protected $defaultItemName = 'Payment';
 
     /**
      * The data is used to generate the POST form to send the user
@@ -61,6 +63,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             'reference' => $this->getTransactionId(),
             'amount' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),
+            'encoding' => $this->getEncoding(),
         ];
 
         // Add basket contents next.
@@ -103,11 +106,6 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
                 $vat = null;
                 $price = ExtendItem::convertPriceInteger($item->getPrice(), $currency_digits);
             }
-
-            // We are ASSUMING here that the price is in minor units.
-            // Since there is no validation or parsing of the Item
-            // price, we really cannot know for sure whether it contains
-            // €100 or 100c
 
             $data['id['.$item_count.']'] = $id;
             $data['pr['.$item_count.']'] = $price;

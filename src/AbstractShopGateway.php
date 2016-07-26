@@ -20,7 +20,7 @@ abstract class AbstractShopGateway extends AbstractGateway
     /**
      * API encoding.
      */
-    const ENCODING_ISO8859 = 'ISO 8859-1';
+    const ENCODING_ISO8859 = 'ISO-8859-1';
     const ENCODING_UTF8 = 'UTF-8';
 
     /**

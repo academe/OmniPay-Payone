@@ -146,14 +146,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
         }
 
         // Create the hash.
-        // First we sort the parameters into alphabetic name order.
-
-        $sorted = $data;
-        ksort($sorted);
-
-        // Then concatenate the values and add the hash.
-
-        $data['hash'] = $this->hashString(implode('', $sorted), $this->getPortalKey());
+        $data['hash'] = $this->doHash($data, $this->getPortalKey());
 
         // Some fields are added after the hash.
 

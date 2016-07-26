@@ -66,21 +66,32 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     );
 
     /**
-     * Hash a string using the chosen method.
+     * Hash an array using the chosen method.
      */
-    protected function hashString($string, $key = '')
+    protected function doHash($data, $key = '')
     {
+        // Sort the data alphanbetically by key.
+        ksort($data);
+
         // The key is concatenated to the string for md5.
         if ($this->getHashMethod() == ShopGateway::HASH_MD5) {
-            return strtolower(md5($string . $key));
+            return strtolower(md5(implode('', $data) . $key));
         }
 
         // The key is a separate parameter for SHA2 384
         if ($this->getHashMethod() == ShopGateway::HASH_SHA2_384) {
-            return strtolower(hash_hmac('sha384', $string, $key));
+            return strtolower(hash_hmac('sha384', implode('', $data), $key));
         }
 
-        throw new InvalidRequestException('Unknown hashing method supplied.');
+        throw new InvalidRequestException('Unknown hashing method.');
+    }
+
+    /**
+     * Hash an string using the chosen method.
+     */
+    protected function hashString($data, $key = '')
+    {
+        return $this->doHash([$data], $key);
     }
 
     /**

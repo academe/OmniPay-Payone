@@ -130,6 +130,13 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['successurl'] = $this->getSuccessUrl();
         }
 
+        // The errorurl does NOT appear in the Frontend documentation, but does
+        // work and is implemented in other platform gateways.
+
+        if ($this->getErrorUrl()) {
+            $data['errorurl'] = $this->getErrorUrl();
+        }
+
         if ($this->getCancelUrl()) {
             $data['backurl'] = $this->getCancelUrl();
         }

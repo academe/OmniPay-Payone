@@ -126,6 +126,14 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['invoiceid'] = $this->getInvoiceId();
         }
 
+        if ($this->getSuccessUrl()) {
+            $data['successurl'] = $this->getSuccessUrl();
+        }
+
+        if ($this->getCancelUrl()) {
+            $data['backurl'] = $this->getCancelUrl();
+        }
+
         if ($this->getTargetWindow()) {
             $data['targetwindow'] = $this->getTargetWindow();
         }

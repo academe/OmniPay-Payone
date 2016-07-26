@@ -735,6 +735,24 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('ecommerceMode');
     }
 
+    /**
+     * An alternative way to set the 3D Secure mode.
+     */
+    public function set3dSecure($value)
+    {
+        if ((bool)$value === true) {
+            $this->setEcommerceMode(static::ECOMMERCE_MODE_3DSECURE);
+        }
+
+        if ((bool)$value === false) {
+            $this->setEcommerceMode(static::ECOMMERCE_MODE_INTERNET);
+        }
+    }
+    public function get3dSecure()
+    {
+        return $this->getEcommerceMode() == static::ECOMMERCE_MODE_3DSECURE;
+    }
+
     public function getRequestCode()
     {
         return $this->request_code;

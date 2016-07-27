@@ -47,7 +47,7 @@ And run composer to update your dependencies:
 
 The following gateways are provided by this package:
 
-* Payone_Shop
+* Payone_ShopServer
 * Payone_ShopFrontend
 
 For general usage instructions, please see the main [Omnipay](https://github.com/thephpleague/omnipay)
@@ -59,14 +59,14 @@ The [PAYONE API](https://www.payone.de/en/platform-integration/interfaces/) has 
 of interest to e-commerce:
 
 * **Server API** - for interacting directly with server without user intervention.
-* **Front end** - for delivering hosted credit card (CC) forms to the user.
+* **Frontend API** - for delivering hosted credit card (CC) forms to the user.
 * Client API - for interacting with a JavaScript front end.
 
 This package is interested in just the first two; Server API for capturing authorized payments and the Front end
 for setting up CC forms. You can also do authorisations and make payments using the Server API, so long as
 you are fully aware of the PCI implications.
 
-The Front end API also has a notification handler for receiving the payment results and captured user information
+The Server API also has a notification handler for receiving the payment results and captured user information
 from the PAYONE servers.
 
 ### Shop and Access API Versions
@@ -131,7 +131,7 @@ default item for the full price will be created automatically.
 Create a gateway object to access the Server API Shop version methods:
 
 ~~~php
-$gateway = Omnipay\Omnipay::create('Payone_Shop');
+$gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 
 // Merchant Account ID
 $gateway->setMerchantId(12345);
@@ -317,7 +317,7 @@ The notification Server Request (i.e. *incoming* request to your server) is capt
 `completeStatus`
 
 ~~~php
-$gateway = Omnipay\Omnipay::create('Payone_Shop');
+$gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 
 $server_request = $gateway->acceptNotification();
 

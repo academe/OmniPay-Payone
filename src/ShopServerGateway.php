@@ -8,11 +8,11 @@ namespace Omnipay\Payone;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 
-class ShopGateway extends AbstractShopGateway
+class ShopServerGateway extends AbstractShopGateway
 {
     public function getName()
     {
-        return 'PAYONE Shop API';
+        return 'PAYONE Shop Server';
     }
 
     /**

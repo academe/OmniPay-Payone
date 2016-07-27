@@ -494,7 +494,11 @@ transaction details must be retained in the session.
 
 Works the same as Front End Authorize, but will require a separate Server API Capture.
 
+# References
 
+* https://github.com/fjbender/simple-php-integration  
+  A write-up showing how the ONEPAY intergratino works.
+  Some great background information.
 
 
 

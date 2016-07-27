@@ -319,16 +319,24 @@ The notification Server Request (i.e. *incoming* request to your server) is capt
 ~~~php
 $gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 
+// The portal key must be provided.
+// This will be used to verify the hash sent with the transaction status notification.
+$gateway->setPortalKey('Ab12Cd34Ef56Gh78');
+
 $server_request = $gateway->acceptNotification();
 
 // The raw data sent is available:
 $data = $server_request->getData();
+
+// Provides the result of the hash verification.
+// If the hash is not verified then the data cannot be trusted.
+$server_request->isValid();
 ~~~
 
 Individual data items can also be extracted from the server request (see list below).
 
-Once the data is saved, respond to the remote gateway to indicate that you have received
-the notification:
+Once the data is saved to the local application, respond to the remote gateway to
+indicate that you have received the notification:
 
 ~~~php
 $server_response = $server_request->send();

@@ -14,12 +14,13 @@ class ShopTransactionStatusServerResponse extends OmnipayAbstractResponse
     protected $responseMessage = 'TSOK';
 
     /**
-     * This method is in the interface for the response message, but is really
-     * not much use when this is a ServerResponse.
+     * This method checks on the success of the hash verification on the
+     * status message from ONEPAY. It does not reflect on whether the
+     * transaction was authorised or not.
      */
     public function isSuccessful()
     {
-        return true;
+        return $this->request->isValid();
     }
 
     /**
@@ -28,7 +29,10 @@ class ShopTransactionStatusServerResponse extends OmnipayAbstractResponse
      */
     public function acknowledge($exit = true)
     {
-        echo $this->responseMessage . "\n";
+        // Only send the OK message if the hash has been successfuly verified.
+        if (isSuccessful()) {
+            echo $this->responseMessage . "\n";
+        }
 
         if ($exit) {
             exit;

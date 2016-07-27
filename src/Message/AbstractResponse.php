@@ -8,7 +8,6 @@ namespace Omnipay\Payone\Message;
 
 use Omnipay\Common\Message\AbstractResponse as OmnipayAbstractResponse;
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Payone\ShopGateway;
 use Omnipay\Omnipay;
 use Guzzle\Http\Url;
 

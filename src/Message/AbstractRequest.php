@@ -9,7 +9,7 @@ namespace Omnipay\Payone\Message;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Payone\ShopGateway;
+use Omnipay\Payone\ShopServerGateway;
 use Omnipay\Common\CreditCard;
 use Omnipay\Omnipay;
 use Guzzle\Http\Url;
@@ -74,12 +74,12 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         ksort($data);
 
         // The key is concatenated to the string for md5.
-        if ($this->getHashMethod() == ShopGateway::HASH_MD5) {
+        if ($this->getHashMethod() == ShopServerGateway::HASH_MD5) {
             return strtolower(md5(implode('', $data) . $key));
         }
 
         // The key is a separate parameter for SHA2 384
-        if ($this->getHashMethod() == ShopGateway::HASH_SHA2_384) {
+        if ($this->getHashMethod() == ShopServerGateway::HASH_SHA2_384) {
             return strtolower(hash_hmac('sha384', implode('', $data), $key));
         }
 
@@ -111,9 +111,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // Must be lower case.
         $data['key'] = $this->hashString($this->getPortalKey());
 
-        $data['api_version'] = ShopGateway::API_VERSION;
+        $data['api_version'] = ShopServerGateway::API_VERSION;
 
-        $data['mode'] = (bool)$this->getTestMode() ? ShopGateway::MODE_TEST : ShopGateway::MODE_LIVE;
+        $data['mode'] = (bool)$this->getTestMode() ? ShopServerGateway::MODE_TEST : ShopServerGateway::MODE_LIVE;
 
         $data['encoding'] = $this->getEncoding();
         $data['language'] = $this->getLanguage();
@@ -524,11 +524,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setEncoding($encoding)
     {
-        if ($encoding != ShopGateway::ENCODING_UTF8 && $encoding != ShopGateway::ENCODING_ISO8859) {
+        if ($encoding != ShopServerGateway::ENCODING_UTF8 && $encoding != ShopServerGateway::ENCODING_ISO8859) {
             throw new InvalidRequestException(sprintf(
                 'Encoding invalid. Must be "%s" or "%s".',
-                ShopGateway::ENCODING_UTF8,
-                ShopGateway::ENCODING_ISO8859
+                ShopServerGateway::ENCODING_UTF8,
+                ShopServerGateway::ENCODING_ISO8859
             ));
         }
 

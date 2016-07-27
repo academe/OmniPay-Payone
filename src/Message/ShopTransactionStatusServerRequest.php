@@ -113,6 +113,15 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
+     * Check the hash against the data.
+     * The hash is only md5 at this time, but may change to SHA2-384 at some future time.
+     */
+    public function isValid()
+    {
+        return $this->getKey() == hash('md5', $this->getPortalKey());
+    }
+
+    /**
      * Get a single data value from the ServerRequest data.
      */
     protected function getValue($name, $default = null)
@@ -124,9 +133,36 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
+     * The Portal Key is used to check the hash.
+     */
+    public function setPortalKey($portalKey)
+    {
+        return $this->setParameter('portalKey', $portalKey);
+    }
+
+    public function getPortalKey()
+    {
+        return $this->getParameter('portalKey');
+    }
+
+    /**
+     * The hash method to use in a number of places.
+     * The PAYONE account must be configured with the hash method to be used.
+     */
+    public function setHashMethod($hashMethod)
+    {
+        return $this->setParameter('hashMethod', $hashMethod);
+    }
+
+    public function getHashMethod()
+    {
+        return $this->getParameter('hashMethod');
+    }
+
+    /**
      * MD5 or SHA2-384
      */
-    public function getPaymentPortalKey()
+    public function getKey()
     {
         return $this->getValue('key');
     }

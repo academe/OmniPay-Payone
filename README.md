@@ -17,7 +17,7 @@ to your `composer.json` file:
 ```json
 {
     "require": {
-        "aimeos/omnipay-payone": "~2.0"
+        "academe/omnipay-payone": "~2.0"
     }
 }
 ```
@@ -27,7 +27,7 @@ While in development, it can be obtained from this repository:
 ```json
 {
     "require": {
-        "aimeos/omnipay-payone": "dev-master"
+        "academe/omnipay-payone": "dev-master"
     },
     "repositories": [
         {

@@ -1,5 +1,5 @@
 {
-    "name": "aimeos/omnipay-payone",
+    "name": "academe/omnipay-payone",
     "type": "library",
     "description": "PAYONE gateway for the Omnipay payment processing library",
     "keywords": [

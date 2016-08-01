@@ -541,6 +541,79 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         return $this->getParameter('encoding') ?: AbstractShopGateway::ENCODING_UTF8;
     }
 
-    // TODO: delivery data (name, address)
+    // Delivery data (name, address)
+
+    /**
+     * 
+     */
+    public function getShippingFirstName()
+    {
+        return $this->getValue('shipping_firstname');
+    }
+
+    /**
+     * 
+     */
+    public function getShippingLastName()
+    {
+        return $this->getValue('shipping_lastname');
+    }
+
+    /**
+     * 
+     */
+    public function getShippingCompany()
+    {
+        return $this->getValue('shipping_company');
+    }
+
+    /**
+     * Name built like cardholer name.
+     */
+    public function getShippingName()
+    {
+        return trim($this->getShippingFirstName() . ' ' . $this->getShippingLastName());
+    }
+
+    /**
+     * 
+     */
+    public function getShippingStreet()
+    {
+        return $this->getValue('shipping_street');
+    }
+
+    /**
+     * 
+     */
+    public function getShippingAddress1()
+    {
+        return $this->getShippingStreet();
+    }
+
+    /**
+     * 
+     */
+    public function getShippingCity()
+    {
+        return $this->getValue('shipping_city');
+    }
+
+    /**
+     * 
+     */
+    public function getShippingPostcode()
+    {
+        return $this->getValue('shipping_zip');
+    }
+
+    /**
+     * ISO 2-digit Code
+     */
+    public function getShippingCountry()
+    {
+        return $this->getValue('shipping_country');
+    }
+
     // TODO: payment process
 }

@@ -46,8 +46,6 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
     /**
      * The data is used to generate the POST form to send the user
      * off to the PAYONE credit card form.
-     * TODO: this is where we need to validate, to make sure we have all
-     * required fields present.
      */
     public function getData()
     {
@@ -55,6 +53,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
         $data = [
             'portalid' => $this->getPortalId(),
             'aid' => $this->getSubAccountId(),
+            'api_version' => AbstractShopGateway::API_VERSION,
             'mode' => $this->getTestMode()
                 ? AbstractShopGateway::MODE_TEST
                 : AbstractShopGateway::MODE_LIVE,
@@ -159,6 +158,10 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['city'] = $card->getBillingCity();
             $data['country'] = $card->getBillingCountry();
             $data['email'] = $card->getEmail();
+        }
+
+        if ($this->getLanguage()) {
+            $data['language'] = $this->getLanguage();
         }
 
         return $data;

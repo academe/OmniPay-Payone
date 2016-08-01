@@ -30,7 +30,7 @@ class ShopTransactionStatusServerResponse extends OmnipayAbstractResponse
     public function acknowledge($exit = true)
     {
         // Only send the OK message if the hash has been successfuly verified.
-        if (isSuccessful()) {
+        if ($this->isSuccessful()) {
             echo $this->responseMessage . "\n";
         }
 

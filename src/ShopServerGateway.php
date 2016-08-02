@@ -40,14 +40,6 @@ class ShopServerGateway extends AbstractShopGateway
     }
 
     /**
-     * Accept an incoming notification (a ServerRequest).
-     */
-    public function acceptNotification(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
-    }
-
-    /**
      * For handling a void action.
      */
     public function void(array $parameters = array())
@@ -55,23 +47,11 @@ class ShopServerGateway extends AbstractShopGateway
         return $this->createRequest('\Omnipay\Payone\Message\ShopVoidRequest', $parameters);
     }
 
-    //
-    // Below: TODO
-    //
-
     /**
-     * For handling a refund action.
+     * Accept an incoming notification (a ServerRequest).
      */
-    public function DISABLED_refund(array $parameters = array())
+    public function acceptNotification(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopRefundRequest', $parameters);
-    }
-
-    /**
-     * To fetch a single transaction.
-     */
-    public function DISABLED_fetchTransaction(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopFetchTransactionRequest', $parameters);
+        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
     }
 }

@@ -55,6 +55,7 @@ abstract class AbstractShopGateway extends AbstractGateway
      * The API version supported.
      */
     const API_VERSION = '3.9';
+
     /**
      * merchantId = Merchant account ID (mid: N..6)
      * portalId = Payment portal ID (portalid: N..7)
@@ -71,10 +72,26 @@ abstract class AbstractShopGateway extends AbstractGateway
             'portalKey' => '',
             // Optional
             'testMode' => false,
-            'encoding' => array(static::ENCODING_UTF8, static::ENCODING_ISO8859),
+            'encoding' => array(
+                static::ENCODING_UTF8,
+                static::ENCODING_ISO8859
+            ),
             'language' => 'en',
             'endpoint' => $this->endpoint,
-            'hashMethod' => static::HASH_MD5,
+            'hashMethod' => array(
+                static::HASH_MD5,
+                static::HASH_SHA2_384,
+            ),
+            'clearingType' => array(
+                static::CLEARING_TYPE_CC,
+                static::CLEARING_TYPE_ELV,
+                static::CLEARING_TYPE_VOR,
+                static::CLEARING_TYPE_REC,
+                static::CLEARING_TYPE_COD,
+                static::CLEARING_TYPE_SB,
+                static::CLEARING_TYPE_WLT,
+                static::CLEARING_TYPE_FNC,
+            ),
         );
     }
 
@@ -206,5 +223,19 @@ abstract class AbstractShopGateway extends AbstractGateway
     public function getLanguage()
     {
         return $this->getParameter('language');
+    }
+
+    /**
+     * The payment clearing type.
+     * See self::CLEARING_TYPE_* for permitted values.
+     */
+    public function setClearingType($value)
+    {
+        return $this->setParameter('clearingtype', $value);
+    }
+
+    public function getClearingType()
+    {
+        return $this->getParameter('clearingtype');
     }
 }

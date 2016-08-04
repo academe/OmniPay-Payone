@@ -731,7 +731,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     public function getClearingType()
     {
-        return $this->getParameter('clearingtype') ?: AbstractShopGateway::CLEARING_TYPE_CC;
+        return $this->getParameter('clearingtype');
     }
 
     /**
@@ -759,6 +759,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     /**
      * An alternative way to set the 3D Secure mode.
+     *
+     * @param boolean $value True/False to enforce 3D Secure on/off
      */
     public function set3dSecure($value)
     {
@@ -770,6 +772,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $this->setEcommerceMode(static::ECOMMERCE_MODE_INTERNET);
         }
     }
+
     public function get3dSecure()
     {
         return $this->getEcommerceMode() == static::ECOMMERCE_MODE_3DSECURE;

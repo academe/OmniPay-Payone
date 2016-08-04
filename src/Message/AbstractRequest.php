@@ -17,12 +17,6 @@ use Guzzle\Http\Url;
 abstract class AbstractRequest extends OmnipayAbstractRequest
 {
     /**
-     * The "clearingtype" parameter.
-     * Only cc (credit card) is supported at this time.
-     */
-    protected $clearingtype = 'cc';
-
-    /**
      * The "request" parameter.
      */
     protected $request_code = 'undefined';
@@ -353,14 +347,17 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     {
         $data = [];
 
+        // For when authentication passes.
         if (!empty($this->getSuccessUrl())) {
             $data['successurl'] = $this->getSuccessUrl();
         }
 
+        // For when authentication fails.
         if (!empty($this->getErrorUrl())) {
             $data['errorurl'] = $this->getErrorUrl();
         }
 
+        // For when the user cancels payment on the remote gateway site.
         if (!empty($this->getBackUrl())) {
             $data['backurl'] = $this->getBackUrl();
         }
@@ -711,7 +708,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * The nerchant site invoice ID (optional).
+     * The merchant site invoice ID (optional).
      */
     public function setInvoiceId($value)
     {
@@ -721,6 +718,20 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function getInvoiceId()
     {
         return $this->getParameter('invoiceId');
+    }
+
+    /**
+     * The payment clearing type.
+     * See AbstractShopGateway::CLEARING_TYPE_* for permitted values.
+     */
+    public function setClearingType($value)
+    {
+        return $this->setParameter('clearingtype', $value);
+    }
+
+    public function getClearingType()
+    {
+        return $this->getParameter('clearingtype') ?: AbstractShopGateway::CLEARING_TYPE_CC;
     }
 
     /**
@@ -767,10 +778,5 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function getRequestCode()
     {
         return $this->request_code;
-    }
-
-    public function getClearingType()
-    {
-        return $this->clearingtype;
     }
 }

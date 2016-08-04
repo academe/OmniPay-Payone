@@ -29,6 +29,26 @@ abstract class AbstractShopGateway extends AbstractGateway
     const HASH_MD5 = 'MD5';
     const HASH_SHA2_384 = 'SHA2_384';
 
+    /**
+     * Clearing type values.
+     */
+    // Debit payment
+    const CLEARING_TYPE_ELV = 'elv';
+    // Credit card
+    const CLEARING_TYPE_CC  = 'cc';
+    // Prepayment
+    const CLEARING_TYPE_VOR = 'vor';
+    // Invoice
+    const CLEARING_TYPE_REC = 'rec';
+    // Cash on delivery
+    const CLEARING_TYPE_COD = 'cod';
+    // Online bank transfer
+    const CLEARING_TYPE_SB  = 'sb';
+    // e-Wallet
+    const CLEARING_TYPE_WLT = 'wlt';
+    // Financing
+    const CLEARING_TYPE_FNC = 'fnc';
+
     protected $endpoint = 'https://api.pay1.de/post-gateway/';
 
     /**

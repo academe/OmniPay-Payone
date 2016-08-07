@@ -225,6 +225,18 @@ and states must be supplied as ISO 3166-2 sub-division codes (various formats, d
     'billingState' => 'AL',
 ~~~
 
+The return URL and cancel URL (when using 3D Secure) are normally set in the account settings,
+but can be overridden here:
+
+~~~php
+    // Return URL on successful authorisation.
+    'returnUrl' => '...',
+    // Return URL on failure to authorise the payment.
+    'errorUrl' => '...',
+    // Return URL if the user choses to cancel the authorisation.
+    'cancelUrl' => '...',
+~~~
+
 Send this request to PAYONE to get the response:
 
 ~~~php
@@ -394,17 +406,16 @@ List of $server_request data methods:
 * getReceivable() - decimal in major currency units
 * getReceivableInteger() - integer in minor currency units
 
-(TODO: Additional fields to be added, e.g. shipping details.)
-
 ### completeAuthorize and completePurchase Methods
 
 Although the Frontend purchase and authorize take the user offsite (either in full screen
 mode or in an iframe), no data is returned with the user coming back to the site.
 as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
 
-TODO: it is not yet entirely clear how 3D Secure flows in this gateway when using the
-Server API methods only, so it may turn out some additional "complete" handling is needed
-for that when more is known.
+3D Secure incolves a vlsit to the authrisaing bank. However, PAYONE will wrap that visit
+up into a page that it controls (the page will contain an iframe). This means the result
+if a 3D Secure password is needed, will still be sent to the merchant site through the
+same notification URL as any non-3D Secure transaction.
 
 ## Front End Authorize
 
@@ -442,7 +453,11 @@ $request = $gateway->authorize([
         'firstName' => 'Firstname',
         'billingAddress1' => 'Street Name',
         ...
-    ]
+    ],
+    // Any of these optional URLs can override those set in the account settings:
+    'returnUrl' => '...',
+    'errorUrl' => '...',
+    'cancelUrl' => '...',
 ]);
 ~~~
 
@@ -457,6 +472,10 @@ The `card` billing details can be used to pre-populate the payment form.
 If the personal details have been checked and known to be valid (another API is able to
 do that) then the name and address fields can be hidden on the payment form using
 `'showName' => false` and `'showAddress' => false`.
+
+Note that it may not be possible to override the URLs as shown above. It may be
+possible to set these URLs *only* if not defined in the account settings. The
+documentation is not entirely clear on this.
 
 The response message (from OmniPay) for performing the next action is:
 
@@ -477,7 +496,7 @@ $url = $response->getRedirectUrl();
 $response->redirect();
 ~~~
 
-For the `POST` redirectMethod, again, you can just let OmnoPay do the redirect,
+For the `POST` redirectMethod, again, you can just let OmniPay do the redirect,
 but you will probably want to build your own form and `target` it at an iframe
 in the page. The two things you need to build the form is the target URL, and the form items.
 The form items are supplied as name/value pairs.
@@ -524,19 +543,12 @@ Works the same as Front End Authorize, but will require a separate Server API Ca
 
 Some development notes yet to be incorporated into the code or documentation:
 
-* The 3D Secure process needs to be fully implemnented.
-* When sending 3D Secure details, do we need to leave off the personal details or resend everything again?
 * Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
-* The response to notifications: "SSOK" for SessionStatus Access portal version and "TSOK" for the TransactionStatus
-  Shop portal version.
 * Other gateway types exist: JavaScript, one-click purchasing.
 
 ## Hosted iframe Mode
 
-JS to include on page: https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js
-
-This JS includes "classic" client-API mode functions supported by "AJAX mode" and "Redirect mode" (also worth following up)
-
-config.cardtype defines available card types (from list in package)
-
-See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.
+* JS to include on page: https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js
+* This JS includes "classic" client-API mode functions supported by "AJAX mode" and "Redirect mode" (also worth following up)
+* config.cardtype defines available card types (from list in package)
+* See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.

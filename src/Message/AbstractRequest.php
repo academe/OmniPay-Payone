@@ -358,8 +358,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         // For when the user cancels payment on the remote gateway site.
-        if (!empty($this->getBackUrl())) {
-            $data['backurl'] = $this->getBackUrl();
+        if (!empty($this->getCancelUrl())) {
+            $data['backurl'] = $this->getCancelUrl();
         }
 
         return $data;
@@ -682,6 +682,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * The return URL, an alias for returnUrl().
+     */
+    public function setReturnUrl($returnUrl)
+    {
+        return $this->setSuccessUrl($returnUrl);
+    }
+
+    public function getReturnUrl()
+    {
+        return $this->getSuccessUrl();
+    }
+
+    /**
      * The error URL (optional).
      */
     public function setErrorUrl($errorUrl)
@@ -697,14 +710,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * The back (cancel) URL (optional).
      */
-    public function setBackUrl($backUrl)
+    public function setCancelUrl($cancelUrl)
     {
-        return $this->setParameter('backUrl', $backUrl);
+        return $this->setParameter('cancelUrl', $cancelUrl);
     }
 
-    public function getBackUrl()
+    public function getCancelUrl()
     {
-        return $this->getParameter('backUrl');
+        return $this->getParameter('cancelUrl');
     }
 
     /**

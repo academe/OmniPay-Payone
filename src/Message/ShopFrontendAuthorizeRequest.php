@@ -125,26 +125,17 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
             $data['invoiceid'] = $this->getInvoiceId();
         }
 
-        if ($this->getSuccessUrl()) {
-            $data['successurl'] = $this->getSuccessUrl();
-        }
-
         // The errorurl does NOT appear in the Frontend documentation, but does
         // work and is implemented in other platform gateways.
 
-        if ($this->getErrorUrl()) {
-            $data['errorurl'] = $this->getErrorUrl();
-        }
-
-        if ($this->getCancelUrl()) {
-            $data['backurl'] = $this->getCancelUrl();
-        }
+        $data += $this->getDataUrl();
 
         if ($this->getTargetWindow()) {
             $data['targetwindow'] = $this->getTargetWindow();
         }
 
         // Create the hash.
+        // All data collected so far must be "protected" by the hash.
         $data['hash'] = $this->doHash($data, $this->getPortalKey());
 
         // Some fields are added after the hash.

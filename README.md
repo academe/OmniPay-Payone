@@ -398,6 +398,14 @@ List of $server_request data methods:
 * getCity()
 * getPostcode()
 * getCountry() - ISO code
+* getShippingFirstName()
+* getShippingLastName()
+* getShippingName()
+* getShippingStreet()
+* getShippingAddress1() - alias of getShippingStreet()
+* getShippingCity()
+* getShippingPostcode()
+* getShippingCountry() - ISO code
 * getEmail()
 * getPrice() - decimal in major currency units
 * getPriceInteger() - integer in minor currency units

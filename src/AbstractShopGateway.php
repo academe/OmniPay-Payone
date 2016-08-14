@@ -49,6 +49,9 @@ abstract class AbstractShopGateway extends AbstractGateway
     // Financing
     const CLEARING_TYPE_FNC = 'fnc';
 
+    /**
+     * The default server endpoint.
+     */
     protected $endpoint = 'https://api.pay1.de/post-gateway/';
 
     /**

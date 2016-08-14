@@ -16,8 +16,10 @@ abstract class AbstractResponse extends OmnipayAbstractResponse
     /**
      * Status codes shared by all responses.
      */
-
-    const STATUS_ERROR = 'ERROR';
+    const STATUS_APPROVED   = 'APPROVED';
+    const STATUS_REDIRECT   = 'REDIRECT';
+    const STATUS_PENDING    = 'PENDING';
+    const STATUS_ERROR      = 'ERROR';
 
     /**
      * Response Message - the system message for logging only.

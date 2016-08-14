@@ -186,7 +186,12 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
      */
     public function getTransactionStatus()
     {
-        if ($this->getTxStatus() == static::TRANSACTION_STATUS_COMPLETED) {
+        // The "appointed" event with no transation status will be sent as
+        // the result of a 3D Secure result.
+        if (
+            $this->getTxStatus() == static::TRANSACTION_STATUS_COMPLETED
+            || $this->getEvent() == static::EVENT_APPOINTED
+        ) {
             return static::STATUS_COMPLETED;
         }
 

@@ -11,6 +11,7 @@ use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\CreditCard;
+use Omnipay\Common\Currency;
 use Omnipay\Omnipay;
 use Guzzle\Http\Url;
 
@@ -101,7 +102,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $data['portalid'] = $this->getPortalId();
 
         // Can alternatively use MD5 or SHA2-384, Status-Hash as MD5.
-        // TODO: support SHA2-384 through as an olption.
         // Must be lower case.
         $data['key'] = $this->hashString($this->getPortalKey());
 
@@ -111,6 +111,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         $data['encoding'] = $this->getEncoding();
         $data['language'] = $this->getLanguage();
+
+        if ($this->getClearingType()) {
+            $data['clearingtype'] = $this->getClearingType();
+        }
 
         return $data;
     }
@@ -291,8 +295,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     {
         $data = array();
 
-        $data['clearingtype'] = $this->getClearingType();
-
         if ($card = $this->getCard()) {
             // If only the card number is set, and not the expiry year, month or CVV, then
             // treat this card number as a Pseudo card PAN.
@@ -306,7 +308,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
             if (empty($card->getExpiryYear()) && empty($card->getExpiryMonth()) && $card->getCvv() === null) {
                 $data['pseudocardpan'] = $card->getNumber();
-            } else {
+            } elseif ($card->getNumber()) {
                 if ($this->getEcommerceMode()) {
                     $data['ecommercemode'] = $this->getEcommerceMode();
                 }
@@ -376,27 +378,28 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $item_count = 0;
 
         if (!empty($this->getItems())) {
+            $currency_digits = Currency::find($this->getCurrency())->getDecimals();
+
             foreach($this->getItems() as $item) {
                 $item_count++;
 
                 if ($item instanceof ExtendItemInterface) {
                     $id = $item->getId();
                     $vat = $item->getVat();
+                    $price = $item->getPriceInteger($currency_digits);
                 } else {
                     $id = $this->defaultItemId;
-                    $vat = 0;
+                    $vat = null;
+                    $price = ExtendItem::convertPriceInteger($item->getPrice(), $currency_digits);
                 }
 
-                // We are ASSUMING here that the price is in minor units.
-                // Since there is no validation or parsing of the Item
-                // price, we really cannot know for sure whether it contains
-                // €100 or 100c
-
                 $data['id['.$item_count.']'] = $id;
-                $data['pr['.$item_count.']'] = $item->getPrice();
+                $data['pr['.$item_count.']'] = $price;
                 $data['no['.$item_count.']'] = $item->getQuantity();
                 $data['de['.$item_count.']'] = $item->getName();
-                $data['va['.$item_count.']'] = $vat;
+                if (isset($vat)) {
+                    $data['va['.$item_count.']'] = $vat;
+                }
             }
         }
 
@@ -415,7 +418,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $httpResponse = $httpRequest->send();
 
         // The body returned will be text of multiple lines, each containing {name}={value}
-        // CHECKME: what is the encoding we get back? I suspect it may always be ISO 8859-1
+        // TODO: also check $httpResponse->getContentType() to make sure we are getting a
+        // sane response and not "application/javascript" or something else.
+        // The normal response seems to be "text/plain; charset=UTF-8".
 
         $body = (string)$httpResponse->getBody();
 

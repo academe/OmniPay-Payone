@@ -11,14 +11,6 @@ use Omnipay\Common\Message\RedirectResponseInterface;
 class ShopAuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
 {
     /**
-     * Status codes shared by authorize and purchase.
-     */
-
-    const STATUS_APPROVED   = 'APPROVED';
-    const STATUS_REDIRECT   = 'REDIRECT';
-    const STATUS_PENDING    = 'PENDING';
-
-    /**
      * Success if the transaction has completed, and does not require a redirect.
      * CHECKME: should we include PENDING as a success state?
      */

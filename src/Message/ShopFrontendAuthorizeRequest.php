@@ -73,7 +73,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
 
         if (empty($items) || $items->count() == 0) {
             // No items in the basket, so we will have to make
-            // one up.
+            // one up. The Frontend API MUST have at least one cart item.
             // The basket MUST add up to the total payment amount, so
             // be aware of that.
 
@@ -87,31 +87,13 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
 
             $items = new ItemBag;
             $items->add($item);
+
+            // Add this dummy cart to the gateway cart.
+            $this->setItems($items);
         }
 
-        $item_count = 0;
-
-        foreach($items as $item) {
-            $item_count++;
-
-            $currency_digits = Currency::find($this->getCurrency())->getDecimals();
-
-            if ($item instanceof ExtendItemInterface) {
-                $id = $item->getId();
-                $vat = $item->getVat();
-                $price = $item->getPriceInteger($currency_digits);
-            } else {
-                $id = $this->defaultItemId;
-                $vat = null;
-                $price = ExtendItem::convertPriceInteger($item->getPrice(), $currency_digits);
-            }
-
-            $data['id['.$item_count.']'] = $id;
-            $data['pr['.$item_count.']'] = $price;
-            $data['no['.$item_count.']'] = $item->getQuantity();
-            $data['de['.$item_count.']'] = $item->getName();
-            $data['va['.$item_count.']'] = $vat;
-        }
+        // Add the cart items to the data.
+        $data += $this->getDataItems();
 
         if ($this->getDisplayName()) {
             $data['display_name'] = $this->getDisplayName();

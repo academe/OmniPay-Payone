@@ -311,6 +311,72 @@ $rssponse = $request->send();
 
 The `void` method will response with a `ShopCaptureResponse` response when sent to ONEPAY.
 
+### Server API Credit Card Check
+
+This method will validate the details of a credit card are *plausible* and optionally
+tokenize the card details for use in other methods. The Credit Card Check method is
+available both for Server direct requests, and for AJAX calls on the Client side.
+
+The request is set up like this:
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_ShopServer');
+$gateway->setSubAccountId(12345);
+$gateway->setTestMode(true); // Or false for production.
+$gateway->setMerchantId(67890);
+$gateway->setPortalId(3456789);
+$gateway->setPortalKey('secret-key');
+
+$request = $gateway->creditCardCheck([
+    'card' => [
+        'number' => '4012001037141112',
+        'expiryYear' => '2020',
+        'expiryMonth' => '12',
+        'cvv' => '123',
+    ],
+    'storeCard' => true,
+]);
+
+$response = $request->send();
+~~~
+
+If the credit card details are plausible, then the response wilb be successful:
+
+~~~php
+$response->isSuccessful();
+// true
+~~~
+
+If the response is not successful, then details will be available in `getCode()`,
+`getMessage()` and `getCustomerMessage()`.
+
+If the response is successful and `storeCard` is `TRUE` then two additional items
+of data will be available:
+
+~~~php
+// The tokenised card:
+$token = $response->getToken();
+// e.g. 4100000227987220
+
+// The truncated card number:
+$response->getCardNumber()
+// e.g. 401200XXXXXX1112
+~~~
+
+In any API that requires credit card details, you can substitute the details with
+the token, for example:
+
+~~~php
+$request = $gateway->authorize([
+    'card' => [
+        'number' => $token
+    ],
+    ...
+~~~
+
+Normally the token will come from the web client (AJAX in the browser) but this
+Server API can be used during development and testing with test cards.
+
 ## Notification Callback
 
 For most - if not all - transactions, PAYONE will send details of that transaction to your

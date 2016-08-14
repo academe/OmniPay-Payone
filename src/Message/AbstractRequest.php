@@ -229,8 +229,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $data['mid'] = $this->getMerchantId();
         $data['portalid'] = $this->getPortalId();
 
-        // Can alternatively use MD5 or SHA2-384, Status-Hash as MD5.
-        // Must be lower case.
+        // Only md5 is used to encode the key for the Server API (no hashing is
+        // needed over the secure server-to-serever connection).
         $data['key'] = md5($this->getPortalKey());
 
         $data['api_version'] = AbstractShopGateway::API_VERSION;

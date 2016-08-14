@@ -7,7 +7,7 @@ namespace Omnipay\Payone\Message;
  * Returns a ShopCaptureResponse on sending.
  */
 
-class ShopVoidRequest extends ShopCaptureRequest
+class ShopServerVoidRequest extends ShopServerCaptureRequest
 {
     public function getData()
     {

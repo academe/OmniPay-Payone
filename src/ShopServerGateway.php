@@ -20,7 +20,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopAuthorizeRequest', $parameters);
+        return $this->createRequest('\Omnipay\Payone\Message\ShopServerAuthorizeRequest', $parameters);
     }
 
     /**
@@ -28,7 +28,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopPurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\Payone\Message\ShopServerPurchaseRequest', $parameters);
     }
 
     /**
@@ -36,7 +36,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function capture(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopCaptureRequest', $parameters);
+        return $this->createRequest('\Omnipay\Payone\Message\ShopServerCaptureRequest', $parameters);
     }
 
     /**
@@ -44,7 +44,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function void(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopVoidRequest', $parameters);
+        return $this->createRequest('\Omnipay\Payone\Message\ShopServerVoidRequest', $parameters);
     }
 
     /**

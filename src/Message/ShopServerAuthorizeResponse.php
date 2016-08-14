@@ -8,7 +8,7 @@ namespace Omnipay\Payone\Message;
 
 use Omnipay\Common\Message\RedirectResponseInterface;
 
-class ShopAuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
+class ShopServerAuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
 {
     /**
      * Success if the transaction has completed, and does not require a redirect.

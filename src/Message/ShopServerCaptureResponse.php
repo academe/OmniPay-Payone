@@ -6,13 +6,13 @@ namespace Omnipay\Payone\Message;
  * Shop Payment Response
  */
 
-class ShopCaptureResponse extends ShopAuthorizeResponse
+class ShopServerCaptureResponse extends ShopServerAuthorizeResponse
 {
     /**
      * Status codes for capture only.
      */
 
-    const STATUS_APPROVED   = 'APPROVED';
+    const STATUS_APPROVED = 'APPROVED';
 
     /**
      * Success if the transaction has completed.

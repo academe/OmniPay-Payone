@@ -12,7 +12,7 @@ use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\ItemBag;
 
-class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
+class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
 {
     /**
      * Required access method to the ONEPAY credit card form.
@@ -117,7 +117,7 @@ class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest
 
         // Create the hash.
         // All data collected so far must be "protected" by the hash.
-        $data['hash'] = $this->doHash($data, $this->getPortalKey());
+        $data['hash'] = $this->hashArray($data);
 
         // Some fields are added after the hash.
 

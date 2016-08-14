@@ -13,7 +13,7 @@ use Omnipay\Payone\ShopClientGateway;
 use Omnipay\Common\Currency;
 use Omnipay\Common\ItemBag;
 
-class ShopClientAuthorizeRequest extends ShopAuthorizeRequest
+class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 {
     /**
      * The mode determines whether a server-to-server call is made, or
@@ -100,7 +100,7 @@ class ShopClientAuthorizeRequest extends ShopAuthorizeRequest
 
         // Create the hash.
         // All data collected so far must be "protected" by the hash.
-        $data['hash'] = $this->doHash($data, $this->getPortalKey());
+        $data['hash'] = $this->hashArray($data);
 
         // Some fields are added after the hash.
 

@@ -6,7 +6,7 @@ namespace Omnipay\Payone\Message;
 * PAYONE Shop Authorize Request
 */
 
-class ShopAuthorizeRequest extends AbstractRequest
+class ShopServerAuthorizeRequest extends AbstractRequest
 {
     /**
      * The "request" parameter.
@@ -64,6 +64,6 @@ class ShopAuthorizeRequest extends AbstractRequest
 
     protected function createResponse($data)
     {
-        return $this->response = new ShopAuthorizeResponse($this, $data);
+        return $this->response = new ShopServerAuthorizeResponse($this, $data);
     }
 }

@@ -38,6 +38,22 @@ class Item extends CommonItem implements ItemInterface
     /**
      * {@inheritDoc}
      */
+    public function setItemType($value)
+    {
+        return $this->setParameter('itemType', $value);
+    }
+
+   /**
+     * {@inheritDoc}
+        */
+    public function getItemType()
+    {
+        return $this->getParameter('itemType');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setId($value)
     {
         return $this->setParameter('id', $value);

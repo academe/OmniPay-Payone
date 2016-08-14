@@ -47,6 +47,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     /**
      * The credit card e-commerce mode.
+     * internet = disabled 3D Secure
+     * 3dsecure = enables 3D Secure where cards support it
      * moto = mail or telephone (card not present)
      */
     const ECOMMERCE_MODE_INTERNET   = 'internet';
@@ -57,36 +59,38 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * A list of countries for which state codes may be given.
      */
     protected $countries_with_states = array(
-        'US', 'CA', 'CN', 'JP', 'MX', 'BR', 'AR', 'ID', 'TH', 'IN'
+        'US', 'CA', 'CN', 'JP', 'MX', 'BR', 'AR', 'ID', 'TH', 'IN',
     );
 
     /**
      * Hash an array using the chosen method.
      */
-    protected function doHash($data, $key = '')
+    protected function hashArray($data)
     {
         // Sort the data alphanbetically by key.
         ksort($data);
 
-        // The key is concatenated to the string for md5.
-        if ($this->getHashMethod() == AbstractShopGateway::HASH_MD5) {
-            return strtolower(md5(implode('', $data) . $key));
-        }
-
-        // The key is a separate parameter for SHA2 384
-        if ($this->getHashMethod() == AbstractShopGateway::HASH_SHA2_384) {
-            return strtolower(hash_hmac('sha384', implode('', $data), $key));
-        }
-
-        throw new InvalidRequestException('Unknown hashing method.');
+        return $this->hashString(implode('', $data));
     }
 
     /**
      * Hash an string using the chosen method.
      */
-    protected function hashString($data, $key = '')
+    protected function hashString($string)
     {
-        return $this->doHash([$data], $key);
+        $key = $this->getPortalKey();
+
+        // The key is concatenated to the string for md5.
+        if ($this->getHashMethod() == AbstractShopGateway::HASH_MD5) {
+            return strtolower(md5($string . $key));
+        }
+
+        // The key is a separate parameter for SHA2 384
+        if ($this->getHashMethod() == AbstractShopGateway::HASH_SHA2_384) {
+            return strtolower(hash_hmac('sha384', $string, $key));
+        }
+
+        throw new InvalidRequestException('Unknown hashing method.');
     }
 
     /**
@@ -388,18 +392,25 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                     $id = $item->getId();
                     $vat = $item->getVat();
                     $price = $item->getPriceInteger($currency_digits);
+                    $item_type = $item->getItemType();
                 } else {
                     $id = $this->defaultItemId;
                     $vat = null;
                     $price = ExtendItem::convertPriceInteger($item->getPrice(), $currency_digits);
+                    $item_type = null;
                 }
 
                 $data['id['.$item_count.']'] = $id;
                 $data['pr['.$item_count.']'] = $price;
                 $data['no['.$item_count.']'] = $item->getQuantity();
                 $data['de['.$item_count.']'] = $item->getName();
+
                 if (isset($vat)) {
                     $data['va['.$item_count.']'] = $vat;
+                }
+
+                if (isset($item_type)) {
+                    $data['it['.$item_count.']'] = $item_type;
                 }
             }
         }

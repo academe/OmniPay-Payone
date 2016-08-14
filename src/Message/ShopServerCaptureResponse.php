@@ -31,6 +31,6 @@ class ShopServerCaptureResponse extends ShopServerAuthorizeResponse
     {
         $settled_text = isset($data['settleaccount']) ? $data['settleaccount'] : null;
 
-        return strtolower($settled_text) == 'yes';
+        return strtolower($settled_text) === 'yes';
     }
 }

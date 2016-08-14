@@ -40,6 +40,16 @@ class ShopServerGateway extends AbstractShopGateway
     }
 
     /**
+     * Check a credit card detail for "plausability" and get a card token in response.
+     * This would normally be done client-side, but is available server side too for
+     * development and testing.
+     */
+    public function creditCardCheck(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Payone\Message\ShopServerCardCheckRequest', $parameters);
+    }
+
+    /**
      * For handling a void action.
      */
     public function void(array $parameters = array())

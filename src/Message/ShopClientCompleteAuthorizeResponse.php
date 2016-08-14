@@ -15,18 +15,6 @@ class ShopClientCompleteAuthorizeResponse extends AbstractResponse implements Re
         return $this->data;
     }
 
-    /**
-     * Get a POST data item, or null if not present.
-     */
-    protected function getDataItem($name)
-    {
-        if (!isset($this->data)) {
-            $this->data = $this->getData();
-        }
-
-        return isset($this->data[$name]) ? $this->data[$name] : null;
-    }
-
     public function getTransactionReference()
     {
         return $this->getDataItem('txid');

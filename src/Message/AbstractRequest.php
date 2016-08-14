@@ -218,7 +218,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * Base data required for all transactions.
+     * Base data required for all Sewrver transactions.
      */
     protected function getBaseData()
     {
@@ -231,7 +231,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         // Can alternatively use MD5 or SHA2-384, Status-Hash as MD5.
         // Must be lower case.
-        $data['key'] = $this->hashString($this->getPortalKey());
+        $data['key'] = md5($this->getPortalKey());
 
         $data['api_version'] = AbstractShopGateway::API_VERSION;
 
@@ -451,7 +451,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                 // The card holder name is defined by OmniPay as the billing first name and
                 // last name concatenated.
 
-                $data['cardholder'] = $card->getName();
+                if ($card->getName()) {
+                    $data['cardholder'] = $card->getName();
+                }
 
                 if (!empty($card->getCvv())) {
                     $data['cardcvc2'] = $card->getCvv();

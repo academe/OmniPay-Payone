@@ -51,7 +51,7 @@ class ShopServerAuthorizeResponse extends AbstractResponse implements RedirectRe
      */
     public function getRedirectUrl()
     {
-        return isset($this->data['redirecturl']) ? $this->data['redirecturl'] : null;
+        return @$this->data['redirecturl'] ?: null;
     }
 
     /**

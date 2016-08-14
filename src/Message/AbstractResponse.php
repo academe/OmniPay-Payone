@@ -22,6 +22,18 @@ abstract class AbstractResponse extends OmnipayAbstractResponse
     const STATUS_ERROR      = 'ERROR';
 
     /**
+     * Get a data item, or default if not present.
+     */
+    protected function getDataItem($name, $default = null)
+    {
+        if (!isset($this->data)) {
+            $this->data = $this->getData();
+        }
+
+        return isset($this->data[$name]) ? $this->data[$name] : $default;
+    }
+
+    /**
      * Response Message - the system message for logging only.
      *
      * @return null|string A response message from the payment gateway

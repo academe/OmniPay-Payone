@@ -60,14 +60,17 @@ of interest to e-commerce:
 
 * **Server API** - for interacting directly with server without user intervention.
 * **Frontend API** - for delivering hosted credit card (CC) forms to the user.
-* Client API - for interacting with a JavaScript front end.
+* **Client API** - for interacting with a JavaScript front end.
 
-This package is interested in just the first two; Server API for capturing authorized payments and the Front end
-for setting up CC forms. You can also do authorisations and make payments using the Server API, so long as
+The Server API is mainly for capturing authorized payments and the Front end
+is for setting up CC forms. The Client side is for supporting AJAX in the browser.
+You can also do authorisations and make payments using the Server API, so long as
 you are fully aware of the PCI implications.
 
 The Server API also has a notification handler for receiving the payment results and captured user information
 from the PAYONE servers.
+
+You will most likely be using a mix of Server, Frontend and Client functions as they complement each other.
 
 ### Shop and Access API Versions
 

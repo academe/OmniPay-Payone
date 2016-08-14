@@ -18,6 +18,109 @@ use Guzzle\Http\Url;
 abstract class AbstractRequest extends OmnipayAbstractRequest
 {
     /**
+     * The list of raw data fields that must be hashed to protect from
+     * manipulation.
+     * There seems to be no one complete list defined anywhere, so these
+     * field names come from a number of sources.
+     */
+    protected $hash_fields = array(
+        // From the SDK
+        'mid',
+        'amount',
+        'productid',
+        'aid',
+        'currency',
+        'accessname',
+        'portalid',
+        'due_time',
+        'accesscode',
+        'mode',
+        'storecarddata',
+        'access_expiretime',
+        'request',
+        'checktype',
+        'access_canceltime',
+        'responsetype',
+        'addresschecktype',
+        'access_starttime',
+        'reference',
+        'consumerscoretype',
+        'access_period',
+        'userid',
+        'invoiceid',
+        'access_aboperiod',
+        'customerid',
+        'invoiceappendix',
+        'access_price',
+        'param',
+        'invoice_deliverymode',
+        'access_aboprice',
+        'narrative_text',
+        'eci',
+        'access_vat',
+        'successurl',
+        'settleperiod',
+        'errorurl',
+        'settletime',
+        'backurl',
+        'vaccountname',
+        'exiturl',
+        'vreference',
+        'clearingtype',
+        'encoding',
+        //
+        // Listed in documentation only, either in a dedicated list or
+        // or marked as requiring a hash in the field tables.
+        'amount_recurring',
+        'period_length_recurring',
+        'period_unit_recurring',
+        //
+        'amount_trail',
+        'period_length_trail',
+        'period_unit_trail',
+        //
+        'api_version',
+        'display_name',
+        'display_address',
+        'autosubmit',
+        'targetwindow',
+        'frontend_description',
+        //
+        'booking_date',
+        'document_date',
+        'ecommercemode',
+        'getusertoken',
+        'mandate_identification',
+        'settleaccount',
+        //
+        'invoice_deliverydate',
+        'invoice_deliveryenddate',
+        //
+        // Cart items, where [x] matches a wildcard.
+        'pr[x]',
+        'id[x]',
+        'it[x]',
+        'ti[x]',
+        'de[x]',
+        'va[x]',
+        'no[x]',
+        //
+        'pr_recurring[x]',
+        'id_recurring[x]',
+        'ti_recurring[x]',
+        'va_recurring[x]',
+        'no_recurring[x]',
+        'de_recurring[x]',
+        //
+        'pr_trail[x]',
+        'id_trail[x]',
+        'ti_trail[x]',
+        'de_trail[x]',
+        'va_trail[x]',
+        'no_trail[x]',
+    );
+
+    /**
      * The "request" parameter.
      */
     protected $request_code = 'undefined';
@@ -63,18 +166,29 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     );
 
     /**
-     * Hash an array using the chosen method.
+     * Hash an array prior to sending it.
+     * Only hashable fields will be included in the hash calculation.
      */
     protected function hashArray($data)
     {
-        // Sort the data alphanbetically by key.
-        ksort($data);
+        // Filter the array using the list of hashable fields.
+        $hash_data = array_filter($data, function($key) {
+            // If the key is an array element then normalise it, e.g. pr[1] => px[x]
+            if (strpos($key, '[')) {
+                $key = preg_replace('/\[[0-9]*\]/', '[x]', $key);
+            }
 
-        return $this->hashString(implode('', $data));
+            return in_array($key, $this->hash_fields);
+        }, ARRAY_FILTER_USE_KEY);
+
+        // Sort the data alphanbetically by key.
+        ksort($hash_data);
+
+        return $this->hashString(implode('', $hash_data));
     }
 
     /**
-     * Hash an string using the chosen method.
+     * Hash a string using the chosen method (hashMethod) and supplied key (portalKey).
      */
     protected function hashString($string)
     {

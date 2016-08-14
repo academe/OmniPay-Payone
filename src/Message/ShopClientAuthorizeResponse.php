@@ -57,6 +57,10 @@ class ShopClientAuthorizeResponse extends AbstractResponse implements RedirectRe
     {
         // Some of the supplied data that does not belong in the hidden form
         // fields is filtered out.
+        // FIXME: expand this filtering to just include only hashed data.
+        // Details such as names, addresses etc. are up to the merchant site
+        // to put into the payment form *as required*. This includes all CC
+        // fields, even in AJAX mode.
 
         $data = array_filter($this->getData(), function($key) {
             return !in_array($key, ['card']);

@@ -16,22 +16,16 @@ use Omnipay\Common\ItemBag;
 class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 {
     /**
-     * The mode determines whether a server-to-server call is made, or
-     * whether the AJAX will be handled on the client.
-     */
-    protected $mode_server = false;
-
-    /**
      * The Response Type is always needed.
      */
-    public function setModeServer($value)
+    public function setServerMode($value)
     {
-        return $this->mode_server = (bool)$value;;
+        return $this->setParameter('serverMode', (bool)$value);
     }
 
-    public function getModeServer()
+    public function getServerMode()
     {
-        return $this->mode_server;
+        return $this->getParameter('serverMode');
     }
 
     /**
@@ -98,12 +92,6 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
         // Add in any cart items.
         $data += $this->getDataItems();
 
-        // Create the hash.
-        // All data collected so far must be "protected" by the hash.
-        $data['hash'] = $this->hashArray($data);
-
-        // Some fields are added after the hash.
-
         if ($card = $this->getCard()) {
             $data['firstname'] = $card->getFirstName();
             $data['lastname'] = $card->getLastName(); // Mandatory
@@ -120,6 +108,11 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['card'] = $card_data;
         }
 
+        $data['serverMode'] = $this->getServerMode();
+
+        // Create the hash for the hashable fields.
+        $data['hash'] = $this->hashArray($data);
+
         return $data;
     }
 
@@ -134,7 +127,7 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
      */
     public function sendData($data)
     {
-        if ($this->getModeServer() && $this->getResponseType() === ShopClientGateway::RETURN_TYPE_JSON) {
+        if ($this->getServerMode() && $this->getResponseType() === ShopClientGateway::RETURN_TYPE_JSON) {
             // Move the card details into the data to be sent.
             $data = $data + $data['card'];
             unset($data['card']);
@@ -162,10 +155,18 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
      * Some responses may require a REDIRECT if 3D Secure is enabled, so that
      * needs to be dealt with in the complete* messages. A redirect may be needed
      * for AJAX, but will be a part of the original POST for the REDIRECT method.
+     *
+     * TODO: just return the one response, but switch it from a transparent redirect
+     * to either complete+no redirect, or a non-transparent redirect (depending on 3DS).
+     * To do this mode_server will need to be a part of the data, and getRedirectData
+     * will need to be cleverer about how it filters what should really be in the redirect
+     * data. Only hashed fields should be included, with the remaining fields up to
+     * the merchant application to add to the front-end form. Maybe some helper methods
+     * will aid filtering those out and providing field names.
      */
     protected function createResponse($data)
     {
-        if ($this->getModeServer() && $this->getResponseType() === ShopClientGateway::RETURN_TYPE_JSON) {
+        if ($this->getServerMode() && $this->getResponseType() === ShopClientGateway::RETURN_TYPE_JSON) {
             // A server-to-server call has been made.
             return $this->response = new ShopClientCompleteAuthorizeResponse($this, $data);
         } else {

@@ -18,19 +18,6 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
     /**
      * The Response Type is always needed.
      */
-    public function setServerMode($value)
-    {
-        return $this->setParameter('serverMode', (bool)$value);
-    }
-
-    public function getServerMode()
-    {
-        return $this->getParameter('serverMode');
-    }
-
-    /**
-     * The Response Type is always needed.
-     */
     public function setResponseType($value)
     {
         return $this->setParameter('responseType', $value);
@@ -108,8 +95,6 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['card'] = $card_data;
         }
 
-        $data['serverMode'] = $this->getServerMode();
-
         // Create the hash for the hashable fields.
         $data['hash'] = $this->hashArray($data);
 
@@ -118,30 +103,9 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 
     /**
      * Sending the data is a simple pass-through.
-     * When using the JSON response type, we can either pass the raw data to the
-     * response object to then be used to generate the payment form which submits
-     * direct to remote gateway, or we can make a direct JSON call and get the
-     * result immediately. Use the latter only for testing or for passing a
-     * pseudocardpan in place of full card details to stay out of PCI requirements
-     * as much as possible.
      */
     public function sendData($data)
     {
-        if ($this->getServerMode() && $this->getResponseType() === ShopClientGateway::RETURN_TYPE_JSON) {
-            // Move the card details into the data to be sent.
-            $data = $data + $data['card'];
-            unset($data['card']);
-
-            $httpRequest = $this->httpClient->post($this->getEndpoint(), null, $data);
-            // CURL_SSLVERSION_TLSv1_2 for libcurl < 7.35
-            $httpRequest->getCurlOptions()->set(CURLOPT_SSLVERSION, 6);
-            $httpResponse = $httpRequest->send();
-
-            $body = (string)$httpResponse->getBody();
-
-            $data = json_decode($body, true);
-        }
-
         return $this->createResponse($data);
     }
 
@@ -152,25 +116,13 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
      * hidden fields and be hash-protected. Some of that data will be user-
      * enterable, and so not included in the hash. Some non-hashed fields are
      * still mandatory, depending on the request type.
-     * Some responses may require a REDIRECT if 3D Secure is enabled, so that
-     * needs to be dealt with in the complete* messages. A redirect may be needed
-     * for AJAX, but will be a part of the original POST for the REDIRECT method.
-     *
-     * TODO: just return the one response, but switch it from a transparent redirect
-     * to either complete+no redirect, or a non-transparent redirect (depending on 3DS).
-     * To do this mode_server will need to be a part of the data, and getRedirectData
-     * will need to be cleverer about how it filters what should really be in the redirect
-     * data. Only hashed fields should be included, with the remaining fields up to
-     * the merchant application to add to the front-end form. Maybe some helper methods
-     * will aid filtering those out and providing field names.
      */
     protected function createResponse($data)
     {
-        if ($this->getServerMode() && $this->getResponseType() === ShopClientGateway::RETURN_TYPE_JSON) {
-            // A server-to-server call has been made.
-            return $this->response = new ShopClientCompleteAuthorizeResponse($this, $data);
-        } else {
-            return $this->response = new ShopClientAuthorizeResponse($this, $data);
-        }
+        // Filter out all fields but the hashable hidden fields.
+        // But do add in the hash that has already been calculated.
+        $data = $this->filterHashFields($data) + array('hash' => $data['hash']);
+
+        return $this->response = new ShopClientAuthorizeResponse($this, $data);
     }
 }

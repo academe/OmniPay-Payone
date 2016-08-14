@@ -166,12 +166,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     );
 
     /**
-     * Hash an array prior to sending it.
-     * Only hashable fields will be included in the hash calculation.
+     * Filter an array of data to just return fields that need to be hashed.
      */
-    protected function hashArray($data)
+    protected function filterHashFields($data)
     {
-        // Filter the array using the list of hashable fields.
         $hash_data = array_filter($data, function($key) {
             // If the key is an array element then normalise it, e.g. pr[1] => px[x]
             if (strpos($key, '[')) {
@@ -180,6 +178,18 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
             return in_array($key, $this->hash_fields);
         }, ARRAY_FILTER_USE_KEY);
+
+        return $hash_data;
+    }
+
+    /**
+     * Hash an array prior to sending it.
+     * Only hashable fields will be included in the hash calculation.
+     */
+    protected function hashArray($data)
+    {
+        // Filter the array using the list of hashable fields.
+        $hash_data = $this->filterHashFields($data);
 
         // Sort the data alphanbetically by key.
         ksort($hash_data);

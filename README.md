@@ -489,7 +489,7 @@ Although the Frontend purchase and authorize take the user offsite (either in fu
 mode or in an iframe), no data is returned with the user coming back to the site.
 as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
 
-3D Secure incolves a vlsit to the authorisaing bank. However, PAYONE will wrap that visit
+3D Secure involves a vlsit to the authorisaing bank. However, PAYONE will wrap that visit
 up into a page that it controls (the page will contain an iframe). This means the result
 if a 3D Secure password is needed, will still be sent to the merchant site through the
 same notification URL as any non-3D Secure transaction.

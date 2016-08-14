@@ -6,12 +6,8 @@ namespace Omnipay\Payone\Message;
  * Authorize, shop mode, client payment gateway (AJAX card tokens or redirect).
  */
 
-use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
-use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Payone\AbstractShopGateway;
-use Omnipay\Payone\ShopClientGateway;
 use Omnipay\Common\Currency;
-use Omnipay\Common\ItemBag;
 
 class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 {
@@ -28,14 +24,9 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
         return $this->getParameter('responseType');
     }
 
-    /**
-     * The data is used to generate the POST form to send the user
-     * off to the PAYONE credit card form.
-     */
-    public function getData()
+    protected function getBaseData()
     {
-        // The base data.
-        $data = [
+        return array(
             'mid' => $this->getMerchantId(),
             'portalid' => $this->getPortalId(),
             'api_version' => AbstractShopGateway::API_VERSION,
@@ -45,7 +36,17 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
             'request' => $this->getRequestCode(),
             'responsetype' => $this->getResponseType(),
             'encoding' => $this->getEncoding(),
-        ];
+        );
+    }
+
+    /**
+     * The data is used to generate the POST form to send the user
+     * off to the PAYONE credit card form.
+     */
+    public function getData()
+    {
+        // The base data.
+        $data = $this->getBaseData();
 
         // The errorurl does NOT appear in the Frontend documentation, but does
         // work and is implemented in other platform gateways.
@@ -102,27 +103,28 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
     }
 
     /**
-     * Sending the data is a simple pass-through.
-     */
-    public function sendData($data)
-    {
-        return $this->createResponse($data);
-    }
-
-
-    /**
+     * Sending the data is a simple pass-through. However:
      * Whether using the AJAX or REDIRECT response type, the client needs the
      * POST data for adding to the form. Some of that data will be supplied in
      * hidden fields and be hash-protected. Some of that data will be user-
      * enterable, and so not included in the hash. Some non-hashed fields are
      * still mandatory, depending on the request type.
      */
-    protected function createResponse($data)
+    public function sendData($data)
     {
         // Filter out all fields but the hashable hidden fields.
         // But do add in the hash that has already been calculated.
         $data = $this->filterHashFields($data) + array('hash' => $data['hash']);
 
+        return $this->createResponse($data);
+    }
+
+
+    /**
+     *
+     */
+    protected function createResponse($data)
+    {
         return $this->response = new ShopClientAuthorizeResponse($this, $data);
     }
 }

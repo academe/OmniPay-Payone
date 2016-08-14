@@ -12,7 +12,7 @@ use Omnipay\Common\Exception\InvalidRequestException;
 class ShopClientGateway extends AbstractShopGateway
 {
     /**
-     * The return type when making a POST.
+     * The response type when making a POST.
      */
     const RETURN_TYPE_JSON = 'JSON';
     const RETURN_TYPE_REDIRECT = 'REDIRECT';
@@ -78,5 +78,13 @@ class ShopClientGateway extends AbstractShopGateway
     public function completeAuthorize(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Payone\Message\ShopClientCompleteAuthorizeRequest', $parameters);
+    }
+
+    /**
+     * Helper for generating the hidden fields in a credit card tokenisation AJAX form.
+     */
+    public function creditCardCheck(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Payone\Message\ShopClientCardCheckRequest', $parameters);
     }
 }

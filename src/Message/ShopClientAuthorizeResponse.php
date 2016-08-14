@@ -15,6 +15,7 @@ class ShopClientAuthorizeResponse extends AbstractResponse implements RedirectRe
     /**
      * A list of the CC fields required to be included in the POST form.
      * These are just for convenience, so check out their use in the documentation.
+     * TODO: move this more central.
      */
     const CREDIT_CARD_FIELDS = array(
         'cardpan',

@@ -10,7 +10,6 @@ namespace Omnipay\Payone\Message;
 use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Payone\AbstractShopGateway;
-use Omnipay\Common\Currency;
 use Omnipay\Common\ItemBag;
 
 class ShopFrontendAuthorizeRequest extends ShopAuthorizeRequest

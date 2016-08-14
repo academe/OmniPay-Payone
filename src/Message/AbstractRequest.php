@@ -378,6 +378,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $item_count = 0;
 
         if (!empty($this->getItems())) {
+            // Find the number of decimal digits the currency uses.
             $currency_digits = Currency::find($this->getCurrency())->getDecimals();
 
             foreach($this->getItems() as $item) {

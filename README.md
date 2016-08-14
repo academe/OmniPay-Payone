@@ -99,7 +99,7 @@ $lines[] = new \Omnipay\Payone\Extend\Item([
     'name' => '{product-name}',
     'quantity' => 2,
     'price' => 123,
-    'vat' => 20,
+    'vat' => 20, // Optional
 ]);
 ~~~
 
@@ -112,7 +112,7 @@ two decimal places):
 * "123"
 * "1.23"
 
-The items are then added to the `ItemBag` in the normal way:
+The items are then added to the `ItemBag` in the normal way as an array of objects:
 
 ~~~php
 $items = new \Omnipay\Common\ItemBag($lines);
@@ -126,7 +126,7 @@ If you do not use the extended `Item` then default values will be substituted (`
 `vat` figure). If you do not supply any items at all for the `Shop Frontend` methods, then a
 default item for the full price will be created automatically.
 
-## The Shop API Gateway
+## The Shop Server API Gateway
 
 Create a gateway object to access the Server API Shop version methods:
 
@@ -420,12 +420,24 @@ Although the Frontend purchase and authorize take the user offsite (either in fu
 mode or in an iframe), no data is returned with the user coming back to the site.
 as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
 
-3D Secure incolves a vlsit to the authrisaing bank. However, PAYONE will wrap that visit
+3D Secure incolves a vlsit to the authorisaing bank. However, PAYONE will wrap that visit
 up into a page that it controls (the page will contain an iframe). This means the result
 if a 3D Secure password is needed, will still be sent to the merchant site through the
 same notification URL as any non-3D Secure transaction.
 
-## Front End Authorize
+## The Shop Front End API Gateway
+
+The Front End gateway supports hosted payment forms, taking either just credit card or
+bank details, or full personal details too. The forms are hosted on the PAYONE site,
+can be customised, and can be either presented to the end user in an iframe, or
+the end user can be fully redirected to the form.
+
+~~~php
+// Set up the Front End gateway.
+$gateway = Omnipay\Omnipay::create('Payone_ShopFrontend');
+~~~
+
+### Front End Authorize
 
 The Front End API methods are encapsulated into a separate gateway class:
 
@@ -525,15 +537,28 @@ will be sent back to your merchant site, and then the user will be returned to e
 "success" page or the "failure" page. No data will be carried with that redirect, so the
 transaction details must be retained in the session.
 
-## Front End Purchase
+### Front End Purchase
 
 Works the same as Front End Authorize, but will require a separate Server API Capture.
+
+
+## The Shop Client API Gateway
+
+The Shop Client gateway handles payments using client AJAX calls or forms on the merchant
+site that are POSTed direct to the PAYONE gateway.
+
+~~~php
+// Set up the Client gateway.
+$gateway = Omnipay\Omnipay::create('Payone_ShopClient');
+~~~
+
 
 # References
 
 * https://github.com/fjbender/simple-php-integration  
   A write-up showing how the ONEPAY intergratino works.
   Some great background information.
+
 
 
 

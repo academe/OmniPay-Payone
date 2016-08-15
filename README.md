@@ -621,6 +621,92 @@ site that are POSTed direct to the PAYONE gateway.
 $gateway = Omnipay\Omnipay::create('Payone_ShopClient');
 ~~~
 
+### Client API Credit Card Check
+
+This is similar to the Server API Credit Card Check, and is set up in a similar way.
+No credit card details are passed to it however, as that is handled on the client.
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_ShopClient');
+$gateway->setSubAccountId(12345);
+$gateway->setTestMode(true); // Or false for production.
+$gateway->setMerchantId(67890);
+$gateway->setPortalId(3456789);
+$gateway->setPortalKey('Odq4574KVN6Qr9AX');
+
+$request = $gateway->creditCardCheck();
+$response = $request->send();
+~~~
+
+This provides the following data to feed into your client:
+
+~~~php
+// The endpoint used to check the card details - GET or POST can be used.
+$endpoint = $request->getEndpoint();
+
+// The additional data that must be included with the card data.
+// This will be an array that can be JSON encoded for the client JavaScript to use:
+$data = $response->getRedirectData();
+~~~
+
+Then on the client you need to provide the credit card fields in a non-submitting
+form:
+
+* cardpan - credit card number
+* cardexpiredate - YYMM
+* cardtype - e.g. V for Visa
+* cardcvc2
+* cardissuenumber - for UK Maestro only
+
+These values will be constructed by your client code, then submitted to the end point.
+The `cardexpiredate` for example, could be two drop-down lists concatenated.
+The `cardtype` could be a drop-down list, or a client library could set it automatically
+by matching card number patterns.
+
+The result will be a JSON response something like this:
+
+~~~json
+{
+    "status" : "VALID",
+    "pseudocardpan" : "4100000228091881",
+    "truncatedcardpan" : "401200XXXXXX1112",
+    "cardtype" : "V",
+    "cardexpiredate" : "2012"
+}
+~~~
+
+Handling that data is out of scope for OmniPay, but the most important value here is
+the `pseudocardpan` which can be used in any server API call in place of the credit card
+number (e.g. the Shop Server Authorize method).
+
+The official PAYONE documentation explains further how this works, and provides
+sample client code fragments.
+
+### Client API Authorize
+
+There are two main modes the client athorize operates in:
+
+* **REDIRECT** - The user POSTs directly to the PAYONE gateway, enters 3D Secure details
+  there if necessary, then is sent back to your site.
+* **JSON** - The user stays on your site initially while the authorisation is requested via
+  AJAX. The client may then send the user to PAYONE to enter their 3D Secure password if
+  reauired, but if not, then results can be posted directly back to the merchant site
+  without the user leaving.
+
+The REDIRECT mode supports the building of a complete payment form on the merchant site that
+POSTs `direct` to the PAYONE gateway. The result of the authorisation will be POSTed by
+PAYONE to the Notification handler. The gateway will also return the success status
+to the merchant site with the user when they are directed back **so long as 3D Secure is
+not being used**. It is important to note that if 3D Secure is used and the end user is
+redirected to enter their 3D Secure password, then they will be returned to your site's
+success/failure/cancel URL with *no* data, so the merchant siet must save enough details
+in the session to pick up the authorisation results sent via the Notification handler.
+
+The AJAX mode is set up the same way, but all the details are POSTed via AJAX rather then
+as a standard browser form. The result comes back as a JSON response, which may include a
+3D Secure redirect, or may just contain the authorisation result.
+
+TODO: the functionaly for this is complete, and will be documented here in due course.
 
 # References
 

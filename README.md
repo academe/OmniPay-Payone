@@ -642,7 +642,7 @@ This provides the following data to feed into your client:
 
 ~~~php
 // The endpoint used to check the card details - GET or POST can be used.
-$endpoint = $request->getEndpoint();
+$endpoint = $response->getRedirectUrl();
 
 // The additional data that must be included with the card data.
 // This will be an array that can be JSON encoded for the client JavaScript to use:

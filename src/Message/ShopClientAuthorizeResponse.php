@@ -40,12 +40,13 @@ class ShopClientAuthorizeResponse extends AbstractResponse implements RedirectRe
     }
 
     /**
-     * The URL the form will POST to.
+     * The URL the form data will POST to.
      */
     public function getRedirectUrl()
     {
-        return $this->postUrl;
+        return $this->request->getEndpoint();
     }
+
     public function getRedirectMethod()
     {
         return 'POST';

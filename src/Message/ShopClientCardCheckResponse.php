@@ -9,7 +9,7 @@ namespace Omnipay\Payone\Message;
 
 use Omnipay\Common\Message\RedirectResponseInterface;
 
-class ShopClientCardCheckResponse extends AbstractResponse
+class ShopClientCardCheckResponse extends AbstractResponse implements RedirectResponseInterface
 {
     public function isSuccessful()
     {
@@ -36,5 +36,22 @@ class ShopClientCardCheckResponse extends AbstractResponse
     public function getRedirectData()
     {
         return $this->getData();
+    }
+
+    /**
+     * Actually either POST or GET will work.
+     * This is over a secure connection, so GET won't be cached.
+     */
+    public function getRedirectMethod()
+    {
+        return 'POST';
+    }
+
+    /**
+     * The URL the form data will POST to.
+     */
+    public function getRedirectUrl()
+    {
+        return $this->request->getEndpoint();
     }
 }

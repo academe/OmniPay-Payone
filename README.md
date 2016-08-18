@@ -11,7 +11,7 @@ processing library for PHP 5.3+. This package implements PAYONE support for Omni
 
 ## Installation
 
-Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply add it
+Omnipay is installed via [Composer](http://getcomposer.org/). To install, add it
 to your `composer.json` file:
 
 ```json
@@ -21,6 +21,10 @@ to your `composer.json` file:
     }
 }
 ```
+
+or
+
+    composer require "academe/omnipay-payone: ~2.0"
 
 While in development, it can be obtained from this repository:
 
@@ -37,6 +41,10 @@ While in development, it can be obtained from this repository:
     ]
 }
 ```
+
+or
+
+    composer require "academe/omnipay-payone: dev-master"
 
 And run composer to update your dependencies:
 

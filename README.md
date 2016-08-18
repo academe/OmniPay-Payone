@@ -706,7 +706,7 @@ The AJAX mode is set up the same way, but all the details are POSTed via AJAX ra
 as a standard browser form. The result comes back as a JSON response, which may include a
 3D Secure redirect, or may just contain the authorisation result.
 
-TODO: the functionaly for this is complete, and will be documented here in due course.
+TODO: the functionaly for this is available, and will be documented here soon.
 
 # References
 
@@ -715,28 +715,3 @@ TODO: the functionaly for this is complete, and will be documented here in due c
   Some great background information.
 
 
-
-
-
-
-
-
-
-
-
-
-======
-
-## Development Notes
-
-Some development notes yet to be incorporated into the code or documentation:
-
-* Other transaction types to support on the "Shop" API: refund, vauthorization, creditcardcheck (AJAX API?), 3dscheck, addresscheck
-* Other gateway types exist: JavaScript, one-click purchasing.
-
-## Hosted iframe Mode
-
-* JS to include on page: https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js
-* This JS includes "classic" client-API mode functions supported by "AJAX mode" and "Redirect mode" (also worth following up)
-* config.cardtype defines available card types (from list in package)
-* See Platform_Client_API.pdf A few good examples are listed of the front-end markup and JS.

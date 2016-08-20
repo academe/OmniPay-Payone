@@ -1,3 +1,4 @@
+[![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)](https://raw.githubusercontent.com/academe/OmniPay-Payone/master/LICENSE.md)
 
 Table of Contents
 =================
@@ -50,7 +51,7 @@ to your `composer.json` file:
 }
 ```
 
-or
+or direct from [packagist](https://packagist.org/packages/academe/omnipay-payone)
 
     composer require "academe/omnipay-payone: ~2.0"
 

@@ -22,6 +22,7 @@ Table of Contents
       * [Client API Credit Card Check](#client-api-credit-card-check)
       * [Client API Authorize](#client-api-authorize)
         * [Client completeAuthorize](#client-completeauthorize)
+      * [Client API Purchase](#client-api-purchase)
     * [Notification Callback](#notification-callback)
       * [completeAuthorize and completePurchase Methods](#completeauthorize-and-completepurchase-methods)
   * [References](#references)
@@ -727,6 +728,13 @@ $server_response->getRedirectUrl()
 $server_response->getMessage();
 $server_response->getCustomerMessage();
 ~~~
+
+### Client API Purchase
+
+This works the same way as *Client API Authorize* but uses the `purchase` method instead.
+
+You would still use `completeAuthorize` with the purchase API.
+
 
 
 ## Notification Callback

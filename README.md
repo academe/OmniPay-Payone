@@ -1,4 +1,5 @@
 [![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)](https://raw.githubusercontent.com/academe/OmniPay-Payone/master/LICENSE.md)
+[![Packagist](https://img.shields.io/packagist/v/academe/omnipay-payone.svg?maxAge=2592000)]()
 
 Table of Contents
 =================

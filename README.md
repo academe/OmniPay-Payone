@@ -1,11 +1,36 @@
-**This repository is very much in development but should be finised shortly. The notes below will be converted to proper documentation.**
+
+Table of Contents
+=================
+
+  * [Omnipay: <a href="https://www.payone.de/">PAYONE</a>](#omnipay-payone)
+    * [Installation](#installation)
+    * [Basic Usage](#basic-usage)
+      * [Gateway Background](#gateway-background)
+      * [Shop and Access API Versions](#shop-and-access-api-versions)
+      * [Extended Items (Order Lines)](#extended-items-order-lines)
+    * [The Shop Server API Gateway](#the-shop-server-api-gateway)
+      * [Server API Authorize Payment](#server-api-authorize-payment)
+      * [Server API Purchase](#server-api-purchase)
+      * [Server API Capture](#server-api-capture)
+      * [Server API Void](#server-api-void)
+      * [Server API Credit Card Check](#server-api-credit-card-check)
+    * [Notification Callback](#notification-callback)
+      * [completeAuthorize and completePurchase Methods](#completeauthorize-and-completepurchase-methods)
+    * [The Shop Front End API Gateway](#the-shop-front-end-api-gateway)
+      * [Front End Authorize](#front-end-authorize)
+      * [Front End Purchase](#front-end-purchase)
+    * [The Shop Client API Gateway](#the-shop-client-api-gateway)
+      * [Client API Credit Card Check](#client-api-credit-card-check)
+      * [Client API Authorize](#client-api-authorize)
+  * [References](#references)
 
 # Omnipay: [PAYONE](https://www.payone.de/)
 
 **PAYONE driver for the Omnipay PHP payment processing library**
 
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
-processing library for PHP 5.3+. This package implements PAYONE support for Omnipay.
+processing library for PHP 5.3+. This package implements PAYONE support for
+[OmniPay](https://github.com/thephpleague/omnipay).
 
 ![Alt text](docs/PAYONE_Logo_480.png?raw=true "PAYONE")
 

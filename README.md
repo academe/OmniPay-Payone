@@ -2,6 +2,7 @@
 Table of Contents
 =================
 
+  * [Table of Contents](#table-of-contents)
   * [Omnipay: <a href="https://www.payone.de/">PAYONE</a>](#omnipay-payone)
     * [Installation](#installation)
     * [Basic Usage](#basic-usage)
@@ -14,14 +15,14 @@ Table of Contents
       * [Server API Capture](#server-api-capture)
       * [Server API Void](#server-api-void)
       * [Server API Credit Card Check](#server-api-credit-card-check)
-    * [Notification Callback](#notification-callback)
-      * [completeAuthorize and completePurchase Methods](#completeauthorize-and-completepurchase-methods)
     * [The Shop Front End API Gateway](#the-shop-front-end-api-gateway)
       * [Front End Authorize](#front-end-authorize)
       * [Front End Purchase](#front-end-purchase)
     * [The Shop Client API Gateway](#the-shop-client-api-gateway)
       * [Client API Credit Card Check](#client-api-credit-card-check)
       * [Client API Authorize](#client-api-authorize)
+    * [Notification Callback](#notification-callback)
+      * [completeAuthorize and completePurchase Methods](#completeauthorize-and-completepurchase-methods)
   * [References](#references)
 
 # Omnipay: [PAYONE](https://www.payone.de/)
@@ -413,120 +414,6 @@ $request = $gateway->authorize([
 Normally the token will come from the web client (AJAX in the browser) but this
 Server API can be used during development and testing with test cards.
 
-## Notification Callback
-
-For most - if not all - transactions, PAYONE will send details of that transaction to your
-notification URL. This URL is specified in the PAYONE account configuration. For most of the
-Server API methods it is a convenience. For the Frontend methods it is essential, being the
-only way of getting a notification that a transaction has completed.
-
-The notification comes from IP address 185.60.20.0/24 (185.60.20.1 to 185.60.20.254).
-This driver does not make any attempt to validate that.
-
-Your application must response to the notification within ten seconds, because when a Frontend
-hosted form is used, the user will be waiting on the PAYONE site for the asknowledgement - just
-save the data to storage and end.
-
-The notification Server Request (i.e. *incoming* request to your server) is captured by the
-`completeStatus`
-
-~~~php
-$gateway = Omnipay\Omnipay::create('Payone_ShopServer');
-
-// The portal key must be provided.
-// This will be used to verify the hash sent with the transaction status notification.
-$gateway->setPortalKey('Ab12Cd34Ef56Gh78');
-
-$server_request = $gateway->acceptNotification();
-
-// The raw data sent is available:
-$data = $server_request->getData();
-
-// Provides the result of the hash verification.
-// If the hash is not verified then the data cannot be trusted.
-$server_request->isValid();
-~~~
-
-Individual data items can also be extracted from the server request (see list below).
-
-Once the data is saved to the local application, respond to the remote gateway to
-indicate that you have received the notification:
-
-~~~php
-$server_response = $server_request->send();
-// Your application will exit on the next command by default.
-// You can prevent that by passiong in `false` as a single parameter, but
-// do make sure no further stdout is issued.
-$server_response->acknowledge(); // or send()
-~~~
-
-List of $server_request data methods:
-
-* getPaymentPortalKey() - MD5 or SHA2 384, depending on portal account configuration
-* getPaymentPortalId()
-* getSubAccountId()
-* getEvent() - the name of the reason the notification was sent.
-  Includes "appointed", "capture", "paid", "underpaid", "cancelation", "refund", "debit", "reminder", "vauthorization", "vsettlement", "transfer", "invoice", "failed"
-* getAccessName()
-* getAccessCode()
-* getTxStatus() - the raw status code
-* getTransactionStatus() - OmniPay transaction status codes
-* getTransactionId()
-* getTransactionReference()
-* getNotifyVersion()
-* getParam()
-* getMode() - test or live
-* getSequenceNumber()
-* getClearingType() - should always be 'cc'
-* getTxTimestamp() - raw unix timestamp
-* getTxTime() - timestamp as a \DateTime object
-* getCompany()
-* getCurrency() -  ISO three-letter code
-* getCurrencyObject() - as an OmniPay `Currency` object
-* getDebtorId()
-* getCustomerId()
-* getNumber() - the CC number with hidden middle digits e.g. 411111xxxxxx1111"
-* getNumberLastFour() - e.g. "1111"
-* getCardType() - PAYONE single-letter code, e.g. "V", "M", "D".
-* getBrand() - OmniPay name for the card type, e.g. "visa", "mastercard", "diners".
-* getExpireDate() - YYMM format, as supplied
-* getExpireDateObject() - expiry date returned as a \DateTime object
-* getCardholder() - documented, but seems to be blank most of the time
-* getFirstName()
-* getLastName()
-* getName()
-* getStreet()
-* getAddress1() - alias of getStreet()
-* getCity()
-* getPostcode()
-* getCountry() - ISO code
-* getShippingFirstName()
-* getShippingLastName()
-* getShippingName()
-* getShippingStreet()
-* getShippingAddress1() - alias of getShippingStreet()
-* getShippingCity()
-* getShippingPostcode()
-* getShippingCountry() - ISO code
-* getEmail()
-* getPrice() - decimal in major currency units
-* getPriceInteger() - integer in minor currency units
-* getBalance() - decimal in major currency units
-* getBalanceInteger() - integer in minor currency units
-* getReceivable() - decimal in major currency units
-* getReceivableInteger() - integer in minor currency units
-
-### completeAuthorize and completePurchase Methods
-
-Although the Frontend purchase and authorize take the user offsite (either in full screen
-mode or in an iframe), no data is returned with the user coming back to the site.
-as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
-
-3D Secure involves a vlsit to the authorisaing bank. However, PAYONE will wrap that visit
-up into a page that it controls (the page will contain an iframe). This means the result
-if a 3D Secure password is needed, will still be sent to the merchant site through the
-same notification URL as any non-3D Secure transaction.
-
 ## The Shop Front End API Gateway
 
 The Front End gateway supports hosted payment forms, taking either just credit card or
@@ -740,6 +627,120 @@ as a standard browser form. The result comes back as a JSON response, which may 
 3D Secure redirect, or may just contain the authorisation result.
 
 TODO: the functionaly for this is available, and will be documented here soon.
+
+## Notification Callback
+
+For most - if not all - transactions, PAYONE will send details of that transaction to your
+notification URL. This URL is specified in the PAYONE account configuration. For most of the
+Server API methods it is a convenience. For the Frontend methods it is essential, being the
+only way of getting a notification that a transaction has completed.
+
+The notification comes from IP address 185.60.20.0/24 (185.60.20.1 to 185.60.20.254).
+This driver does not make any attempt to validate that.
+
+Your application must response to the notification within ten seconds, because when a Frontend
+hosted form is used, the user will be waiting on the PAYONE site for the asknowledgement - just
+save the data to storage and end.
+
+The notification Server Request (i.e. *incoming* request to your server) is captured by the
+`completeStatus`
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_ShopServer');
+
+// The portal key must be provided.
+// This will be used to verify the hash sent with the transaction status notification.
+$gateway->setPortalKey('Ab12Cd34Ef56Gh78');
+
+$server_request = $gateway->acceptNotification();
+
+// The raw data sent is available:
+$data = $server_request->getData();
+
+// Provides the result of the hash verification.
+// If the hash is not verified then the data cannot be trusted.
+$server_request->isValid();
+~~~
+
+Individual data items can also be extracted from the server request (see list below).
+
+Once the data is saved to the local application, respond to the remote gateway to
+indicate that you have received the notification:
+
+~~~php
+$server_response = $server_request->send();
+// Your application will exit on the next command by default.
+// You can prevent that by passiong in `false` as a single parameter, but
+// do make sure no further stdout is issued.
+$server_response->acknowledge(); // or send()
+~~~
+
+List of $server_request data methods:
+
+* getPaymentPortalKey() - MD5 or SHA2 384, depending on portal account configuration
+* getPaymentPortalId()
+* getSubAccountId()
+* getEvent() - the name of the reason the notification was sent.
+  Includes "appointed", "capture", "paid", "underpaid", "cancelation", "refund", "debit", "reminder", "vauthorization", "vsettlement", "transfer", "invoice", "failed"
+* getAccessName()
+* getAccessCode()
+* getTxStatus() - the raw status code
+* getTransactionStatus() - OmniPay transaction status codes
+* getTransactionId()
+* getTransactionReference()
+* getNotifyVersion()
+* getParam()
+* getMode() - test or live
+* getSequenceNumber()
+* getClearingType() - should always be 'cc'
+* getTxTimestamp() - raw unix timestamp
+* getTxTime() - timestamp as a \DateTime object
+* getCompany()
+* getCurrency() -  ISO three-letter code
+* getCurrencyObject() - as an OmniPay `Currency` object
+* getDebtorId()
+* getCustomerId()
+* getNumber() - the CC number with hidden middle digits e.g. 411111xxxxxx1111"
+* getNumberLastFour() - e.g. "1111"
+* getCardType() - PAYONE single-letter code, e.g. "V", "M", "D".
+* getBrand() - OmniPay name for the card type, e.g. "visa", "mastercard", "diners".
+* getExpireDate() - YYMM format, as supplied
+* getExpireDateObject() - expiry date returned as a \DateTime object
+* getCardholder() - documented, but seems to be blank most of the time
+* getFirstName()
+* getLastName()
+* getName()
+* getStreet()
+* getAddress1() - alias of getStreet()
+* getCity()
+* getPostcode()
+* getCountry() - ISO code
+* getShippingFirstName()
+* getShippingLastName()
+* getShippingName()
+* getShippingStreet()
+* getShippingAddress1() - alias of getShippingStreet()
+* getShippingCity()
+* getShippingPostcode()
+* getShippingCountry() - ISO code
+* getEmail()
+* getPrice() - decimal in major currency units
+* getPriceInteger() - integer in minor currency units
+* getBalance() - decimal in major currency units
+* getBalanceInteger() - integer in minor currency units
+* getReceivable() - decimal in major currency units
+* getReceivableInteger() - integer in minor currency units
+
+### completeAuthorize and completePurchase Methods
+
+Although the Frontend purchase and authorize take the user offsite (either in full screen
+mode or in an iframe), no data is returned with the user coming back to the site.
+as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
+
+3D Secure involves a vlsit to the authorisaing bank. However, PAYONE will wrap that visit
+up into a page that it controls (the page will contain an iframe). This means the result
+if a 3D Secure password is needed, will still be sent to the merchant site through the
+same notification URL as any non-3D Secure transaction.
 
 # References
 

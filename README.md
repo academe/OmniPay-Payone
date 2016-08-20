@@ -21,6 +21,7 @@ Table of Contents
     * [The Shop Client API Gateway](#the-shop-client-api-gateway)
       * [Client API Credit Card Check](#client-api-credit-card-check)
       * [Client API Authorize](#client-api-authorize)
+        * [Client completeAuthorize](#client-completeauthorize)
     * [Notification Callback](#notification-callback)
       * [completeAuthorize and completePurchase Methods](#completeauthorize-and-completepurchase-methods)
   * [References](#references)
@@ -362,7 +363,7 @@ $gateway->setSubAccountId(12345);
 $gateway->setTestMode(true); // Or false for production.
 $gateway->setMerchantId(67890);
 $gateway->setPortalId(3456789);
-$gateway->setPortalKey('secret-key');
+$gateway->setPortalKey('Ab12Cd34Ef56Gh78');
 
 $request = $gateway->creditCardCheck([
     'card' => [
@@ -552,7 +553,7 @@ $gateway->setSubAccountId(12345);
 $gateway->setTestMode(true); // Or false for production.
 $gateway->setMerchantId(67890);
 $gateway->setPortalId(3456789);
-$gateway->setPortalKey('Odq4574KVN6Qr9AX');
+$gateway->setPortalKey('Ab12Cd34Ef56Gh78');
 
 $request = $gateway->creditCardCheck();
 $response = $request->send();
@@ -626,7 +627,107 @@ The AJAX mode is set up the same way, but all the details are POSTed via AJAX ra
 as a standard browser form. The result comes back as a JSON response, which may include a
 3D Secure redirect, or may just contain the authorisation result.
 
-TODO: the functionaly for this is available, and will be documented here soon.
+Setting up the message starts is much the same way as other methods. It is the same for
+both the REDIRECT and the JSON response types:
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_ShopClient');
+$gateway->setSubAccountId(12345);
+$gateway->setTestMode(true); // Or false for production.
+$gateway->setMerchantId(67890);
+$gateway->setPortalId(3456789);
+$gateway->setPortalKey('Ab12Cd34Ef56Gh78');
+// Set up the response type - redirect the user or do an AJAX call.
+$gateway->setResponseType($gateway::RETURN_TYPE_REDIRECT);
+//$gateway->setResponseType($gateway::RETURN_TYPE_JSON);
+
+$request = $gateway->authorize([
+    'transactionId' => $transactionId, // Merchant site ID (or a nonce for it)
+    'amount' => 9.99, // Major units
+    'currency' => 'EUR',
+    '3dSecure' => false, // or true
+    'items' => $items, // Array or ItemBag of Items or Exten\Items
+    // Where to send the user in authorisation suucess or falure.
+    'returnUrl' => $returnUrl,
+    'errorUrl' => $errorUrl,
+    // Where to send the user on cancellation in 3D Secure form.
+    'cancelUrl' => $cancelUrl,
+]);
+$response = $request->send();
+~~~
+
+The `$response` now contains the details needed for either hidden fields
+in the client-side direct POST form, or for the AJAX call. These details are:
+
+~~~php
+// Array of name/value pairs
+$params = $response->getRedirectData();
+
+// The destination endpoint.
+$endpoint = $response->getRedirectUrl();
+~~~
+
+In addition to `$params` you need to include the following data provided by
+the end user:
+
+* lastname - mandatory
+* country - ISO3166 e.g. GB
+* cardpan
+* cardexpiredate YYMM
+* cardtype - e.g. V
+* cardcvc2
+* cardissuenumber - UK Maestro only
+* cardholder - optional
+
+If your redirectMethod was REDIRECT, then all this information will be put into a form that
+the user submits. The form will POST directly to PAYONE. What happens next will depend on
+whether 3D Secure has been turned on and is availa to the card used.
+
+* If 3D Secure is available, PAYONE will present the end user with a 3D Secure password form.
+  The user will then be returned to the site with **no results**. The results will be send to
+  the `Notification` handler where the merchant site must fetch them using the merchant site
+  `transactionId`.
+* If 3D Secure is NOT available, then the card will be validated and the user returned to the
+  merchant site **with the results** as GET parameters. The result cannot be trusted as it is
+  not signed, but can be useful in the flow. The result can be captured using the
+  `completeAuthorize` message (see below).
+
+If your redirectMethod was JSON, then the merchant sit client page is expected to POST the data
+using AJAX. The return will be a JSON message detailing the result, which can be a success, failure,
+or a redirect for 3D Secure. Handling that response is out of scope for OmniPay, but the PAYONE
+documentation provides some examples and some handy scripts.
+
+#### Client completeAuthorize
+
+This can be used to parse the resturn data from the server request (i.e. the data the user brings
+back with them):
+
+~~~php
+$gateway = Omnipay\Omnipay::create('Payone_ShopClient');
+
+$server_request = $gateway->completeAuthorize();
+$server_response = $server_request->send();
+~~~
+
+The `$server_response` can give you a number of standardised items:
+
+~~~php
+// The raw data
+$server_response->getData();
+
+// The authorisation success state:
+$server_response->isSuccessful();
+
+// The redirect status and URL (we would not expect to see this for a REDIRECT response
+// type as the redirect has already been processed on the client side:
+$server_response->isRedirect();
+$server_response->getRedirectUrl()
+
+// If there are errors, then there will be a system message and a user-safe message:
+$server_response->getMessage();
+$server_response->getCustomerMessage();
+~~~
+
 
 ## Notification Callback
 

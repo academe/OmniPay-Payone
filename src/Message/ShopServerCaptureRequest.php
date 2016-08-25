@@ -6,7 +6,7 @@ namespace Omnipay\Payone\Message;
 * PAYONE Shop Capture Request
 */
 
-class ShopServerCaptureRequest extends AbstractRequest
+class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
 {
     /**
      * Values for the settleAccount parameter.

@@ -138,15 +138,15 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['narrative_text'] = $this->getDescription();
         }
 
-        // Create the hash.
-        $data['hash'] = $this->hashArray($data);
-
         $data += $this->getDataPersonal();
         $data += $this->getDataShipping();
 
         if ($this->getLanguage()) {
             $data['language'] = $this->getLanguage();
         }
+
+        // Create the hash for hashable fields.
+        $data['hash'] = $this->hashArray($data);
 
         return $data;
     }

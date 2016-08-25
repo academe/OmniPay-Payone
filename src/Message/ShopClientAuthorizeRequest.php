@@ -53,32 +53,33 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 
         $data += $this->getDataUrl();
 
-        if ($this->getSubAccountId()) {
-            $data['aid'] = $this->getSubAccountId();
-        }
-
-        if ($this->getClearingType()) {
-            $data['clearingtype'] = $this->getClearingType();
-        }
-
-        if ($this->getTransactionId()) {
-            $data['reference'] = $this->getTransactionId();
-        }
-
-        if ($this->getAmountInteger()) {
-            $data['amount'] = $this->getAmountInteger();
-        }
-
-        if ($this->getCurrency()) {
-            $data['currency'] = $this->getCurrency();
-        }
+        $data['aid'] = $this->getSubAccountId();
+        $data['clearingtype'] = $this->getClearingType();
+        $data['reference'] = $this->getTransactionId();
+        $data['amount'] = $this->getAmountInteger();
+        $data['currency'] = $this->getCurrency();
 
         if ($this->getEcommerceMode()) {
             $data['ecommercemode'] = $this->getEcommerceMode();
         }
 
+        if ($this->getParam() !== null) {
+            $data['param'] = $this->getParam();
+        }
+
+        if ($this->getDescription()) {
+            $data['narrative_text'] = $this->getDescription();
+        }
+
+        if ($this->getInvoiceId()) {
+            $data['invoiceid'] = $this->getInvoiceId();
+        }
+
         // Add in any cart items.
         $data += $this->getDataItems();
+
+        // Note that "lastname" and "country" are mandatory, so card details with
+        // a lastname and country must be supplied at an absolute minimum.
 
         if ($card = $this->getCard()) {
             $data['firstname'] = $card->getFirstName();

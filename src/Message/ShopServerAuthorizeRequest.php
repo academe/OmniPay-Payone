@@ -39,6 +39,10 @@ class ShopServerAuthorizeRequest extends AbstractRequest
 
         $data += $this->getDataPersonal();
 
+        if ($this->getParam() !== null) {
+            $data['param'] = $this->getParam();
+        }
+
         if ($this->getDescription()) {
             $data['narrative_text'] = substr($this->getDescription(), 0, 80);
         }

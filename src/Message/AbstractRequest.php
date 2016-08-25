@@ -891,6 +891,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * The custom "param" field.
+     */
+    public function setParam($value)
+    {
+        return $this->setParameter('param', $value);
+    }
+
+    public function getParam()
+    {
+        return $this->getParameter('param');
+    }
+
+    /**
      * The ecommerce mode - relates to the risk of the card transaction
      * being fraudulent.
      */

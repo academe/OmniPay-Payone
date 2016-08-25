@@ -35,12 +35,17 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     const TARGET_WINDOW_SELF    = 'self';
 
     /**
-     * Default values for the auto-created Item if none are supplied.
-     * If you don't want to use these defaults, then make sure you always
+     * The display_name values.
+     */
+    const DISPLAY_NAME_YES = 'yes';
+    const DISPLAY_NAME_NO = 'no';
+
+    /**
+     * Default ID for the auto-created Item if none are supplied.
+     * If you don't want to use this default, then make sure you always
      * pass an ItemBag into the transaction.
      */
     protected $defaultItemId = '000000';
-    protected $defaultItemName = 'Payment';
 
     /**
      * The data is used to generate the POST form to send the user
@@ -80,7 +85,7 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
                 'id' => $this->defaultItemId,
                 'price' => $this->getAmountInteger(),
                 'quantity' => 1,
-                'name' => $this->defaultItemName,
+                'name' => $this->getDescription(),
                 'vat' => null,
             ]);
 
@@ -115,22 +120,20 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['targetwindow'] = $this->getTargetWindow();
         }
 
+        if ($this->getParam() !== null) {
+            $data['param'] = $this->getParam();
+        }
+
+        if ($this->getDescription()) {
+            $data['narrative_text'] = $this->getDescription();
+        }
+
         // Create the hash.
         // All data collected so far must be "protected" by the hash.
         $data['hash'] = $this->hashArray($data);
 
-        // Some fields are added after the hash.
-
-        if ($card = $this->getCard()) {
-            $data['firstname'] = $card->getFirstName();
-            $data['lastname'] = $card->getLastName();
-            $data['company'] = $card->getCompany();
-            $data['street'] = $card->getBillingAddress1();
-            $data['zip'] = $card->getBillingPostcode();
-            $data['city'] = $card->getBillingCity();
-            $data['country'] = $card->getBillingCountry();
-            $data['email'] = $card->getEmail();
-        }
+        $data += $this->getDataPersonal();
+        $data += $this->getDataShipping();
 
         if ($this->getLanguage()) {
             $data['language'] = $this->getLanguage();
@@ -190,9 +193,9 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     public function setDisplayName($value)
     {
         if ($value === true) {
-            $value = 'yes';
+            $value = static::DISPLAY_NAME_YES;
         } elseif ($value === false) {
-            $value = 'no';
+            $value = static::DISPLAY_NAME_NO;
         }
 
         $this->setParameter('displayName', $value);

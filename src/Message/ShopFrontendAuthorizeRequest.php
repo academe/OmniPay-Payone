@@ -48,17 +48,15 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     protected $defaultItemId = '000000';
 
     /**
-     * The data is used to generate the POST form to send the user
-     * off to the PAYONE credit card form.
+     * Base data required for all Front End transactions.
      */
-    public function getData()
+    protected function getBaseData()
     {
-        // The base data.
-        $data = [
+        $data = array(
             'portalid' => $this->getPortalId(),
-            'aid' => $this->getSubAccountId(),
             'api_version' => AbstractShopGateway::API_VERSION,
-            'mode' => $this->getTestMode()
+            'aid' => $this->getSubAccountId(),
+            'mode' => (bool)$this->getTestMode()
                 ? AbstractShopGateway::MODE_TEST
                 : AbstractShopGateway::MODE_LIVE,
             'request' => $this->getRequestCode(),
@@ -67,7 +65,19 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
             'amount' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),
             'encoding' => $this->getEncoding(),
-        ];
+        );
+
+        return $data;
+    }
+
+    /**
+     * The data is used to generate the POST form to send the user
+     * off to the PAYONE credit card form.
+     */
+    public function getData()
+    {
+        // The base data.
+        $data = $this->getBaseData();
 
         // Add basket contents next.
         // It seems that we MUST have at least one item in
@@ -111,7 +121,7 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['invoiceid'] = $this->getInvoiceId();
         }
 
-        // The errorurl does NOT appear in the Frontend documentation, but does
+        // The errorurl does not appear in the Frontend documentation, but does
         // work and is implemented in other platform gateways.
 
         $data += $this->getDataUrl();
@@ -129,7 +139,6 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
         }
 
         // Create the hash.
-        // All data collected so far must be "protected" by the hash.
         $data['hash'] = $this->hashArray($data);
 
         $data += $this->getDataPersonal();

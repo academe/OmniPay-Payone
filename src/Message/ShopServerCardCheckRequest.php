@@ -6,7 +6,7 @@ namespace Omnipay\Payone\Message;
 * PAYONE Shop Server Credit Card Check Request
 */
 
-class ShopServerCardCheckRequest extends AbstractRequest
+class ShopServerCardCheckRequest extends ShopServerAuthorizeRequest
 {
     /**
      * The "request" parameter.

@@ -6,6 +6,8 @@ namespace Omnipay\Payone\Message;
 * PAYONE Shop Authorize Request
 */
 
+use Omnipay\Payone\AbstractShopGateway;
+
 class ShopServerAuthorizeRequest extends AbstractRequest
 {
     /**
@@ -14,16 +16,40 @@ class ShopServerAuthorizeRequest extends AbstractRequest
     protected $request_code = 'preauthorization';
 
     /**
+     * Base data required for all Server transactions.
+     */
+    protected function getBaseData()
+    {
+        $data = array(
+            'request' => $this->request_code,
+            'mid' => $this->getMerchantId(),
+            'portalid' => $this->getPortalId(),
+            'api_version' => AbstractShopGateway::API_VERSION,
+            // Only md5 is used to encode the key for the Server API (no hashing is
+            // needed over the secure server-to-server connection).
+            'key' => md5($this->getPortalKey()),
+            'mode' => (bool)$this->getTestMode()
+                ? AbstractShopGateway::MODE_TEST
+                : AbstractShopGateway::MODE_LIVE,
+            'encoding' => $this->getEncoding(),
+            'language' => $this->getLanguage(),
+        );
+
+        return $data;
+    }
+
+    /**
      * Collect the data together to send to the Gateway.
      */
     public function getData()
     {
         $data = $this->getBaseData();
 
+        $data['clearingtype'] = $this->getClearingType();
+
         $data['aid'] = $this->getSubAccountId();
 
         // CC details
-
         $data += $this->getDataCard();
 
         // Merchant site reference.
@@ -36,7 +62,6 @@ class ShopServerAuthorizeRequest extends AbstractRequest
         $data['currency'] = $this->getCurrency();
 
         // Personal data.
-
         $data += $this->getDataPersonal();
 
         if ($this->getParam() !== null) {
@@ -52,15 +77,12 @@ class ShopServerAuthorizeRequest extends AbstractRequest
         }
 
         // URL orverrides.
-
         $data += $this->getDataUrl();
 
         // Shipping details.
-
         $data += $this->getDataShipping();
 
         // Items/Cart details
-
         $data += $this->getDataItems();
 
         return $data;

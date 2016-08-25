@@ -218,36 +218,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * Base data required for all Sewrver transactions.
-     */
-    protected function getBaseData()
-    {
-        $data = array();
-
-        $data['request'] = $this->request_code;
-
-        $data['mid'] = $this->getMerchantId();
-        $data['portalid'] = $this->getPortalId();
-
-        // Only md5 is used to encode the key for the Server API (no hashing is
-        // needed over the secure server-to-serever connection).
-        $data['key'] = md5($this->getPortalKey());
-
-        $data['api_version'] = AbstractShopGateway::API_VERSION;
-
-        $data['mode'] = (bool)$this->getTestMode() ? AbstractShopGateway::MODE_TEST : AbstractShopGateway::MODE_LIVE;
-
-        $data['encoding'] = $this->getEncoding();
-        $data['language'] = $this->getLanguage();
-
-        if ($this->getClearingType()) {
-            $data['clearingtype'] = $this->getClearingType();
-        }
-
-        return $data;
-    }
-
-    /**
      * Collect the personal data to send to the Gateway.
      */
     public function getDataPersonal()

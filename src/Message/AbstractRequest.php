@@ -170,16 +170,23 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     protected function filterHashFields($data)
     {
-        $hash_data = array_filter($data, function($key) {
-            // If the key is an array element then normalise it, e.g. pr[1] => px[x]
+        foreach($data as $key => $value) {
+            // If the key is an array element then normalise it, e.g. pr[1] => pr[x]
             if (strpos($key, '[')) {
-                $key = preg_replace('/\[[0-9]*\]/', '[x]', $key);
+                $normalised_key = preg_replace('/\[[0-9]*\]/', '[x]', $key);
+            } else {
+                $normalised_key = $key;
             }
 
-            return in_array($key, $this->hash_fields);
-        }, ARRAY_FILTER_USE_KEY);
+            // If the normalised key is not in the list of hashable keys,
+            // then remove that element from the supplied data.
+            if (! in_array($normalised_key, $this->hash_fields)) {
+                unset($data[$key]);
+            }
+        }
 
-        return $hash_data;
+        // Return the data array with non-hashable elements removed.
+        return $data;
     }
 
     /**

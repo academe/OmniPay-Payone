@@ -170,7 +170,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     protected function filterHashFields($data)
     {
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             // If the key is an array element then normalise it, e.g. pr[1] => pr[x]
             if (strpos($key, '[')) {
                 $normalised_key = preg_replace('/\[[0-9]*\]/', '[x]', $key);
@@ -325,7 +325,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         // ONEPAY supports IPv4 only, so we will filter out IPv6 formats.
 
-        if ($this->getClientIp() && preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $this->getClientIp())) {
+        $ipv4match = preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $this->getClientIp());
+        if ($this->getClientIp() && $ipv4match) {
             $data['ip'] = $this->getClientIp();
         }
 
@@ -488,7 +489,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             // Find the number of decimal digits the currency uses.
             $currency_digits = Currency::find($this->getCurrency())->getDecimals();
 
-            foreach($this->getItems() as $item) {
+            foreach ($this->getItems() as $item) {
                 $item_count++;
 
                 if ($item instanceof ExtendItemInterface) {
@@ -545,7 +546,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         $lines = preg_split('/[\n\r]+/', trim($body));
 
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             // We won't make too many assumptions about the validity of the data.
             // This will also skip blank lines, which can happen between the system
             // error message and the user error message.
@@ -686,7 +687,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // Validate
         if (!in_array($cardType, $this->getCardTypes())) {
             throw new InvalidRequestException(sprintf(
-                'Unrecognised card type "%s".', $cardType
+                'Unrecognised card type "%s".',
+                $cardType
             ));
         }
 

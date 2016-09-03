@@ -13,7 +13,8 @@ class ShopServerCardCheckRequest extends ShopServerAuthorizeRequest
      */
     protected $request_code = 'creditcardcheck';
 
-    public function getData() {
+    public function getData()
+    {
         $data = $this->getBaseData();
 
         // We don't need this one.

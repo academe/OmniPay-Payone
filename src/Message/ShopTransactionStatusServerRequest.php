@@ -64,7 +64,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         if ($this->getEncoding() == AbstractShopGateway::ENCODING_UTF8) {
             // We want UTF-8 back, so the ISO-8859 needs to be converted.
 
-            array_walk($data, function(&$item) {
+            array_walk($data, function (&$item) {
                 if (!empty($item)) {
                     $item = utf8_encode($item);
                 }
@@ -328,7 +328,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         $brands = AbstractRequest::getCardTypes();
 
         $type = $this->getCardType();
-        foreach($brands as $name => $code) {
+        foreach ($brands as $name => $code) {
             if ($type == $code) {
                 return $name;
             }

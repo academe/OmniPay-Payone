@@ -42,15 +42,18 @@ class ShopClientCompleteAuthorizeResponse extends AbstractResponse implements Re
         return $this->getDataItem('userid');
     }
 
-    public function getMessage() {
+    public function getMessage()
+    {
         return $this->getDataItem('errormessage');
     }
 
-    public function getCustomerMessage() {
+    public function getCustomerMessage()
+    {
         return $this->getDataItem('customermessage');
     }
 
-    public function getAvs() {
+    public function getAvs()
+    {
         return $this->getDataItem('protect_result_avs');
     }
 

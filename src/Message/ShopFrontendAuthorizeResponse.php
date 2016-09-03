@@ -82,4 +82,3 @@ class ShopFrontendAuthorizeResponse extends AbstractResponse implements Redirect
         $this->redirectMethod = $value;
     }
 }
-

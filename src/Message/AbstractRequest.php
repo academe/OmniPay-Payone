@@ -8,6 +8,7 @@ namespace Omnipay\Payone\Message;
 
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
+use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\CreditCard;

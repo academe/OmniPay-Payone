@@ -66,7 +66,11 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
 
             array_walk($data, function (&$item) {
                 if (!empty($item)) {
-                    $item = utf8_encode($item);
+                    if (is_array($item)) {
+                        $item = json_decode(utf8_encode(json_encode($item)), true);
+                    } else {
+                        $item = utf8_encode($item);
+                    }
                 }
             });
         }

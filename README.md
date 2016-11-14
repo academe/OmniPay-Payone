@@ -192,7 +192,7 @@ $gateway->setCurrency('EUR');
 
 ### Server API Authorize Payment
 
-PAYONE calls this "pre-authorization". It authoprizes a payment to be captured later.
+PAYONE calls this "pre-authorization". It authorizes a payment to be captured later.
 
 To create an authorization request:
 
@@ -255,6 +255,10 @@ as a pseudo-card:
 ];
 ~~~
 
+It is strongly recommended to only work with pseudo card numbers through the Server API channel,
+to avoid potential PCI DSS issues. A pseudo card number should be obtained through the Client API
+channel using the "hosted iFrame" functionality.
+
 Also to note about the card data is that countries must be supplied as ISO 3166 tw-letter codes:
 
 ~~~php
@@ -301,7 +305,7 @@ if (!$response->isSuccessful()) {
 
 ### Server API Purchase
 
-PAYONE calls this "authorization". It authoprizes and captures a payment immediately.
+PAYONE calls this "authorization". It authorizes and captures a payment immediately.
 
 It is used and responses in the same way as `authorize`. The request message is created:
 
@@ -329,12 +333,13 @@ account open for capturing the total in multiple stages, then specify for the ac
 be left unsettled:
 
 ~~~php
-    'sedquenceNumber' => $sequence,
+    'sequenceNumber' => $sequence,
     'settleAccount' => false,
 ~~~
 
 The sequence number starts at 1 for the first capture, and must be incremented for each
-subsequent capture.
+subsequent capture. It should be taken from the [Notification Callback](#notification-callback),
+see below.
 
 ### Server API Void
 
@@ -352,7 +357,7 @@ $request = $gateway->void([
 $rssponse = $request->send();
 ~~~
 
-The `void` method will response with a `ShopCaptureResponse` response when sent to ONEPAY.
+The `void` method will response with a `ShopCaptureResponse` response when sent to PAYONE.
 
 ### Server API Credit Card Check
 
@@ -383,7 +388,7 @@ $request = $gateway->creditCardCheck([
 $response = $request->send();
 ~~~
 
-If the credit card details are plausible, then the response wilb be successful:
+If the credit card details are plausible, then the response will be successful:
 
 ~~~php
 $response->isSuccessful();
@@ -608,9 +613,12 @@ number (e.g. the Shop Server Authorize method).
 The official PAYONE documentation explains further how this works, and provides
 sample client code fragments.
 
+It is highly recommended to use the "hosted iFrame" mode of capturing credit card data. It is out
+of the scope of OmniPay and described in more detail [here](https://github.com/fjbender/simple-php-integration#credit-card-payments).
+
 ### Client API Authorize
 
-There are two main modes the client athorize operates in:
+There are two main modes the client authorize operates in:
 
 * **REDIRECT** - The user POSTs directly to the PAYONE gateway, enters 3D Secure details
   there if necessary, then is sent back to your site.
@@ -751,8 +759,8 @@ only way of getting a notification that a transaction has completed.
 The notification comes from IP address 185.60.20.0/24 (185.60.20.1 to 185.60.20.254).
 This driver does not make any attempt to validate that.
 
-Your application must response to the notification within ten seconds, because when a Frontend
-hosted form is used, the user will be waiting on the PAYONE site for the asknowledgement - just
+Your application must respond to the notification within ten seconds, because when a Frontend
+hosted form is used, the user will be waiting on the PAYONE site for the aknowledgement - just
 save the data to storage and end.
 
 The notification Server Request (i.e. *incoming* request to your server) is captured by the
@@ -850,7 +858,7 @@ Although the Frontend purchase and authorize take the user offsite (either in fu
 mode or in an iframe), no data is returned with the user coming back to the site.
 as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
 
-3D Secure involves a vlsit to the authorisaing bank. However, PAYONE will wrap that visit
+3D Secure involves a vlsit to the authorising bank. However, PAYONE will wrap that visit
 up into a page that it controls (the page will contain an iframe). This means the result
 if a 3D Secure password is needed, will still be sent to the merchant site through the
 same notification URL as any non-3D Secure transaction.
@@ -858,7 +866,7 @@ same notification URL as any non-3D Secure transaction.
 # References
 
 * https://github.com/fjbender/simple-php-integration  
-  A write-up showing how the ONEPAY intergratino works.
+  A write-up showing how the PAYONE integration works.
   Some great background information.
 
 

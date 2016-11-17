@@ -868,5 +868,6 @@ same notification URL as any non-3D Secure transaction.
 * https://github.com/fjbender/simple-php-integration  
   A write-up showing how the PAYONE integration works.
   Some great background information.
-
+* https://github.com/ekalinin/github-markdown-toc  
+  Tool to generate the Table of Contents in this README.
 

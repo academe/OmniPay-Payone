@@ -89,6 +89,7 @@ The following gateways are provided by this package:
 
 * Payone_ShopServer
 * Payone_ShopFrontend
+* Payone_ShopClient
 
 For general usage instructions, please see the main [Omnipay](https://github.com/thephpleague/omnipay)
 repository. You will find more specific details can be found below.
@@ -99,7 +100,7 @@ The [PAYONE API](https://www.payone.de/en/platform-integration/interfaces/) has 
 of interest to e-commerce:
 
 * **Server API** - for interacting directly with server without user intervention.
-* **Frontend API** - for delivering hosted credit card (CC) forms to the user.
+* **Frontend API** - for delivering hosted credit card (CC) forms to the user (iframe or redirect).
 * **Client API** - for interacting with a JavaScript front end.
 
 The Server API is mainly for capturing authorized payments and the Front end
@@ -129,14 +130,14 @@ allow for `Access` version methods to be added later if required.
 
 ### Extended Items (Order Lines)
 
-The PAYONE API supports two additional item properties that must be completed (`id` and `vat`). Since the OmniPay v2
+The PAYONE API supports two additional cart item properties that must be completed (`id` and `vat`). Since the core OmniPay v2
 `Item` object cannot accept custom property values, this has been extended. The extended `Item` class can be found here:
 
     \Omnipay\Payone\Extend\Item
 
 Creating an `Item` uses these fields:
 
-~~~php
+```php
 $lines[] = new \Omnipay\Payone\Extend\Item([
     'id' => '{merchant-site-stock-ID}',
     'name' => '{product-name}',
@@ -144,7 +145,7 @@ $lines[] = new \Omnipay\Payone\Extend\Item([
     'price' => 123,
     'vat' => 20, // Optional
 ]);
-~~~
+```
 
 The `price` can be supplied in *minor currency units* or *major currency units*.
 The following `Item` prices are equivalent in dollars or Euros (currencies with
@@ -157,9 +158,9 @@ two decimal places):
 
 The items are then added to the `ItemBag` in the normal way as an array of objects:
 
-~~~php
+```php
 $items = new \Omnipay\Common\ItemBag($lines);
-~~~
+```
 
 The total price of the `ItemBag` does not appear to need to add up to the order total
 for the `Shop Server API` methods. It MUST however sum to the order total for the `Shop Frontend`
@@ -173,7 +174,7 @@ default item for the full price will be created automatically.
 
 Create a gateway object to access the Server API Shop version methods:
 
-~~~php
+```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 
 // Merchant Account ID
@@ -188,7 +189,7 @@ $gateway->setTestMode(true);
 $gateway->setLanguage("de");
 // Currency as ISO 4217 three-character code
 $gateway->setCurrency('EUR');
-~~~
+```
 
 ### Server API Authorize Payment
 
@@ -196,7 +197,7 @@ PAYONE calls this "pre-authorization". It authorizes a payment to be captured la
 
 To create an authorization request:
 
-~~~php
+```php
 $request = $gateway->authorize([
     // Unique merchant site transaction ID
     'transactionId' => 'ABC123',
@@ -213,7 +214,7 @@ $request = $gateway->authorize([
     // Optional ecommerce mode declares risk
     'ecommerceMode' => '3dsecure',
 ]);
-~~~
+```
 
 The driver will attempt to work out the card type from the card number, but if it fails or
 you are using a card type not yet supported by the driver or by OmniPay, then you can supply
@@ -222,15 +223,15 @@ your own card type letter.
 The `$card` details are populated like any other standard OmniPay card, with one exception detailed
 below. You can supply the details as an array or as a `\Omnipay\Common\CreditCard` object.
 
-The `ecommerceMode` overrides the 3D Secure configuration in the portal. Values include `internet`
+The `ecommerceMode` overrides the 3D Secure configuration set in the portal. Values include `internet`
 to turn off 3D Secure, `3dsecure` to turn on 3D Secure and `moto` for telephone and email payments.
 Note: when capturing an authorized payment, the *same ecommerceMode must be used* or the capture
-will be rejected. However, it looks like PAYONE may actually wrap the bank's 3D Secure form on its
+will be rejected. However, PAYONE will wrap the bank's 3D Secure form on its
 own site, because it provides no additional POST data to send.
 
 These four fields normally define the details for a credit card:
 
-~~~php
+```php
 [
     ...
     'number' => '4111111111111111',
@@ -238,86 +239,88 @@ These four fields normally define the details for a credit card:
     'expiryMonth' => '12',
     'cvv' => '123',
 ];
-~~~
+```
 
 PAYONE will also accept a "pseudo-card" number. This is a temporary token supplied by another
 process (e.g. a "creditcardcheck") and used in place of a card. If supplying a pseudo-card number,
 leave the remaining card fields blank or null. The gateway driver will then treat the card number
 as a pseudo-card:
 
-~~~php
+```php
 [
     ...
+    // A pseudo-card number.
     'number' => '4111111111111111',
+    // Other card details left as null.
     'expiryYear' => null,
     'expiryMonth' => null,
     'cvv' => null,
 ];
-~~~
+```
 
-It is strongly recommended to only work with pseudo card numbers through the Server API channel,
-to avoid potential PCI DSS issues. A pseudo card number should be obtained through the Client API
+It is strongly recommended to only work with pseudo card numbers through the `Server` API channel,
+to reduce potential PCI DSS issues. A pseudo card number should be obtained through the `Client` API
 channel using the "hosted iFrame" functionality.
 
-Also to note about the card data is that countries must be supplied as ISO 3166 tw-letter codes:
+Also to note about the card data is that countries must be supplied as ISO 3166 two-letter codes:
 
-~~~php
+```php
     'billingCountry' => 'US',
-~~~
+```
 
 and states must be supplied as ISO 3166-2 sub-division codes (various formats, depending on the country):
 
-~~~php
+```php
     'billingCountry' => 'US',
     'billingState' => 'AL',
-~~~
+```
 
 The return URL and cancel URL (when using 3D Secure) are normally set in the account settings,
 but can be overridden here:
 
-~~~php
+```php
     // Return URL on successful authorisation.
     'returnUrl' => '...',
     // Return URL on failure to authorise the payment.
     'errorUrl' => '...',
     // Return URL if the user choses to cancel the authorisation.
     'cancelUrl' => '...',
-~~~
+```
 
 Send this request to PAYONE to get the response:
 
-~~~php
+```php
 $response = $request->send();
-~~~
+```
 
 The standard OmniPay documentation shows how to handle the response. In addition, in the event
-of an error, there will be the normal loggable error message, and an error message that is safe
+of an error, there will be the normal loggable error message, and a separate error message that is safe
 to put in front of an end user:
 
-~~~php
+```php
 if (!$response->isSuccessful()) {
     echo $response->getMessage();
     // e.g. "Expiry date invalid, incorrect or in the past"
     echo $response->getCustomerMessage();
     // e.g. "Invalid card expiry date. Please verify your card data."
 }
-~~~
+```
 
 ### Server API Purchase
 
 PAYONE calls this "authorization". It authorizes and captures a payment immediately.
 
-It is used and responses in the same way as `authorize`. The request message is created:
+It is used and responds in the same way as `authorize`. The request message is created like this:
 
-~~~php
+```php
 $request = $gateway->purchase([...]);
-~~~
+```
 
 ### Server API Capture
 
 Once a payment has been authorised, it may be captured. This is done using this minimal message:
 
-~~~php
+```php
 $request = $gateway->capture([
     // The reference for the original authorize transaction.
     'transactionReference' => '123456789',
@@ -326,16 +329,16 @@ $request = $gateway->capture([
     // Pre-shared secret key used for authentication, if not already set on $gateway.
     'portalKey' => 'Ab12Cd34Ef56Gh78',
 ]);
-~~~
+```
 
 That will capture the amount specified and settle the account. If you want to leave the
 account open for capturing the total in multiple stages, then specify for the account to
 be left unsettled:
 
-~~~php
+```php
     'sequenceNumber' => $sequence,
     'settleAccount' => false,
-~~~
+```
 
 The sequence number starts at 1 for the first capture, and must be incremented for each
 subsequent capture. It should be taken from the [Notification Callback](#notification-callback),
@@ -345,7 +348,7 @@ see below.
 
 To void an authorized payment:
 
-~~~php
+```php
 $request = $gateway->void([
     // The reference for the original authorize transaction.
     'transactionReference' => '123456789',
@@ -355,19 +358,19 @@ $request = $gateway->void([
     'portalKey' => 'Ab12Cd34Ef56Gh78',
 ]);
 $rssponse = $request->send();
-~~~
+```
 
 The `void` method will response with a `ShopCaptureResponse` response when sent to PAYONE.
 
 ### Server API Credit Card Check
 
-This method will validate the details of a credit card are *plausible* and optionally
+This method will check that the details of a credit card are *plausible* and optionally
 tokenize the card details for use in other methods. The Credit Card Check method is
 available both for Server direct requests, and for AJAX calls on the Client side.
 
 The request is set up like this:
 
-~~~php
+```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 $gateway->setSubAccountId(12345);
 $gateway->setTestMode(true); // Or false for production.
@@ -386,14 +389,14 @@ $request = $gateway->creditCardCheck([
 ]);
 
 $response = $request->send();
-~~~
+```
 
 If the credit card details are plausible, then the response will be successful:
 
-~~~php
+```php
 $response->isSuccessful();
 // true
-~~~
+```
 
 If the response is not successful, then details will be available in `getCode()`,
 `getMessage()` and `getCustomerMessage()`.
@@ -401,7 +404,7 @@ If the response is not successful, then details will be available in `getCode()`
 If the response is successful and `storeCard` is `TRUE` then two additional items
 of data will be available:
 
-~~~php
+```php
 // The tokenised card:
 $token = $response->getToken();
 // e.g. 4100000227987220
@@ -409,18 +412,18 @@ $token = $response->getToken();
 // The truncated card number:
 $response->getCardNumber()
 // e.g. 401200XXXXXX1112
-~~~
+```
 
 In any API that requires credit card details, you can substitute the details with
 the token, for example:
 
-~~~php
+```php
 $request = $gateway->authorize([
     'card' => [
         'number' => $token
     ],
     ...
-~~~
+```
 
 Normally the token will come from the web client (AJAX in the browser) but this
 Server API can be used during development and testing with test cards.
@@ -430,18 +433,18 @@ Server API can be used during development and testing with test cards.
 The Front End gateway supports hosted payment forms, taking either just credit card or
 bank details, or full personal details too. The forms are hosted on the PAYONE site,
 can be customised, and can be either presented to the end user in an iframe, or
-the end user can be fully redirected to the form.
+the end user can be fully redirected to the remote form.
 
-~~~php
+```php
 // Set up the Front End gateway.
 $gateway = Omnipay\Omnipay::create('Payone_ShopFrontend');
-~~~
+```
 
 ### Front End Authorize
 
 The Front End API methods are encapsulated into a separate gateway class:
 
-~~~php
+```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopFrontend');
 
 // Merchant Portal ID
@@ -479,13 +482,13 @@ $request = $gateway->authorize([
     'errorUrl' => '...',
     'cancelUrl' => '...',
 ]);
-~~~
+```
 
 The `accessMethod` will be `"classic"` or `"iframe"`, defaulting to "classic".
 The `redirectMethod` will be `"GET"` or `"POST"`, defaulting to "POST".
 
 The `items` are optional, but if you
-do not supply at least one item, then a dummy item will be created for you; the cart is
+do not supply at least one item, then a default item will be created for you; the cart is
 mandatory for the Frontend API, unlike the Server API.
 
 The `card` billing details can be used to pre-populate the payment form.
@@ -499,30 +502,30 @@ documentation is not entirely clear on this.
 
 The response message (from OmniPay) for performing the next action is:
 
-~~~php
+```php
 $response = $request->send();
-~~~
+```
 
 The response will be a redirect response, either GET or POST, according to the `redirectMethod`
 parameter.
 
 You can retrieve the GET URL and redirect in your application, or leave OmniPay to do the redirect:
 
-~~~php
+```php
 // Get the URL.
 $url = $response->getRedirectUrl();
 
-// Just do the redirect.
+// Just do the redirect using the methods in OmniPay core.
 $response->redirect();
-~~~
+```
 
 For the `POST` redirectMethod, again, you can just let OmniPay do the redirect,
 but you will probably want to build your own form and `target` it at an iframe
 in the page. The two things you need to build the form is the target URL, and the form items.
 The form items are supplied as name/value pairs.
 
-~~~php
-// This form needs to be set to auto-submit.
+```php
+// This form needs javascript to auto-submit.
 echo '<form action="' . $response->getRedirectUrl() . '" method="POST" target="target-iframe">';
 foreach($response->getRedirectData() as $name => $value) {
     echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
@@ -530,34 +533,37 @@ foreach($response->getRedirectData() as $name => $value) {
 echo '</form>';
 
 echo '<iframe name="target-iframe" width="400" height="650"></iframe>';
-~~~
+```
+
+Note that this driver does not attempt to generate HTML forms. It will instead give you the
+data for creating your own HTML forms.
 
 After the user has completed their details on the PAYONE site, a notification of the result
 will be sent back to your merchant site, and then the user will be returned to either the 
 "success" page or the "failure" page. No data will be carried with that redirect, so the
-transaction details must be retained in the session.
+transaction details must be retained in the session to match up with the results in
+the notification back-channel.
 
 ### Front End Purchase
 
-Works the same as Front End Authorize, but will require a separate Server API Capture.
-
+Works the same as Front End Authorize, but will require a separate `Server` API Capture.
 
 ## The Shop Client API Gateway
 
 The Shop Client gateway handles payments using client AJAX calls or forms on the merchant
 site that are POSTed direct to the PAYONE gateway.
 
-~~~php
+```php
 // Set up the Client gateway.
 $gateway = Omnipay\Omnipay::create('Payone_ShopClient');
-~~~
+```
 
 ### Client API Credit Card Check
 
 This is similar to the Server API Credit Card Check, and is set up in a similar way.
 No credit card details are passed to it however, as that is handled on the client.
 
-~~~php
+```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopClient');
 $gateway->setSubAccountId(12345);
 $gateway->setTestMode(true); // Or false for production.
@@ -567,21 +573,21 @@ $gateway->setPortalKey('Ab12Cd34Ef56Gh78');
 
 $request = $gateway->creditCardCheck();
 $response = $request->send();
-~~~
+```
 
 This provides the following data to feed into your client:
 
-~~~php
+```php
 // The endpoint used to check the card details - GET or POST can be used.
 $endpoint = $response->getRedirectUrl();
 
 // The additional data that must be included with the card data.
 // This will be an array that can be JSON encoded for the client JavaScript to use:
 $data = $response->getRedirectData();
-~~~
+```
 
 Then on the client you need to provide the credit card fields in a non-submitting
-form:
+form (form items with no `name` attributes):
 
 * cardpan - credit card number
 * cardexpiredate - YYMM
@@ -596,7 +602,7 @@ by matching card number patterns.
 
 The result will be a JSON response something like this:
 
-~~~json
+```json
 {
     "status" : "VALID",
     "pseudocardpan" : "4100000228091881",
@@ -604,16 +610,16 @@ The result will be a JSON response something like this:
     "cardtype" : "V",
     "cardexpiredate" : "2012"
 }
-~~~
+```
 
 Handling that data is out of scope for OmniPay, but the most important value here is
-the `pseudocardpan` which can be used in any server API call in place of the credit card
+the `pseudocardpan` which can be used in any server API call in place of the real credit card
 number (e.g. the Shop Server Authorize method).
 
 The official PAYONE documentation explains further how this works, and provides
 sample client code fragments.
 
-It is highly recommended to use the "hosted iFrame" mode of capturing credit card data. It is out
+It is recommended to use the "hosted iFrame" mode of capturing credit card data. It is out
 of the scope of OmniPay and described in more detail [here](https://github.com/fjbender/simple-php-integration#credit-card-payments).
 
 ### Client API Authorize
@@ -634,16 +640,16 @@ to the merchant site with the user when they are directed back **so long as 3D S
 not being used**. It is important to note that if 3D Secure is used and the end user is
 redirected to enter their 3D Secure password, then they will be returned to your site's
 success/failure/cancel URL with *no* data, so the merchant siet must save enough details
-in the session to pick up the authorisation results sent via the Notification handler.
+in the session to pick up the authorisation results sent via the `Notification` back-channel handler.
 
 The AJAX mode is set up the same way, but all the details are POSTed via AJAX rather then
 as a standard browser form. The result comes back as a JSON response, which may include a
 3D Secure redirect, or may just contain the authorisation result.
 
-Setting up the message starts is much the same way as other methods. It is the same for
+Setting up the message is much the same as other methods. It is the same for
 both the REDIRECT and the JSON response types:
 
-~~~php
+```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopClient');
 $gateway->setSubAccountId(12345);
 $gateway->setTestMode(true); // Or false for production.
@@ -667,18 +673,18 @@ $request = $gateway->authorize([
     'cancelUrl' => $cancelUrl,
 ]);
 $response = $request->send();
-~~~
+```
 
 The `$response` now contains the details needed for either hidden fields
 in the client-side direct POST form, or for the AJAX call. These details are:
 
-~~~php
+```php
 // Array of name/value pairs
 $params = $response->getRedirectData();
 
 // The destination endpoint.
 $endpoint = $response->getRedirectUrl();
-~~~
+```
 
 In addition to `$params` you need to include the following data provided by
 the end user:
@@ -705,7 +711,7 @@ whether 3D Secure has been turned on and is availa to the card used.
   not signed, but can be useful in the flow. The result can be captured using the
   `completeAuthorize` message (see below).
 
-If your redirectMethod was JSON, then the merchant sit client page is expected to POST the data
+If your redirectMethod was JSON, then the merchant site client page is expected to POST the data
 using AJAX. The return will be a JSON message detailing the result, which can be a success, failure,
 or a redirect for 3D Secure. Handling that response is out of scope for OmniPay, but the PAYONE
 documentation provides some examples and some handy scripts.
@@ -715,16 +721,16 @@ documentation provides some examples and some handy scripts.
 This can be used to parse the resturn data from the server request (i.e. the data the user brings
 back with them):
 
-~~~php
+```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopClient');
 
 $server_request = $gateway->completeAuthorize();
 $server_response = $server_request->send();
-~~~
+```
 
 The `$server_response` can give you a number of standardised items:
 
-~~~php
+```php
 // The raw data
 $server_response->getData();
 
@@ -739,7 +745,7 @@ $server_response->getRedirectUrl()
 // If there are errors, then there will be a system message and a user-safe message:
 $server_response->getMessage();
 $server_response->getCustomerMessage();
-~~~
+```
 
 ### Client API Purchase
 
@@ -766,7 +772,7 @@ save the data to storage and end.
 The notification Server Request (i.e. *incoming* request to your server) is captured by the
 `completeStatus`
 
-~~~php
+```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 
 // The portal key must be provided.
@@ -781,20 +787,20 @@ $data = $server_request->getData();
 // Provides the result of the hash verification.
 // If the hash is not verified then the data cannot be trusted.
 $server_request->isValid();
-~~~
+```
 
 Individual data items can also be extracted from the server request (see list below).
 
 Once the data is saved to the local application, respond to the remote gateway to
 indicate that you have received the notification:
 
-~~~php
+```php
 $server_response = $server_request->send();
 // Your application will exit on the next command by default.
 // You can prevent that by passiong in `false` as a single parameter, but
 // do make sure no further stdout is issued.
-$server_response->acknowledge(); // or send()
-~~~
+$server_response->acknowledge(); // or $server_response->send()
+```
 
 List of $server_request data methods:
 
@@ -858,10 +864,11 @@ Although the Frontend purchase and authorize take the user offsite (either in fu
 mode or in an iframe), no data is returned with the user coming back to the site.
 as a consequence, the `completeAuthorize` and `completePurchase` methods are not needed.
 
-3D Secure involves a vlsit to the authorising bank. However, PAYONE will wrap that visit
-up into a page that it controls (the page will contain an iframe). This means the result
+3D Secure involves a visit to the authorising bank. However, PAYONE will wrap that visit
+up into a page that it hosts (the page will contain an iframe). This means the result,
 if a 3D Secure password is needed, will still be sent to the merchant site through the
-same notification URL as any non-3D Secure transaction.
+same notification URL as any non-3D Secure transaction. One advantage is that your merchant
+site does not need to mess around with `PAReq`/`PARes` parameters and suchlike from the end banks.
 
 # References
 

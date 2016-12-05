@@ -48,23 +48,23 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
             $data['settleaccount'] = $this->getSettleAccount();
         }
 
-        if($this->getDataItems()){
+        if ($this->getDataItems()) {
             $data += $this->getDataItems();
         }
 
-        if($this->getMerchantInvoiceId()){
+        if ($this->getMerchantInvoiceId()) {
             $data['invoiceid'] = $this->getMerchantInvoiceId();
         }
 
-        if($this->getInvoiceDeliveryMode()){
+        if ($this->getInvoiceDeliveryMode()) {
             $data['invoice_deliverymode'] = $this->getInvoiceDeliveryMode();
         }
 
-        if($this->getInvoiceDeliveryDate()){
+        if ($this->getInvoiceDeliveryDate()) {
             $data['invoice_deliverydate'] = $this->getInvoiceDeliveryDate();
         }
 
-        if($this->getInvoiceAppendix()){
+        if ($this->getInvoiceAppendix()) {
             $data['invoiceappendix'] = $this->getInvoiceAppendix();
         }
 

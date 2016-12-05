@@ -347,16 +347,16 @@ see below.
 For invoicing module some additional parameters have to be provided:
 
 ```php
-    $lines[] = new \Omnipay\Payone\Extend\Item([
-        'id' => '{merchant-site-stock-ID}',
-        'name' => '{product-name}',
-        'itemType' => 'goods', // Available types: goods, shipping etc.
-        'quantity' => 2,
-        'price' => 123,
-        'vat' => 20, // Optional
-    ]);
+$lines[] = new \Omnipay\Payone\Extend\Item([
+    'id' => '{merchant-site-stock-ID}',
+    'name' => '{product-name}',
+    'itemType' => 'goods', // Available types: goods, shipping etc.
+    'quantity' => 2,
+    'price' => 123,
+    'vat' => 20, // Optional
+]);
 
-    $items = new ItemBag($lines);
+$items = new ItemBag($lines);
 ```
 
 And in capture request:

@@ -370,7 +370,7 @@ And in capture request:
     'invoiceDeliveryDate' => date('Ymd'),
     'invoiceAppendix' => 'This is your invoice appendix'
 ```
-Note that the email field in card details has to passed to authorize method in pre-authorization step since it's
+Note that the email field in card details has to be passed to authorize method in pre-authorization step since it's
 the email that will be used by Payone to send invoice to customer.
 
 ### Server API Void

@@ -344,6 +344,35 @@ The sequence number starts at 1 for the first capture, and must be incremented f
 subsequent capture. It should be taken from the [Notification Callback](#notification-callback),
 see below.
 
+For invoicing module some additional parameters have to be provided:
+
+```php
+    $lines[] = new \Omnipay\Payone\Extend\Item([
+        'id' => '{merchant-site-stock-ID}',
+        'name' => '{product-name}',
+        'itemType' => 'goods', // Available types: goods, shipping etc.
+        'quantity' => 2,
+        'price' => 123,
+        'vat' => 20, // Optional
+    ]);
+
+    $items = new ItemBag($lines);
+```
+
+And in capture request:
+
+```php
+    'items' => $items,
+    'sequenceNumber' => 1,
+    'settleAccount' => false,
+    'invoiceid' => 1,
+    'invoiceDeliveryMode' => 'P', // PDF, for others look into documentation
+    'invoiceDeliveryDate' => date('Ymd'),
+    'invoiceAppendix' => 'This is your invoice appendix'
+```
+Note that the email field in card details has to passed to authorize method in pre-authorization step since it's
+the email that will be used by Payone to send invoice to customer.
+
 ### Server API Void
 
 To void an authorized payment:

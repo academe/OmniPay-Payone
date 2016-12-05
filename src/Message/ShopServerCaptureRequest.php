@@ -48,6 +48,26 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
             $data['settleaccount'] = $this->getSettleAccount();
         }
 
+        if($this->getDataItems()){
+            $data += $this->getDataItems();
+        }
+
+        if($this->getMerchantInvoiceId()){
+            $data['invoiceid'] = $this->getMerchantInvoiceId();
+        }
+
+        if($this->getInvoiceDeliveryMode()){
+            $data['invoice_deliverymode'] = $this->getInvoiceDeliveryMode();
+        }
+
+        if($this->getInvoiceDeliveryDate()){
+            $data['invoice_deliverydate'] = $this->getInvoiceDeliveryDate();
+        }
+
+        if($this->getInvoiceAppendix()){
+            $data['invoiceappendix'] = $this->getInvoiceAppendix();
+        }
+
         return $data;
     }
 
@@ -102,5 +122,45 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
     public function getSettleAccount()
     {
         return $this->getParameter('settleAccount');
+    }
+
+    public function setMerchantInvoiceId($invoiceId)
+    {
+        return $this->setParameter('merchantInvoiceId', $invoiceId);
+    }
+
+    public function getMerchantInvoiceId()
+    {
+        return $this->getParameter('merchantInvoiceId');
+    }
+
+    public function setInvoiceDeliveryMode($deliveryMode)
+    {
+        return $this->setParameter('invoiceDeliveryMode', $deliveryMode);
+    }
+
+    public function getInvoiceDeliveryMode()
+    {
+        return $this->getParameter('invoiceDeliveryMode');
+    }
+
+    public function setInvoiceDeliveryDate($deliveryDate)
+    {
+        return $this->setParameter('invoiceDeliveryDate', $deliveryDate);
+    }
+
+    public function getInvoiceDeliveryDate()
+    {
+        return $this->getParameter('invoiceDeliveryDate');
+    }
+
+    public function setInvoiceAppendix($invoiceAppendix)
+    {
+        return $this->setParameter('invoiceAppendix', $invoiceAppendix);
+    }
+
+    public function getInvoiceAppendix()
+    {
+        return $this->getParameter('invoiceAppendix');
     }
 }

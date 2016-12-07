@@ -50,7 +50,7 @@ class ShopServerAuthorizeRequest extends AbstractRequest
         $data['aid'] = $this->getSubAccountId();
 
         // CC details
-        $data += $this->getDataCard();
+        $data = array_merge($data, $this->getDataCard());
 
         // Merchant site reference.
         $data['reference'] = $this->getTransactionId();
@@ -62,7 +62,7 @@ class ShopServerAuthorizeRequest extends AbstractRequest
         $data['currency'] = $this->getCurrency();
 
         // Personal data.
-        $data += $this->getDataPersonal();
+        $data = array_merge($data, $this->getDataPersonal());
 
         if ($this->getParam() !== null) {
             $data['param'] = $this->getParam();
@@ -77,13 +77,13 @@ class ShopServerAuthorizeRequest extends AbstractRequest
         }
 
         // URL orverrides.
-        $data += $this->getDataUrl();
+        $data = array_merge($data, $this->getDataUrl());
 
         // Shipping details.
-        $data += $this->getDataShipping();
+        $data = array_merge($data, $this->getDataShipping());
 
         // Items/Cart details
-        $data += $this->getDataItems();
+        $data = array_merge($data, $this->getDataItems());
 
         return $data;
     }

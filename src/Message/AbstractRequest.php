@@ -122,6 +122,13 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     );
 
     /**
+     * Default ID for the auto-created Item if none are supplied.
+     * If you don't want to use this default, then make sure you always
+     * pass an ItemBag into the transaction.
+     */
+    protected $defaultItemId = '000000';
+
+    /**
      * The "request" parameter.
      */
     protected $request_code = 'undefined';

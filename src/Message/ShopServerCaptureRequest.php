@@ -16,6 +16,13 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
     const SETTLE_ACCOUNT_AUTO = 'auto';
 
     /**
+     * Values for the invoiceDeliveryMode parameter.
+     */
+    const INVOICE_DELIVERY_MODE_POST = 'M'; // aka Mail
+    const INVOICE_DELIVERY_MODE_PDF = 'P';  // via email
+    const INVOICE_DELIVERY_MODE_NONE = 'N'; // no delivery
+
+    /**
      * The "request" parameter.
      */
     protected $request_code = 'capture';
@@ -48,12 +55,36 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
             $data['settleaccount'] = $this->getSettleAccount();
         }
 
+        if ($this->getDataItems()) {
+            $data = array_merge($data, $this->getDataItems());
+        }
+
+        if ($this->getMerchantInvoiceId()) {
+            $data['invoiceid'] = $this->getMerchantInvoiceId();
+        }
+
+        if ($this->getInvoiceDeliveryMode()) {
+            $data['invoice_deliverymode'] = $this->getInvoiceDeliveryMode();
+        }
+
+        if ($this->getInvoiceDeliveryDate()) {
+            $data['invoice_deliverydate'] = $this->getInvoiceDeliveryDate();
+        }
+
+        if ($this->getInvoiceDeliveryEndDate()) {
+            $data['invoice_deliveryenddate'] = $this->getInvoiceDeliveryEndDate();
+        }
+
+        if ($this->getInvoiceAppendix()) {
+            $data['invoiceappendix'] = $this->getInvoiceAppendix();
+        }
+
         return $data;
     }
 
     protected function createResponse($data)
     {
-        return $this->response = new ShopCaptureResponse($this, $data);
+        return $this->response = new ShopServerCaptureResponse($this, $data);
     }
 
     /**
@@ -102,5 +133,64 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
     public function getSettleAccount()
     {
         return $this->getParameter('settleAccount');
+    }
+
+    public function setMerchantInvoiceId($invoiceId)
+    {
+        return $this->setParameter('merchantInvoiceId', $invoiceId);
+    }
+
+    public function getMerchantInvoiceId()
+    {
+        return $this->getParameter('merchantInvoiceId');
+    }
+
+    /**
+     * See static::INVOICE_DELIVERY_MODE_*
+     */
+    public function setInvoiceDeliveryMode($deliveryMode)
+    {
+        return $this->setParameter('invoiceDeliveryMode', $deliveryMode);
+    }
+
+    public function getInvoiceDeliveryMode()
+    {
+        return $this->getParameter('invoiceDeliveryMode');
+    }
+
+    /**
+     * @param string $deliveryDate Format YYYYMMDD
+     */
+    public function setInvoiceDeliveryDate($deliveryDate)
+    {
+        return $this->setParameter('invoiceDeliveryDate', $deliveryDate);
+    }
+
+    public function getInvoiceDeliveryDate()
+    {
+        return $this->getParameter('invoiceDeliveryDate');
+    }
+
+    /**
+     * @param string $deliveryEndDate Format YYYYMMDD
+     */
+    public function setInvoiceDeliveryEndDate($deliveryEndDate)
+    {
+        return $this->setParameter('invoiceDeliveryEndDate', $deliveryEndDate);
+    }
+
+    public function getInvoiceDeliveryEndDate()
+    {
+        return $this->getParameter('invoiceDeliveryEndDate');
+    }
+
+    public function setInvoiceAppendix($invoiceAppendix)
+    {
+        return $this->setParameter('invoiceAppendix', $invoiceAppendix);
+    }
+
+    public function getInvoiceAppendix()
+    {
+        return $this->getParameter('invoiceAppendix');
     }
 }

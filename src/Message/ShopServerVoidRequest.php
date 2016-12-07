@@ -11,7 +11,7 @@ class ShopServerVoidRequest extends ShopServerCaptureRequest
 {
     public function getData()
     {
-        // Settling the account while taking noting will void the authorization.
+        // Settling the account while taking nothing will void the authorization.
         $this->setAmount(0.00);
         $this->setSettleAccount(true);
 

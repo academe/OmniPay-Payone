@@ -41,13 +41,6 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     const DISPLAY_NAME_NO = 'no';
 
     /**
-     * Default ID for the auto-created Item if none are supplied.
-     * If you don't want to use this default, then make sure you always
-     * pass an ItemBag into the transaction.
-     */
-    protected $defaultItemId = '000000';
-
-    /**
      * Base data required for all Front End transactions.
      */
     protected function getBaseData()

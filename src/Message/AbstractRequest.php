@@ -8,6 +8,7 @@ namespace Omnipay\Payone\Message;
 
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
+use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\CreditCard;
@@ -119,6 +120,13 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         'va_trail[x]',
         'no_trail[x]',
     );
+
+    /**
+     * Default ID for the auto-created Item if none are supplied.
+     * If you don't want to use this default, then make sure you always
+     * pass an ItemBag into the transaction.
+     */
+    protected $defaultItemId = '000000';
 
     /**
      * The "request" parameter.

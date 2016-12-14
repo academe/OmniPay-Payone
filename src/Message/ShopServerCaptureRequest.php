@@ -3,8 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Capture Request
-*/
+ * PAYONE Shop Capture Request
+ */
 
 class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
 {
@@ -68,12 +68,16 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
             $data['invoiceappendix'] = $this->getInvoiceAppendix();
         }
 
+        if ($this->getMandateId()) {
+            $data['mandate_identification'] = $this->getMandateId();
+        }
+
         return $data;
     }
 
     protected function createResponse($data)
     {
-        return $this->response = new ShopCaptureResponse($this, $data);
+        return $this->response = new ShopServerCaptureResponse($this, $data);
     }
 
     /**
@@ -124,16 +128,6 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
         return $this->getParameter('settleAccount');
     }
 
-    public function setMerchantInvoiceId($invoiceId)
-    {
-        return $this->setParameter('merchantInvoiceId', $invoiceId);
-    }
-
-    public function getMerchantInvoiceId()
-    {
-        return $this->getParameter('merchantInvoiceId');
-    }
-
     public function setInvoiceDeliveryMode($deliveryMode)
     {
         return $this->setParameter('invoiceDeliveryMode', $deliveryMode);
@@ -162,5 +156,15 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
     public function getInvoiceAppendix()
     {
         return $this->getParameter('invoiceAppendix');
+    }
+
+    public function getMandateId()
+    {
+        return $this->getParameter('mandateId');
+    }
+
+    public function setMandateId($id)
+    {
+        return $this->setParameter('mandateId', $id);
     }
 }

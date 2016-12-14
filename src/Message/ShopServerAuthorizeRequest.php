@@ -3,8 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Authorize Request
-*/
+ * PAYONE Shop Authorize Request
+ */
 
 use Omnipay\Payone\AbstractShopGateway;
 
@@ -95,6 +95,10 @@ class ShopServerAuthorizeRequest extends AbstractRequest
 
         if ($this->getInvoiceDeliveryDate()) {
             $data['invoice_deliverydate'] = $this->getInvoiceDeliveryDate();
+        }
+
+        if ($this->getInvoiceAppendix()) {
+            $data['invoiceappendix'] = $this->getInvoiceAppendix();
         }
 
         if ($this->getWalletType()) {

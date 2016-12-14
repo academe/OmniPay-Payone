@@ -51,7 +51,7 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
         // The errorurl does NOT appear in the Frontend documentation, but does
         // work and is implemented in other platform gateways.
 
-        $data += $this->getDataUrl();
+        $data = array_merge($data, $this->getDataUrl());
 
         $data['aid'] = $this->getSubAccountId();
         $data['clearingtype'] = $this->getClearingType();
@@ -76,7 +76,7 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
         }
 
         // Add in any cart items.
-        $data += $this->getDataItems();
+        $data = array_merge($data, $this->getDataItems());
 
         // Note that "lastname" and "country" are mandatory, so card details with
         // a lastname and country must be supplied at an absolute minimum.

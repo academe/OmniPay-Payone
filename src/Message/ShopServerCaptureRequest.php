@@ -3,8 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
- * PAYONE Shop Capture Request
- */
+* PAYONE Shop Capture Request
+*/
 
 class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
 {

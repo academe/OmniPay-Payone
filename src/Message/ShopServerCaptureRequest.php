@@ -77,7 +77,7 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
 
     protected function createResponse($data)
     {
-        return $this->response = new ShopServerCaptureResponse($this, $data);
+        return $this->response = new ShopCaptureResponse($this, $data);
     }
 
     /**

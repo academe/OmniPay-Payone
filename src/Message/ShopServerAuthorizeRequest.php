@@ -3,8 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
- * PAYONE Shop Authorize Request
- */
+* PAYONE Shop Authorize Request
+*/
 
 use Omnipay\Payone\AbstractShopGateway;
 

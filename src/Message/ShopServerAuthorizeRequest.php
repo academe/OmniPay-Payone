@@ -97,6 +97,10 @@ class ShopServerAuthorizeRequest extends AbstractRequest
             $data['invoice_deliverydate'] = $this->getInvoiceDeliveryDate();
         }
 
+        if ($this->getInvoiceDeliveryEndDate()) {
+            $data['invoice_deliveryenddate'] = $this->getInvoiceDeliveryEndDate();
+        }
+
         if ($this->getInvoiceAppendix()) {
             $data['invoiceappendix'] = $this->getInvoiceAppendix();
         }
@@ -129,6 +133,9 @@ class ShopServerAuthorizeRequest extends AbstractRequest
         return $this->response = new ShopServerAuthorizeResponse($this, $data);
     }
 
+    /**
+     * See static::INVOICE_DELIVERY_MODE_*
+     */
     public function setInvoiceDeliveryMode($deliveryMode)
     {
         return $this->setParameter('invoiceDeliveryMode', $deliveryMode);
@@ -147,6 +154,19 @@ class ShopServerAuthorizeRequest extends AbstractRequest
     public function getInvoiceDeliveryDate()
     {
         return $this->getParameter('invoiceDeliveryDate');
+    }
+
+    /**
+     * @param string $deliveryEndDate Format YYYYMMDD
+     */
+    public function setInvoiceDeliveryEndDate($deliveryEndDate)
+    {
+        return $this->setParameter('invoiceDeliveryEndDate', $deliveryEndDate);
+    }
+
+    public function getInvoiceDeliveryEndDate()
+    {
+        return $this->getParameter('invoiceDeliveryEndDate');
     }
 
     public function setInvoiceAppendix($invoiceAppendix)

@@ -97,10 +97,6 @@ class ShopServerAuthorizeRequest extends AbstractRequest
             $data['invoice_deliverydate'] = $this->getInvoiceDeliveryDate();
         }
 
-        if ($this->getInvoiceAppendix()) {
-            $data['invoiceappendix'] = $this->getInvoiceAppendix();
-        }
-
         if ($this->getWalletType()) {
             $data['wallettype'] = $this->getWalletType();
         }
@@ -115,6 +111,10 @@ class ShopServerAuthorizeRequest extends AbstractRequest
 
         if ($this->getIban()) {
             $data['iban'] = $this->getIban();
+        }
+
+        if ($this->getMandateId()) {
+            $data['mandate_identification'] = $this->getMandateId();
         }
 
         return $data;
@@ -203,5 +203,15 @@ class ShopServerAuthorizeRequest extends AbstractRequest
     public function getIban()
     {
         return $this->getParameter('iban');
+    }
+
+    public function getMandateId()
+    {
+        return $this->getParameter('mandateId');
+    }
+
+    public function setMandateId($id)
+    {
+        return $this->setParameter('mandateId', $id);
     }
 }

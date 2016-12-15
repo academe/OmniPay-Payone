@@ -798,8 +798,8 @@ Your application must respond to the notification within ten seconds, because wh
 hosted form is used, the user will be waiting on the PAYONE site for the aknowledgement - just
 save the data to storage and end.
 
-The notification Server Request (i.e. *incoming* request to your server) is captured by the
-`completeStatus`
+The notification Server Request (i.e. *incoming* request to your server) is captured/handled by the
+`completeStatus` class created using the standard OmniPay `acceptNotification()` gateway method.
 
 ```php
 $gateway = Omnipay\Omnipay::create('Payone_ShopServer');

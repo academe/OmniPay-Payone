@@ -85,11 +85,157 @@ class ShopServerAuthorizeRequest extends AbstractRequest
         // Items/Cart details
         $data = array_merge($data, $this->getDataItems());
 
+        if ($this->getMerchantInvoiceId()) {
+            $data['invoiceid'] = $this->getMerchantInvoiceId();
+        }
+
+        if ($this->getInvoiceDeliveryMode()) {
+            $data['invoice_deliverymode'] = $this->getInvoiceDeliveryMode();
+        }
+
+        if ($this->getInvoiceDeliveryDate()) {
+            $data['invoice_deliverydate'] = $this->getInvoiceDeliveryDate();
+        }
+
+        if ($this->getInvoiceDeliveryEndDate()) {
+            $data['invoice_deliveryenddate'] = $this->getInvoiceDeliveryEndDate();
+        }
+
+        if ($this->getInvoiceAppendix()) {
+            $data['invoiceappendix'] = $this->getInvoiceAppendix();
+        }
+
+        if ($this->getWalletType()) {
+            $data['wallettype'] = $this->getWalletType();
+        }
+
+        if ($this->getOnlinebankTransferType()) {
+            $data['onlinebanktransfertype'] = $this->getOnlinebankTransferType();
+        }
+
+        if ($this->getBankCountry()) {
+            $data['bankcountry'] = $this->getBankCountry();
+        }
+
+        if ($this->getIban()) {
+            $data['iban'] = $this->getIban();
+        }
+
+        if ($this->getMandateId()) {
+            $data['mandate_identification'] = $this->getMandateId();
+        }
+
         return $data;
     }
 
     protected function createResponse($data)
     {
         return $this->response = new ShopServerAuthorizeResponse($this, $data);
+    }
+
+    /**
+     * See static::INVOICE_DELIVERY_MODE_*
+     */
+    public function setInvoiceDeliveryMode($deliveryMode)
+    {
+        return $this->setParameter('invoiceDeliveryMode', $deliveryMode);
+    }
+
+    public function getInvoiceDeliveryMode()
+    {
+        return $this->getParameter('invoiceDeliveryMode');
+    }
+
+    public function setInvoiceDeliveryDate($deliveryDate)
+    {
+        return $this->setParameter('invoiceDeliveryDate', $deliveryDate);
+    }
+
+    public function getInvoiceDeliveryDate()
+    {
+        return $this->getParameter('invoiceDeliveryDate');
+    }
+
+    /**
+     * @param string $deliveryEndDate Format YYYYMMDD
+     */
+    public function setInvoiceDeliveryEndDate($deliveryEndDate)
+    {
+        return $this->setParameter('invoiceDeliveryEndDate', $deliveryEndDate);
+    }
+
+    public function getInvoiceDeliveryEndDate()
+    {
+        return $this->getParameter('invoiceDeliveryEndDate');
+    }
+
+    public function setInvoiceAppendix($invoiceAppendix)
+    {
+        return $this->setParameter('invoiceAppendix', $invoiceAppendix);
+    }
+
+    public function getInvoiceAppendix()
+    {
+        return $this->getParameter('invoiceAppendix');
+    }
+
+    public function setMerchantInvoiceId($invoiceId)
+    {
+        return $this->setParameter('merchantInvoiceId', $invoiceId);
+    }
+
+    public function getMerchantInvoiceId()
+    {
+        return $this->getParameter('merchantInvoiceId');
+    }
+
+    public function setWalletType($walletType)
+    {
+        return $this->setParameter('walletType', $walletType);
+    }
+
+    public function getWalletType()
+    {
+        return $this->getParameter('walletType');
+    }
+
+    public function setOnlinebankTransferType($onlinebankTransferType)
+    {
+        return $this->setParameter('onlinebankTransferType', $onlinebankTransferType);
+    }
+
+    public function getOnlinebankTransferType()
+    {
+        return $this->getParameter('onlinebankTransferType');
+    }
+
+    public function setBankCountry($bankCountry)
+    {
+        return $this->setParameter('bankCountry', $bankCountry);
+    }
+
+    public function getBankCountry()
+    {
+        return $this->getParameter('bankCountry');
+    }
+
+    public function setIban($iban)
+    {
+        return $this->setParameter('iban', $iban);
+    }
+
+    public function getIban()
+    {
+        return $this->getParameter('iban');
+    }
+
+    public function getMandateId()
+    {
+        return $this->getParameter('mandateId');
+    }
+
+    public function setMandateId($id)
+    {
+        return $this->setParameter('mandateId', $id);
     }
 }

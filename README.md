@@ -169,6 +169,8 @@ methods.
 If you do not use the extended `Item` then default values will be substituted (`"000000"` for the `id` and `null` for the
 `vat` figure). If you do not supply any items at all for the `Shop Frontend` methods, then a
 default item for the full price will be created automatically.
+The `Shop Frontend` *must* have a basket of at least one item, which is why this driver
+will create a default item if you do not supply a basket.
 
 ## The Shop Server API Gateway
 

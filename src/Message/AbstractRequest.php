@@ -140,20 +140,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * Note: Switch is now Maestro UK
      */
     protected static $cardtypes = array(
-        CreditCard::BRAND_VISA => 'V',
-        CreditCard::BRAND_MASTERCARD => 'M',
-        CreditCard::BRAND_DISCOVER => 'C',
-        CreditCard::BRAND_AMEX => 'A',
-        CreditCard::BRAND_DINERS_CLUB => 'D',
-        CreditCard::BRAND_JCB => 'J',
-        CreditCard::BRAND_SWITCH => 'U',
-        CreditCard::BRAND_SOLO => null,
-        CreditCard::BRAND_DANKORT => null,
-        CreditCard::BRAND_MAESTRO => 'O', // International
+        CreditCard::BRAND_VISA          => 'V',
+        CreditCard::BRAND_MASTERCARD    => 'M',
+        CreditCard::BRAND_DISCOVER      => 'C',
+        CreditCard::BRAND_AMEX          => 'A',
+        CreditCard::BRAND_DINERS_CLUB   => 'D',
+        CreditCard::BRAND_JCB           => 'J',
+        CreditCard::BRAND_SWITCH        => 'U',
+        CreditCard::BRAND_SOLO          => null,
+        CreditCard::BRAND_DANKORT       => null,
+        CreditCard::BRAND_MAESTRO       => 'O', // International
         //CreditCard::BRAND_FORBRUGSFORENINGEN => null, // No details available
-        CreditCard::BRAND_LASER => null,
-        'discover' => 'C',
-        'cartebleue' => 'B',
+        CreditCard::BRAND_LASER         => null,
+        'cartebleue'                    => 'B',
     );
 
     /**
@@ -645,7 +644,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * The default encoding is ISO-5559-1 in the API.
+     * The default encoding is ISO-8859-1 in the API.
      * We don't want to encourage that, so will set UTF-8 as the default in this gateway.
      */
     public function setEncoding($encoding)

@@ -35,6 +35,12 @@ Table of Contents
 
 **PAYONE driver for the Omnipay PHP payment processing library**
 
+Written to specication:
+
+* *TECHNICAL REFERENCE PAYONE Platform Channel Client API* 1.28 (2016-05-09)
+* *TECHNICAL REFERENCE PAYONE Platform Channel Server API* 2.84 (2016-05-09)
+* *TECHNICAL REFERENCE PAYONE Platform Frontend* 2.40 (2016-05-09)
+
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
 processing library for PHP 5.3+. This package implements PAYONE support for
 [OmniPay](https://github.com/thephpleague/omnipay).

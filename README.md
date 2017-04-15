@@ -565,21 +565,29 @@ in the page. The two things you need to build the form is the target URL, and th
 The form items are supplied as name/value pairs.
 
 ```php
-// This form needs javascript to auto-submit.
+// This form needs javascript to auto-submit on page load.
 echo '<form action="' . $response->getRedirectUrl() . '" method="POST" target="target-iframe">';
 foreach($response->getRedirectData() as $name => $value) {
-    echo '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
+    echo '<input type="hidden" name="'.$name.'" value="'.htmlspecialchars($value).'" />';
 }
 echo '</form>';
 
+// The autp-submitted form, tagetting at this iframe, will generate the
+// remote credit card payment form within this iframe.
 echo '<iframe name="target-iframe" width="400" height="650"></iframe>';
 ```
+
+On return from the remote gateway, if using the iframe, you will need to break out
+of the iframe to get to the final page in your merchant site. The PAYONE API does have
+iframe-busting functionality built in. Set the `setTargetWindow()` on your authorize request
+to tell the gateway where to take the user.
+Accepted values are given in `ShopFrontendAuthorizeRequest::TARGET_WINDOW_*`.
 
 Note that this driver does not attempt to generate HTML forms. It will instead give you the
 data for creating your own HTML forms.
 
 After the user has completed their details on the PAYONE site, a notification of the result
-will be sent back to your merchant site, and then the user will be returned to either the 
+will be sent back to your merchant site, and then the user will be returned to either the
 "success" page or the "failure" page. No data will be carried with that redirect, so the
 transaction details must be retained in the session to match up with the results in
 the notification back-channel.

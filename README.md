@@ -496,6 +496,9 @@ $gateway->setLanguage("de");
 $gateway->setCurrency('EUR');
 // The pre-shared secret, used for hashing.
 $gateway->setPortalKey('Ab12Cd34Ef56Gh78');
+// The default for this gateway is HASH_MD5 for legacy applications, but the hash
+// method recommended by PAYONE is HASH_SHA2_384,
+$gateway->setHashMethod($gateway::HASH_SHA2_384);
 ~~~
 
 Sending an authorization involves setting up the request message:
@@ -607,6 +610,7 @@ $gateway->setTestMode(true); // Or false for production.
 $gateway->setMerchantId(67890);
 $gateway->setPortalId(3456789);
 $gateway->setPortalKey('Ab12Cd34Ef56Gh78');
+$gateway->setHashMethod($gateway::HASH_SHA2_384);
 
 $request = $gateway->creditCardCheck();
 $response = $request->send();
@@ -693,6 +697,9 @@ $gateway->setTestMode(true); // Or false for production.
 $gateway->setMerchantId(67890);
 $gateway->setPortalId(3456789);
 $gateway->setPortalKey('Ab12Cd34Ef56Gh78');
+// The default for this gateway is HASH_MD5 for legacy applications, but the hash
+// method recommended gby PAYONE is HASH_SHA2_384,
+$gateway->setHashMethod($gateway::HASH_SHA2_384);
 // Set up the response type - redirect the user or do an AJAX call.
 $gateway->setResponseType($gateway::RETURN_TYPE_REDIRECT);
 //$gateway->setResponseType($gateway::RETURN_TYPE_JSON);
@@ -814,6 +821,8 @@ $gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 
 // The portal key must be provided.
 // This will be used to verify the hash sent with the transaction status notification.
+// PAYONE will send an MD5 hash at all times. This is subject to change and will support
+// the option to use a SHA2-384 hash eventually.
 $gateway->setPortalKey('Ab12Cd34Ef56Gh78');
 
 $server_request = $gateway->acceptNotification();

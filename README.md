@@ -499,11 +499,11 @@ $gateway->setPortalKey('Ab12Cd34Ef56Gh78');
 // The default for this gateway is HASH_MD5 for legacy applications, but the hash
 // method recommended by PAYONE is HASH_SHA2_384,
 $gateway->setHashMethod($gateway::HASH_SHA2_384);
-~~~
+```
 
 Sending an authorization involves setting up the request message:
 
-~~~php
+```php
 $transactionId = {merchant-site-transaction-ID}
 
 $request = $gateway->authorize([

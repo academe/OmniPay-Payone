@@ -20,6 +20,12 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     const ACCESS_METHOD_CLASSIC = 'classic';
     const ACCESS_METHOD_IFRAME = 'iframe';
 
+    /**
+     * Redirect method.
+     */
+    const REDIRECT_METHOD_POST = 'POST';
+    const REDIRECT_METHOD_GET = 'GET';
+
     const ENDPOINT_CLASSIC = 'https://secure.pay1.de/frontend/';
     const ENDPOINT_IFRAME = 'https://frontend.pay1.de/frontend/v2/';
 
@@ -249,8 +255,9 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
      */
     public function setRedirectMethod($value)
     {
-        if ($value != 'GET' && $value != 'POST') {
-            // TODO: exception
+        if ($value != static::REDIRECT_METHOD_GET && $value != static::REDIRECT_METHOD_POST) {
+            // TODO: exception (just default it for now).
+            $value = static::REDIRECT_METHOD_GET;
         }
 
         $this->setParameter('redirectMethod', $value);

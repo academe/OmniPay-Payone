@@ -524,8 +524,8 @@ $request = $gateway->authorize([
 ]);
 ```
 
-The `accessMethod` will be `"classic"` or `"iframe"`, defaulting to "classic".
-The `redirectMethod` will be `"GET"` or `"POST"`, defaulting to "POST".
+The `accessMethod` will be `"classic"` or `"iframe"`; default is `ShopFrontendAuthorizeRequest::ACCESS_METHOD_CLASSIC`
+The `redirectMethod` will be `"GET"` or `"POST"`; default is `ShopFrontendAuthorizeRequest::REDIRECT_METHOD_GET`
 
 The `items` are optional, but if you
 do not supply at least one item, then a default item will be created for you; the cart is
@@ -763,7 +763,7 @@ whether 3D Secure has been turned on and is availa to the card used.
   not signed, but can be useful in the flow. The result can be captured using the
   `completeAuthorize` message (see below).
 
-If your redirectMethod was JSON, then the merchant site client page is expected to POST the data
+If your `responseType` was JSON (`ShopClientGateway::RETURN_TYPE_REDIRECT`), then the merchant site client page is expected to POST the data
 using AJAX. The return will be a JSON message detailing the result, which can be a success, failure,
 or a redirect for 3D Secure. Handling that response is out of scope for OmniPay, but the PAYONE
 documentation provides some examples and some handy scripts.

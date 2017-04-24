@@ -73,9 +73,17 @@ class ShopClientGateway extends AbstractShopGateway
     }
 
     /**
-     * The completion authorization transaction (capturting data retuned with the user).
+     * The complete authorization transaction (capturing data retuned with the user).
      */
     public function completeAuthorize(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Payone\Message\ShopClientCompleteAuthorizeRequest', $parameters);
+    }
+
+    /**
+     * The complete purchase transaction (capturing data retuned with the user).
+     */
+    public function completePurchase(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Payone\Message\ShopClientCompleteAuthorizeRequest', $parameters);
     }
@@ -86,5 +94,15 @@ class ShopClientGateway extends AbstractShopGateway
     public function creditCardCheck(array $parameters = array())
     {
         return $this->createRequest('\Omnipay\Payone\Message\ShopClientCardCheckRequest', $parameters);
+    }
+
+    /**
+     * Accept an incoming notification (a ServerRequest).
+     * This API supports the notification responses as well as the complete* responses.
+     * However, only the notification responses are signed and so can be trusted.
+     */
+    public function acceptNotification(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
     }
 }

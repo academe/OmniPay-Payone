@@ -59,6 +59,7 @@ class ShopServerGateway extends AbstractShopGateway
 
     /**
      * Accept an incoming notification (a ServerRequest).
+     * This API supports the notification responses as a suplement to the direct server responses.
      */
     public function acceptNotification(array $parameters = array())
     {

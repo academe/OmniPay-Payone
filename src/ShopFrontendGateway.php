@@ -32,4 +32,13 @@ class ShopFrontendGateway extends AbstractShopGateway
     {
         return $this->createRequest('\Omnipay\Payone\Message\ShopFrontendPurchaseRequest', $parameters);
     }
+
+    /**
+     * Accept an incoming notification (a ServerRequest).
+     * This API supports the notification responses only.
+     */
+    public function acceptNotification(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
+    }
 }

@@ -189,7 +189,7 @@ $gateway = Omnipay\Omnipay::create('Payone_ShopServer');
 $gateway->setMerchantId(12345);
 // Merchant Portal ID
 $gateway->setPortalId(1234567);
-// Sub-Acount ID
+// Sub-Account ID
 $gateway->setSubAccountId(56789);
 // True to use test mode.
 $gateway->setTestMode(true);
@@ -394,7 +394,7 @@ $request = $gateway->void([
     // Pre-shared secret key used for authentication, if not already set on $gateway.
     'portalKey' => 'Ab12Cd34Ef56Gh78',
 ]);
-$rssponse = $request->send();
+$response = $request->send();
 ```
 
 The `void` method will response with a `ShopCaptureResponse` response when sent to PAYONE.
@@ -486,7 +486,7 @@ $gateway = Omnipay\Omnipay::create('Payone_ShopFrontend');
 
 // Merchant Portal ID
 $gateway->setPortalId(1234567);
-// Sub-Acount ID
+// Sub-Account ID
 $gateway->setSubAccountId(56789);
 // True to use test mode.
 $gateway->setTestMode(true);
@@ -565,7 +565,7 @@ in the page. The two things you need to build the form is the target URL, and th
 The form items are supplied as name/value pairs.
 
 ```php
-// This form needs javascript to auto-submit on page load.
+// This form needs JavaScript to auto-submit on page load.
 echo '<form action="' . $response->getRedirectUrl() . '" method="POST" target="target-iframe">';
 foreach($response->getRedirectData() as $name => $value) {
     echo '<input type="hidden" name="'.$name.'" value="'.htmlspecialchars($value).'" />';
@@ -679,7 +679,7 @@ There are two main modes the client authorize operates in:
   there if necessary, then is sent back to your site.
 * **JSON** - The user stays on your site initially while the authorisation is requested via
   AJAX. The client may then send the user to PAYONE to enter their 3D Secure password if
-  reauired, but if not, then results can be posted directly back to the merchant site
+  required, but if not, then results can be posted directly back to the merchant site
   without the user leaving.
 
 The REDIRECT mode supports the building of a complete payment form on the merchant site that
@@ -688,7 +688,7 @@ PAYONE to the Notification handler. The gateway will also return the success sta
 to the merchant site with the user when they are directed back **so long as 3D Secure is
 not being used**. It is important to note that if 3D Secure is used and the end user is
 redirected to enter their 3D Secure password, then they will be returned to your site's
-success/failure/cancel URL with *no* data, so the merchant siet must save enough details
+success/failure/cancel URL with *no* data, so the merchant site must save enough details
 in the session to pick up the authorisation results sent via the `Notification` back-channel handler.
 
 The AJAX mode is set up the same way, but all the details are POSTed via AJAX rather then
@@ -818,7 +818,7 @@ The notification comes from IP address 185.60.20.0/24 (185.60.20.1 to 185.60.20.
 This driver does not make any attempt to validate that.
 
 Your application must respond to the notification within ten seconds, because when a Frontend
-hosted form is used, the user will be waiting on the PAYONE site for the aknowledgement - just
+hosted form is used, the user will be waiting on the PAYONE site for the acknowledgement - just
 save the data to storage and end.
 
 The notification Server Request (i.e. *incoming* request to your server) is captured/handled by the

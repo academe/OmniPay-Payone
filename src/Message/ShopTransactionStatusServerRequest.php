@@ -7,6 +7,7 @@ namespace Omnipay\Payone\Message;
  */
  
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Payone\AbstractShopGateway;
@@ -15,6 +16,11 @@ use DateTime;
 
 class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implements NotificationInterface
 {
+    /**
+     * Text response to acknowledge receipt.
+     */
+    protected $responseMessage = 'TSOK';
+
     /**
      * Transaction status values.
      */
@@ -94,6 +100,26 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     protected function createResponse($data)
     {
         return $this->response = new ShopTransactionStatusServerResponse($this, $data);
+    }
+
+    /**
+     * Return the HTTP response for acknowledging to the gateway receipt of this notification.
+     * @return HttpResponse
+     */
+    public function getResponse()
+    {
+        // Only send the OK message if the hash has been successfuly verified.
+        // If we find errors with the data in other ways, then that is up to us
+        // to handle, but not to report back here.
+
+        if ($this->isValid()) {
+            $body = $this->responseMessage . "\n";
+        } else {
+            $body = '';
+        }
+
+        // HTTP code 200, no special headers, plain text body (all defaults).
+        return HttpResponse::create($body);
     }
 
     /**

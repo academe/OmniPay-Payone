@@ -192,14 +192,26 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     {
         // The "appointed" event with no transation status will be sent as
         // the result of a 3D Secure result.
+        // handle missing transaction status responses by PAYONE
         if (
             $this->getTxStatus() == static::TRANSACTION_STATUS_COMPLETED
             || $this->getEvent() == static::EVENT_APPOINTED
+            || $this->getEvent() == static::EVENT_PAID
+            || $this->getEvent() == static::EVENT_INVOICE
         ) {
             return static::STATUS_COMPLETED;
         }
 
-        if ($this->getTxStatus() == static::TRANSACTION_STATUS_PENDING) {
+        // handle missing transaction status responses by PAYONE
+        if ($this->getEvent() == static::EVENT_CAPTURE
+            || $this->getEvent() == static::EVENT_UNDERPAID
+            || $this->getEvent() == static::EVENT_REFUND
+            || $this->getEvent() == static::EVENT_DEBIT
+            || $this->getEvent() == static::EVENT_REMINDER
+            || $this->getEvent() == static::EVENT_VAUTHORIZATION
+            || $this->getEvent() == static::EVENT_VSETTLEMENT
+            || $this->getEvent() == static::EVENT_TRANSFER
+        ) {
             return static::STATUS_PENDING;
         }
 

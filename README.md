@@ -843,6 +843,27 @@ $data = $server_request->getData();
 $server_request->isValid();
 ```
 
+So long as the notification is valid, you can also get the status of the transaction.
+The following table lists the way this driver maps the status and and the event (the `txaction`)
+to Omnipay's overall status values:
+
+| transaction_status | txaction | Overall transaction status | Notes |
+| ------------------ | -------- | -------------------------- | ----- |
+| completed | - | STATUS_COMPLETED | |
+| - | appointed | STATUS_COMPLETED | |
+| - | paid | STATUS_COMPLETED | |
+| - | invoice | STATUS_COMPLETED | |
+| - | capture | STATUS_PENDING | |
+| - | underpaid | STATUS_PENDING | |
+| - | refund | STATUS_PENDING | |
+| - | debit | STATUS_PENDING | |
+| - | reminder | STATUS_PENDING | |
+| - | vauthorization | STATUS_PENDING | |
+| - | vsettlement | STATUS_PENDING | |
+| - | transfer | STATUS_PENDING | |
+| - | cancelation | STATUS_FAILED | |
+| - | failed | STATUS_FAILED | |
+
 Individual data items can also be extracted from the server request (see list below).
 
 Once the data is saved to the local application, respond to the remote gateway to

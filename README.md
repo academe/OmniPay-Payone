@@ -845,7 +845,7 @@ $server_request->isValid();
 
 So long as the notification is valid, you can also get the status of the transaction.
 The following table lists the way this driver maps the status and and the event (the `txaction`)
-to Omnipay's overall status values:
+to Omnipay's overall status values ("-" neans "anything"):
 
 | transaction_status | txaction | Overall transaction status | Notes |
 | ------------------ | -------- | -------------------------- | ----- |
@@ -863,6 +863,7 @@ to Omnipay's overall status values:
 | - | transfer | STATUS_PENDING | |
 | - | cancelation | STATUS_FAILED | |
 | - | failed | STATUS_FAILED | |
+| - | - | STATUS_FAILED | |
 
 Individual data items can also be extracted from the server request (see list below).
 

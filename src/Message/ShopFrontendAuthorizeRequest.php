@@ -60,6 +60,7 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
                 : AbstractShopGateway::MODE_LIVE,
             'request' => $this->getRequestCode(),
             'clearingtype' => $this->getClearingType(),
+            'wallettype' => $this->getWalletType(),
             'reference' => $this->getTransactionId(),
             'amount' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),

@@ -47,6 +47,8 @@ class ShopServerAuthorizeRequest extends AbstractRequest
 
         $data['clearingtype'] = $this->getClearingType();
 
+        $data['walletType'] = $this->getWalletType();
+
         $data['aid'] = $this->getSubAccountId();
 
         // CC details

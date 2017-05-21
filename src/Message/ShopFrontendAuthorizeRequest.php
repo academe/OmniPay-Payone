@@ -47,6 +47,18 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     const DISPLAY_NAME_NO = 'no';
 
     /**
+     * The display_address values.
+     */
+    const DISPLAY_ADDRESS_YES = 'yes';
+    const DISPLAY_ADDRESS_NO = 'no';
+
+    /**
+     * The autosubmit values.
+     */
+    const AUTOSUBMIT_YES = 'yes';
+    const AUTOSUBMIT_NO = 'no';
+
+    /**
      * Base data required for all Front End transactions.
      */
     protected function getBaseData()
@@ -144,6 +156,14 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['language'] = $this->getLanguage();
         }
 
+        if ($this->getWalletType()) {
+            $data['wallettype'] = $this->getWalletType();
+        }
+
+        if ($this->getAutosubmit()) {
+            $data['autosubmit'] = $this->getAutosubmit();
+        }
+
         // Create the hash for hashable fields.
         $data['hash'] = $this->hashArray($data);
 
@@ -222,9 +242,9 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     public function setDisplayAddress($value)
     {
         if ($value === true) {
-            $value = 'yes';
+            $value = static::DISPLAY_ADDRESS_YES;
         } elseif ($value === false) {
-            $value = 'no';
+            $value = static::DISPLAY_ADDRESS_NO;
         }
 
         $this->setParameter('displayAddress', $value);
@@ -233,6 +253,27 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
     public function getDisplayAddress()
     {
         return $this->getParameter('displayAddress');
+    }
+
+    /**
+     * Indicates whether the form should be autosubmitted and take the
+     * use direct to the wallet merchant.
+     * Values are "yes" and "no".
+     */
+    public function setAutosubmit($value)
+    {
+        if ($value === true) {
+            $value = static::AUTOSUBMIT_YES;
+        } elseif ($value === false) {
+            $value = AUTOSUBMIT_NO;
+        }
+
+        $this->setParameter('autosubmit', $value);
+    }
+
+    public function getAutosubmit()
+    {
+        return $this->getParameter('autosubmit');
     }
 
     /**

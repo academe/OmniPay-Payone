@@ -262,6 +262,11 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         return $this->getValue('clearingtype');
     }
 
+    public function getWalletType()
+    {
+        return $this->getValue('wallettype');
+    }
+
     public function getTxTimestamp()
     {
         return $this->getValue('txtime');

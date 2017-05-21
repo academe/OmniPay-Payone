@@ -150,6 +150,9 @@ $lines[] = new \Omnipay\Payone\Extend\Item([
     'quantity' => 2,
     'price' => 123,
     'vat' => 20, // Optional
+    // Used but optional for clearingType = \Omnipay\Payone\AbstractShopGateway::CLEARING_TYPE_WLT
+    // and walletType = \Omnipay\Payone\AbstractShopGateway::WALLET_TYPE_PPE
+    'itemType' => \Omnipay\Payone\Extend\ItemInterface::ITEM_TYPE_GOODS,
 ]);
 ```
 
@@ -169,8 +172,9 @@ $items = new \Omnipay\Common\ItemBag($lines);
 ```
 
 The total price of the `ItemBag` does not appear to need to add up to the order total
-for the `Shop Server API` methods. It MUST however sum to the order total for the `Shop Frontend`
-methods.
+for the `Shop Server API` methods when clearing by credit card.
+It MUST however sum to the order total for the `Shop Frontend`
+methods, and it must sum correctly when using the CLEARING_TYPE_WLT clearing type.
 
 If you do not use the extended `Item` then default values will be substituted (`"000000"` for the `id` and `null` for the
 `vat` figure). If you do not supply any items at all for the `Shop Frontend` methods, then a
@@ -895,7 +899,8 @@ List of $server_request data methods:
 * getParam()
 * getMode() - test or live
 * getSequenceNumber()
-* getClearingType() - should always be 'cc'
+* getClearingType() - 'cc' for credit card; 'wlt' and walletType = 'PPE' for PayPal Express
+* getWalletType() - 'PPE' for PayPal Express
 * getTxTimestamp() - raw unix timestamp
 * getTxTime() - timestamp as a \DateTime object
 * getCompany()

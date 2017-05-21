@@ -50,6 +50,12 @@ abstract class AbstractShopGateway extends AbstractGateway
     const CLEARING_TYPE_FNC = 'fnc';
 
     /**
+     * The wallet type is used with clearing type CLEARING_TYPE_WLT
+     */
+    // PPE = PayPal Express
+    const WALLET_TYPE_PPE = 'PPE';
+
+    /**
      * The default server endpoint.
      */
     protected $endpoint = 'https://api.pay1.de/post-gateway/';

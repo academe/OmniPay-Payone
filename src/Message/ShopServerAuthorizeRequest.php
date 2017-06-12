@@ -242,14 +242,4 @@ class ShopServerAuthorizeRequest extends AbstractRequest
     {
         return $this->setParameter('mandateId', $id);
     }
-
-    public function getFinancingtype()
-    {
-        return $this->getParameter('financingtype');
-    }
-
-    public function setFinancingtype($financingtype)
-    {
-        return $this->setParameter('financingtype', $financingtype);
-    }
 }

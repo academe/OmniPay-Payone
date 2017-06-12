@@ -887,7 +887,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function getFinancingtype()
     {
         return $this->getParameter('financingtype');
-
     }
 
     /**

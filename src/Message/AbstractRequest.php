@@ -19,6 +19,20 @@ use Guzzle\Http\Url;
 abstract class AbstractRequest extends OmnipayAbstractRequest
 {
     /**
+     * Item types ("it") in the basket.
+     */
+
+    // Goods
+    const ITEM_TYPE_GOODS = 'goods';
+    // Shipping charges
+    const ITEM_TYPE_SHIPMENT = 'shipment';
+    // Handling fee
+    // "handling" only available after assignment by BillSAFE
+    const ITEM_TYPE_HANDLING = 'handling';
+    // Voucher / discount
+    const ITEM_TYPE_VOUCHER = 'voucher';
+
+    /**
      * The list of raw data fields that must be hashed to protect from
      * manipulation.
      * There seems to be no one complete list defined anywhere, so these
@@ -520,6 +534,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                     $data['va['.$item_count.']'] = $vat;
                 }
 
+                // For BSV / KLV / KLS financingtype.
+                // Values see ITEM_TYPE_*
                 if (isset($item_type)) {
                     $data['it['.$item_count.']'] = $item_type;
                 }

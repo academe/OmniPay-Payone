@@ -11,6 +11,20 @@ use Omnipay\Payone\AbstractShopGateway;
 class ShopServerAuthorizeRequest extends AbstractRequest
 {
     /**
+     * The additional financing types.
+     * In addition to BSV, KLV and KLS.
+     */
+
+    // Payolution-Invoicing
+    const FINANCING_TYPE_PYV = 'PYV';
+    // Payolution-Monthly
+    const FINANCING_TYPE_PYM = 'PYM';
+    // Payolution-Installment
+    const FINANCING_TYPE_PYS = 'PYS';
+    // Payolution-Debit
+    const FINANCING_TYPE_PYD = 'PYD';
+
+    /**
      * The "request" parameter.
      */
     protected $request_code = 'preauthorization';

@@ -50,6 +50,17 @@ abstract class AbstractShopGateway extends AbstractGateway
     const CLEARING_TYPE_FNC = 'fnc';
 
     /**
+     * The common financing types.
+     */
+
+    // BillSAFE Invoice
+    const FINANCING_TYPE_BSV = 'BSV';
+    // Klarna Invoice
+    const FINANCING_TYPE_KLV = 'KLV';
+    // Klarna installment
+    const FINANCING_TYPE_KLS = 'KLS';
+
+    /**
      * The wallet type is used with clearing type CLEARING_TYPE_WLT
      */
     // PPE = PayPal Express

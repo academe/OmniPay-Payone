@@ -125,6 +125,10 @@ class ShopServerAuthorizeRequest extends AbstractRequest
             $data['mandate_identification'] = $this->getMandateId();
         }
 
+        if ($this->getFinancingtype()) {
+            $data['financingtype'] = $this->getFinancingtype();
+        }
+
         return $data;
     }
 

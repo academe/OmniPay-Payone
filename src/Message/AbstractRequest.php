@@ -877,6 +877,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
+     * The financing type for clearing type AbstractShopGateway::CLEARING_TYPE_FNC
+     */
+    public function setFinancingtype($financingtype)
+    {
+        return $this->setParameter('financingtype', $financingtype);
+    }
+
+    public function getFinancingtype()
+    {
+        return $this->getParameter('financingtype');
+    }
+
+    /**
      * The custom "param" field.
      */
     public function setParam($value)

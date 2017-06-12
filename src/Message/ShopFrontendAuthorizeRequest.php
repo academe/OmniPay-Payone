@@ -164,6 +164,10 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['autosubmit'] = $this->getAutosubmit();
         }
 
+        if ($this->getFinancingtype()) {
+            $data['financingtype'] = $this->getFinancingtype();
+        }
+
         // Create the hash for hashable fields.
         $data['hash'] = $this->hashArray($data);
 

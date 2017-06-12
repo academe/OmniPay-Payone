@@ -97,6 +97,10 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
             $data['card'] = $card_data;
         }
 
+        if ($this->getFinancingtype()) {
+            $data['financingtype'] = $this->getFinancingtype();
+        }
+
         // Create the hash for the hashable fields.
         $data['hash'] = $this->hashArray($data);
 
@@ -115,7 +119,14 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
     {
         // Filter out all fields but the hashable hidden fields.
         // But do add in the hash that has already been calculated.
-        $data = $this->filterHashFields($data) + array('hash' => $data['hash']);
+        // CHECKME: some fields, such as 'financingtype', may still need to be
+        // included, but don't need to be a part of the hash. Should we just let
+        // them all through?
+
+        $data = array_merge(
+            $this->filterHashFields($data),
+            array('hash' => $data['hash'])
+        );
 
         return $this->createResponse($data);
     }

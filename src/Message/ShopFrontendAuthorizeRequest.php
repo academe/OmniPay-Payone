@@ -60,7 +60,6 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
                 : AbstractShopGateway::MODE_LIVE,
             'request' => $this->getRequestCode(),
             'clearingtype' => $this->getClearingType(),
-            'wallettype' => $this->getWalletType(),
             'reference' => $this->getTransactionId(),
             'amount' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),
@@ -143,6 +142,10 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
 
         if ($this->getLanguage()) {
             $data['language'] = $this->getLanguage();
+        }
+
+        if ($this->getWalletType()) {
+            $data['wallettype'] = $this->getWalletType();
         }
 
         // Create the hash for hashable fields.

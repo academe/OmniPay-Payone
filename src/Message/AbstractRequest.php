@@ -725,11 +725,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                 $card->addSupportedBrand(
                     'discover',
                     '^6('
-                        . '?:011\d{12}'
-                        . '|5\d{14}'
-                        . '|4[4-9]\d{13}'
-                        . '|22(?:1(?:2[6-9]|[3-9]\d)|[2-8]\d{2}|9(?:[01]\d|2[0-5]))\d{10}'
-                     . ')$'
+                    . '?:011\d{12}'
+                    . '|5\d{14}'
+                    . '|4[4-9]\d{13}'
+                    . '|22(?:1(?:2[6-9]|[3-9]\d)|[2-8]\d{2}|9(?:[01]\d|2[0-5]))\d{10}'
+                    . ')$'
                 );
 
                 // No regex found for Carte Bleue cards.

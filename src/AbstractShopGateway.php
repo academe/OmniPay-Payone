@@ -241,4 +241,14 @@ abstract class AbstractShopGateway extends AbstractGateway
     {
         return $this->getParameter('clearingtype');
     }
+
+    public function setWalletType($value)
+    {
+        return $this->setParameter('wallettype', $value);
+    }
+
+    public function getWalletType()
+    {
+        return $this->getParameter('wallettype');
+    }
 }

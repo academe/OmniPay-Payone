@@ -734,13 +734,23 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             // Extend the supported card types.
 
             // See http://stackoverflow.com/questions/13500648/regex-for-discover-credit-card
-            $card->addSupportedBrand(
-                'discover',
-                '^6(?:011\d{12}|5\d{14}|4[4-9]\d{13}|22(?:1(?:2[6-9]|[3-9]\d)|[2-8]\d{2}|9(?:[01]\d|2[0-5]))\d{10})$'
-            );
+            // Issue #27 the addSupportedBrand() method was introduced in omnipay/common 2.4,
+            // so this check is necessary to support down to 2.0
 
-            // No regex found for Carte Bleue cards.
-            //$card->addSupportedBrand('cartebleue', '/^ unknown $/');
+            if (method_exists($card, 'addSupportedBrand')) {
+                $card->addSupportedBrand(
+                    'discover',
+                    '^6('
+                    . '?:011\d{12}'
+                    . '|5\d{14}'
+                    . '|4[4-9]\d{13}'
+                    . '|22(?:1(?:2[6-9]|[3-9]\d)|[2-8]\d{2}|9(?:[01]\d|2[0-5]))\d{10}'
+                    . ')$'
+                );
+
+                // No regex found for Carte Bleue cards.
+                //$card->addSupportedBrand('cartebleue', '/^ unknown $/');
+            }
 
             $brand_name = $card->getBrand();
             $card_types = $this->getCardTypes();

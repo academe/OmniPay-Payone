@@ -165,6 +165,13 @@ two decimal places):
 * "123"
 * "1.23"
 
+The `vat` value is the VAT rate, expressed as a percentage (%)
+or as a [basis point](https://en.wikipedia.org/wiki/Basis_point) (‱).
+The rules are as follows:
+
+* Any integer up to 99 will be interpreted as a percentage.
+* Any integer 100 to 9999 will be interpreted as a basis point.
+
 The items are then added to the `ItemBag` in the normal way as an array of objects:
 
 ```php

@@ -11,7 +11,7 @@
         "payment"
     ],
     "homepage": "https://github.com/academe/omnipay-payone",
-    "license": "LGPLv3",
+    "license": "MIT",
     "authors": [
         {
             "name": "Jason Judge",

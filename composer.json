@@ -16,10 +16,16 @@
         {
             "name": "Jason Judge",
             "email": "jason@academe.co.uk"
+        },
+        {
+            "name": "Omnipay Contributors",
+            "homepage": "https://github.com/thephpleague/omnipay-sagepay/contributors"
         }
     ],
     "autoload": {
-        "psr-4": { "Omnipay\\Payone\\" : "src/" }
+        "psr-4": {
+            "Omnipay\\Payone\\" : "src/"
+        }
     },
     "require": {
         "omnipay/common": "~2.4"

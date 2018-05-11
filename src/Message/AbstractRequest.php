@@ -433,7 +433,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             // https://github.com/thephpleague/omnipay-common/issues/29
             // It is also assumed that an empty ('000') CVV is valid for a card, so we compare to null.
 
-            if (empty($card->getExpiryYear()) && empty($card->getExpiryMonth()) && $card->getCvv() === null) {
+            $expiryYear = $card->getExpiryYear();
+            $expiryMonth = $card->getExpiryMonth();
+
+            if (empty($expiryYear) && empty($expiryMonth) && $card->getCvv() === null) {
                 $data['pseudocardpan'] = $card->getNumber();
             } elseif ($card->getNumber()) {
                 if ($this->getEcommerceMode()) {
@@ -454,7 +457,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                     $data['cardholder'] = $card->getName();
                 }
 
-                if (!empty($card->getCvv())) {
+                $cvv = $card->getCvv();
+
+                if (! empty($cvv)) {
                     $data['cardcvc2'] = $card->getCvv();
                 }
 
@@ -479,17 +484,23 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $data = [];
 
         // For when authentication passes.
-        if (!empty($this->getSuccessUrl())) {
+
+        $successUrl = $this->getSuccessUrl();
+        if (! empty($successUrl)) {
             $data['successurl'] = $this->getSuccessUrl();
         }
 
         // For when authentication fails.
-        if (!empty($this->getErrorUrl())) {
+
+        $errorUrl = $this->getErrorUrl();
+        if (! empty($errorUrl)) {
             $data['errorurl'] = $this->getErrorUrl();
         }
 
         // For when the user cancels payment on the remote gateway site.
-        if (!empty($this->getCancelUrl())) {
+
+        $cancelUrl = $this->getCancelUrl();
+        if (! empty($cancelUrl)) {
             $data['backurl'] = $this->getCancelUrl();
         }
 
@@ -506,7 +517,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // Each item must be contingously numbered, starting from 1.
         $item_count = 0;
 
-        if (!empty($this->getItems())) {
+        $items = $this->getItems();
+        if (! empty($items)) {
             // Find the number of decimal digits the currency uses.
             $currency_digits = Currency::find($this->getCurrency())->getDecimals();
 

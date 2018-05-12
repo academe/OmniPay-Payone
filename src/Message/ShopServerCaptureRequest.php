@@ -123,8 +123,7 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
             $settleAccount = static::SETTLE_ACCOUNT_AUTO;
         }
 
-        if (
-            $settleAccount != static::SETTLE_ACCOUNT_YES
+        if ($settleAccount != static::SETTLE_ACCOUNT_YES
             && $settleAccount != static::SETTLE_ACCOUNT_NO
             && $settleAccount != static::SETTLE_ACCOUNT_AUTO
         ) {

@@ -951,8 +951,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setEcommerceMode($ecommerceMode)
     {
-        if (
-            isset($ecommerceMode)
+        if (isset($ecommerceMode)
             && $ecommerceMode != static::ECOMMERCE_MODE_INTERNET
             && $ecommerceMode != static::ECOMMERCE_MODE_3DSECURE
             && $ecommerceMode != static::ECOMMERCE_MODE_MOTO

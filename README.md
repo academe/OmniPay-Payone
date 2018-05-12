@@ -1,7 +1,7 @@
 [![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)](https://raw.githubusercontent.com/academe/OmniPay-Payone/master/LICENSE.md)
 [![Packagist](https://img.shields.io/packagist/v/academe/omnipay-payone.svg?maxAge=2592000)](https://packagist.org/packages/academe/omnipay-payone)
 [![GitHub issues](https://img.shields.io/github/issues/academe/OmniPay-Payone.svg)](https://github.com/academe/OmniPay-Payone/issues)
-[![Build Status](https://travis-ci.org/academe/OmniPay-Payone.svg?branch=master)](https://travis-ci.org/academe/OmniPay-Payone)
+[![Build Status](https://travis-ci.org/academe/OmniPay-Payone.svg?branch=issue29)](https://travis-ci.org/academe/OmniPay-Payone)
 
 Table of Contents
 =================

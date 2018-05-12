@@ -193,8 +193,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         // The "appointed" event with no transation status will be sent as
         // the result of a 3D Secure result.
         // handle missing transaction status responses by PAYONE
-        if (
-            $this->getTxStatus() == static::TRANSACTION_STATUS_COMPLETED
+        if ($this->getTxStatus() == static::TRANSACTION_STATUS_COMPLETED
             || $this->getEvent() == static::EVENT_APPOINTED
             || $this->getEvent() == static::EVENT_PAID
             || $this->getEvent() == static::EVENT_INVOICE
@@ -240,7 +239,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     protected function getParam()
     {
@@ -386,7 +385,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getFirstName()
     {
@@ -394,7 +393,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getLastName()
     {
@@ -410,7 +409,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getStreet()
     {
@@ -418,7 +417,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getAddress1()
     {
@@ -426,7 +425,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getCity()
     {
@@ -434,7 +433,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getPostcode()
     {
@@ -450,7 +449,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getEmail()
     {
@@ -550,7 +549,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     // Delivery data (name, address)
 
     /**
-     * 
+     *
      */
     public function getShippingFirstName()
     {
@@ -558,7 +557,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getShippingLastName()
     {
@@ -566,7 +565,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getShippingCompany()
     {
@@ -582,7 +581,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getShippingStreet()
     {
@@ -590,7 +589,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getShippingAddress1()
     {
@@ -598,7 +597,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getShippingCity()
     {
@@ -606,7 +605,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     }
 
     /**
-     * 
+     *
      */
     public function getShippingPostcode()
     {

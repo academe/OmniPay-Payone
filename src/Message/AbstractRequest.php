@@ -253,10 +253,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the personal data to send to the Gateway.
      */
-    public function getDataPersonal()
+    public function getDataPersonal(array $data = [])
     {
-        $data = array();
-
         if ($this->getCustomerId()) {
             $data['customerid'] = $this->getCustomerId();
         }
@@ -362,10 +360,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the shipping data to send to the Gateway.
      */
-    public function getDataShipping()
+    public function getDataShipping(array $data = [])
     {
-        $data = array();
-
         if ($card = $this->getCard()) {
             if ($card->getShippingFirstName()) {
                 $data['shipping_firstname'] = $card->getShippingFirstName();
@@ -423,10 +419,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the credit card data to send to the Gateway.
      */
-    public function getDataCard()
+    public function getDataCard(array $data = [])
     {
-        $data = array();
-
         if ($card = $this->getCard()) {
             // If only the card number is set, and not the expiry year, month or CVV, then
             // treat this card number as a Pseudo card PAN.
@@ -484,10 +478,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect URL overrides.
      */
-    public function getDataUrl()
+    public function getDataUrl(array $data = [])
     {
-        $data = [];
-
         // For when authentication passes.
 
         $successUrl = $this->getSuccessUrl();
@@ -515,10 +507,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the items/cart/basket data to send to the Gateway.
      */
-    public function getDataItems()
+    public function getDataItems(array $data = [])
     {
-        $data = [];
-
         // Each item must be contingously numbered, starting from 1.
         $item_count = 0;
 
@@ -565,11 +555,12 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function sendData($data)
     {
-        //$httpRequest = $this->httpClient->request(
         $httpResponse = $this->httpClient->request(
             'POST',
             $this->getEndpoint(),
-            [],
+            [
+                "Content-Type" => "application/x-www-form-urlencoded",
+            ],
             http_build_query($data)
         );
 

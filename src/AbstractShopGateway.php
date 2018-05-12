@@ -77,6 +77,10 @@ abstract class AbstractShopGateway extends AbstractGateway
 
     /**
      * The API version supported.
+     *
+     * 3.9 API from 2015-01-05
+     * 3.10 API from 2016-06-01
+     * 3.11 API from 2018-02-01
      */
     const API_VERSION = '3.9';
 

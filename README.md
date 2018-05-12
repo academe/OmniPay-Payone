@@ -49,6 +49,9 @@ processing library for PHP 5.3+. This package implements PAYONE support for
 
 ## Installation
 
+**This is for the older Omnipay 2.x branch.**
+**The newer 3.x branch is the [master branch](https://github.com/academe/OmniPay-Payone)**
+
 Omnipay is installed via [Composer](http://getcomposer.org/). To install, add it
 to your `composer.json` file:
 

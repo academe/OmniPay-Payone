@@ -20,7 +20,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopServerAuthorizeRequest', $parameters);
+        return $this->createRequest(Message\ShopServerAuthorizeRequest::class, $parameters);
     }
 
     /**
@@ -28,7 +28,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopServerPurchaseRequest', $parameters);
+        return $this->createRequest(Message\ShopServerPurchaseRequest::class, $parameters);
     }
 
     /**
@@ -36,7 +36,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function capture(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopServerCaptureRequest', $parameters);
+        return $this->createRequest(Message\ShopServerCaptureRequest::class, $parameters);
     }
 
     /**
@@ -46,7 +46,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function creditCardCheck(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopServerCardCheckRequest', $parameters);
+        return $this->createRequest(Message\ShopServerCardCheckRequest::class, $parameters);
     }
 
     /**
@@ -54,7 +54,7 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function void(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopServerVoidRequest', $parameters);
+        return $this->createRequest(Message\ShopServerVoidRequest::class, $parameters);
     }
 
     /**
@@ -63,6 +63,6 @@ class ShopServerGateway extends AbstractShopGateway
      */
     public function acceptNotification(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
+        return $this->createRequest(Message\ShopTransactionStatusServerRequest::class, $parameters);
     }
 }

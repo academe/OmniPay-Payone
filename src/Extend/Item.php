@@ -8,6 +8,9 @@ namespace Omnipay\Payone\Extend;
  */
 
 use Omnipay\Common\Item as CommonItem;
+use Money\Currencies\ISOCurrencies;
+use Money\Parser\DecimalMoneyParser;
+use Money\Money;
 
 class Item extends CommonItem implements ItemInterface
 {
@@ -62,36 +65,64 @@ class Item extends CommonItem implements ItemInterface
     /**
      * {@inheritDoc}
      */
-    public function getPriceInteger($currency_digits = 2)
+    public function getPriceInteger($currency = null)
     {
-        return static::convertPriceInteger($this->getPrice(), $currency_digits);
+        return static::convertPriceInteger($this->getPrice(), $currency);
     }
 
     /**
      * Return a price as minor unit integer, naking some assumptioms:
      * - If $price is an integer, assume it already is minor units.
      * - If a float, then assume it is major units.
-     * - If a string with a decimal point in, then assume it is major units.
+     * - If a string with a decimal point in, then treat it like a float.
+     *
+     * @param int|float|string|Money The amount to convert to an integer minor units
+     * @param string|Currency The currency to use if converting from a string or float
+     * @return int The minor units
      */
-    public static function convertPriceInteger($price, $currency_digits = 2)
+    public static function convertPriceInteger($price, $currency = null)
     {
-        if (is_string($price) && strpos($price, '.') !== false) {
-            $price = (float)$price;
-        }
-
-        if (is_string($price) && strpos($price, '.') === false) {
-            $price = (integer)$price;
-        }
+        // An integer provided as the price, so assume it is for minor units.
 
         if (is_integer($price)) {
             return $price;
         }
 
+        // An integer in a string, so assume it referesents minor units.
+
+        if (is_string($price) && strpos($price, '.') === false) {
+            $price = (integer)$price;
+        }
+
+        // A float or a decimal in a string are assumed to be major units.
+        // We need the currency to convert that.
+
         if (is_float($price)) {
-            return $price * pow(10, $currency_digits);
+            // Convert to a string for parsing.
+            // Four decimal digits should be enough for all currencies.
+            // Three decimal digits is the maximum in use today.
+
+            $price = number_format($price, 4, '.', '');
+        }
+
+        if (is_string($price) && strpos($price, '.') !== false) {
+            // Parse the string.
+            // Currency is required for this to succeed.
+
+            $currencies = new ISOCurrencies();
+            $moneyParser = new DecimalMoneyParser($currencies);
+
+            $price = $moneyParser->parse($price, $currency);
+        }
+
+        // A money object supplied. We should use this all the time.
+
+        if ($price instanceof Money) {
+            return (integer)$price->getAmount();
         }
 
         // Don't know what to do with it.
+
         return $price;
     }
 }

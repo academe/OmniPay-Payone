@@ -1,7 +1,7 @@
 [![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)](https://raw.githubusercontent.com/academe/OmniPay-Payone/master/LICENSE.md)
 [![Packagist](https://img.shields.io/packagist/v/academe/omnipay-payone.svg?maxAge=2592000)](https://packagist.org/packages/academe/omnipay-payone)
 [![GitHub issues](https://img.shields.io/github/issues/academe/OmniPay-Payone.svg)](https://github.com/academe/OmniPay-Payone/issues)
-[![Build Status](https://travis-ci.org/academe/OmniPay-Payone.svg?branch=master)](https://travis-ci.org/academe/OmniPay-Payone)
+[![Build Status](https://travis-ci.org/academe/OmniPay-Payone.svg?branch=issue29)](https://travis-ci.org/academe/OmniPay-Payone)
 
 Table of Contents
 =================
@@ -22,6 +22,7 @@ Table of Contents
     * [The Shop Front End API Gateway](#the-shop-front-end-api-gateway)
       * [Front End Authorize](#front-end-authorize)
       * [Front End Purchase](#front-end-purchase)
+      * [Front End Credit Card Check](#front-end-credit-card-check)
     * [The Shop Client API Gateway](#the-shop-client-api-gateway)
       * [Client API Credit Card Check](#client-api-credit-card-check)
       * [Client API Authorize](#client-api-authorize)
@@ -41,13 +42,16 @@ Written to specication:
 * *TECHNICAL REFERENCE PAYONE Platform Channel Server API* 2.84 (2016-05-09)
 * *TECHNICAL REFERENCE PAYONE Platform Frontend* 2.40 (2016-05-09)
 
-[Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
-processing library for PHP 5.3+. This package implements PAYONE support for
-[OmniPay](https://github.com/thephpleague/omnipay).
+[Omnipay 3.x](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
+processing library for PHP 7.1+.
+This package implements PAYONE support for [OmniPay](https://github.com/thephpleague/omnipay).
 
 ![Alt text](docs/PAYONE_Logo_480.png?raw=true "PAYONE")
 
 ## Installation
+
+**This is for the older Omnipay 3.x branch.**
+**The older [2.x branch can be found here](https://github.com/academe/OmniPay-Payone/tree/2.x)**
 
 Omnipay is installed via [Composer](http://getcomposer.org/). To install, add it
 to your `composer.json` file:
@@ -606,6 +610,18 @@ the notification back-channel.
 ### Front End Purchase
 
 Works the same as Front End Authorize, but will require a separate `Server` API Capture.
+
+### Front End Credit Card Check
+
+Set this up the same way as the Client API Credit Card Check.
+The response is then used to generate the data you will need for the JSON
+to configure the form you will use to tokenise the card:
+
+    $jsonForJavaScript = json_encode($request->send()->getData());
+
+Setting up the card tokenisation form and JavaScript to process it, is out of scope
+for this guide. The official documentation provides good examples. Just replace the
+sample request config data with the contents of `$jsonForJavaScript`.
 
 ## The Shop Client API Gateway
 

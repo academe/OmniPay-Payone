@@ -12,12 +12,17 @@ use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\CreditCard;
-use Omnipay\Common\Currency;
+//use Omnipay\Common\Currency;
+use Money\Currency;
 use Omnipay\Omnipay;
 use Guzzle\Http\Url;
 
+use Omnipay\Payone\Traits\HasGatewayParams;
+
 abstract class AbstractRequest extends OmnipayAbstractRequest
 {
+    use HasGatewayParams;
+
     /**
      * Item types ("it") in the basket.
      */
@@ -248,10 +253,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the personal data to send to the Gateway.
      */
-    public function getDataPersonal()
+    public function getDataPersonal(array $data = [])
     {
-        $data = array();
-
         if ($this->getCustomerId()) {
             $data['customerid'] = $this->getCustomerId();
         }
@@ -357,10 +360,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the shipping data to send to the Gateway.
      */
-    public function getDataShipping()
+    public function getDataShipping(array $data = [])
     {
-        $data = array();
-
         if ($card = $this->getCard()) {
             if ($card->getShippingFirstName()) {
                 $data['shipping_firstname'] = $card->getShippingFirstName();
@@ -418,10 +419,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the credit card data to send to the Gateway.
      */
-    public function getDataCard()
+    public function getDataCard(array $data = [])
     {
-        $data = array();
-
         if ($card = $this->getCard()) {
             // If only the card number is set, and not the expiry year, month or CVV, then
             // treat this card number as a Pseudo card PAN.
@@ -479,10 +478,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect URL overrides.
      */
-    public function getDataUrl()
+    public function getDataUrl(array $data = [])
     {
-        $data = [];
-
         // For when authentication passes.
 
         $successUrl = $this->getSuccessUrl();
@@ -510,30 +507,25 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Collect the items/cart/basket data to send to the Gateway.
      */
-    public function getDataItems()
+    public function getDataItems(array $data = [])
     {
-        $data = [];
-
         // Each item must be contingously numbered, starting from 1.
         $item_count = 0;
 
         $items = $this->getItems();
         if (! empty($items)) {
-            // Find the number of decimal digits the currency uses.
-            $currency_digits = Currency::find($this->getCurrency())->getDecimals();
-
             foreach ($this->getItems() as $item) {
                 $item_count++;
 
                 if ($item instanceof ExtendItemInterface) {
                     $id = $item->getId();
                     $vat = $item->getVat();
-                    $price = $item->getPriceInteger($currency_digits);
+                    $price = $item->getPriceInteger($this->getCurrency());
                     $item_type = $item->getItemType();
                 } else {
                     $id = $this->defaultItemId;
                     $vat = null;
-                    $price = ExtendItem::convertPriceInteger($item->getPrice(), $currency_digits);
+                    $price = ExtendItem::convertPriceInteger($item->getPrice(), $this->getCurrency());
                     $item_type = null;
                 }
 
@@ -563,10 +555,18 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function sendData($data)
     {
-        $httpRequest = $this->httpClient->post($this->getEndpoint(), null, $data);
+        $httpResponse = $this->httpClient->request(
+            'POST',
+            $this->getEndpoint(),
+            [
+                "Content-Type" => "application/x-www-form-urlencoded",
+            ],
+            http_build_query($data)
+        );
+
         // CURL_SSLVERSION_TLSv1_2 for libcurl < 7.35
-        $httpRequest->getCurlOptions()->set(CURLOPT_SSLVERSION, 6);
-        $httpResponse = $httpRequest->send();
+        //$httpRequest->getCurlOptions()->set(CURLOPT_SSLVERSION, 6);
+        //$httpResponse = $httpRequest->send();
 
         // The body returned will be text of multiple lines, each containing {name}={value}
         // TODO: also check $httpResponse->getContentType() to make sure we are getting a
@@ -595,115 +595,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         return $this->createResponse($data);
-    }
-
-    /**
-     * The Merchant ID is always needed.
-     */
-    public function setMerchantId($merchantId)
-    {
-        if (!is_numeric($merchantId)) {
-            throw new InvalidRequestException('Merchant Account ID must be numeric.');
-        }
-
-        return $this->setParameter('merchantId', $merchantId);
-    }
-
-    public function getMerchantId()
-    {
-        return $this->getParameter('merchantId');
-    }
-
-    /**
-     * The Portal ID is always needed.
-     */
-    public function setPortalId($portalId)
-    {
-        if (!is_numeric($portalId)) {
-            throw new InvalidRequestException('Payment Portal ID must be numeric.');
-        }
-
-        return $this->setParameter('portalId', $portalId);
-    }
-
-    public function getPortalId()
-    {
-        return $this->getParameter('portalId');
-    }
-
-    /**
-     * The Portal Key is always needed.
-     */
-    public function setPortalKey($portalKey)
-    {
-        return $this->setParameter('portalKey', $portalKey);
-    }
-
-    public function getPortalKey()
-    {
-        return $this->getParameter('portalKey');
-    }
-
-    /**
-     * The Endpoint will only need to be changed if instructructed.
-     */
-    public function setEndpoint($endpoint)
-    {
-        return $this->setParameter('endpoint', $endpoint);
-    }
-
-    public function getEndpoint()
-    {
-        return $this->getParameter('endpoint');
-    }
-
-    /**
-     * The hash method to use in a number of places.
-     * The PAYONE account must be configured with the hash method to be used.
-     */
-    public function setHashMethod($hashMethod)
-    {
-        return $this->setParameter('hashMethod', $hashMethod);
-    }
-
-    public function getHashMethod()
-    {
-        return $this->getParameter('hashMethod');
-    }
-
-    /**
-     * The default encoding is ISO-8859-1 in the API.
-     * We don't want to encourage that, so will set UTF-8 as the default in this gateway.
-     */
-    public function setEncoding($encoding)
-    {
-        if ($encoding != AbstractShopGateway::ENCODING_UTF8 && $encoding != AbstractShopGateway::ENCODING_ISO8859) {
-            throw new InvalidRequestException(sprintf(
-                'Encoding invalid. Must be "%s" or "%s".',
-                AbstractShopGateway::ENCODING_UTF8,
-                AbstractShopGateway::ENCODING_ISO8859
-            ));
-        }
-
-        return $this->setParameter('encoding', $encoding);
-    }
-
-    public function getEncoding()
-    {
-        return $this->getParameter('encoding');
-    }
-
-    /**
-     * The language sets the language used in the customermessage results..
-     */
-    public function setLanguage($language)
-    {
-        return $this->setParameter('language', $language);
-    }
-
-    public function getLanguage()
-    {
-        return $this->getParameter('language');
     }
 
     /**
@@ -773,23 +664,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         return $cardType;
-    }
-
-    /**
-     * The Sub Account ID is needed for each transaction.
-     */
-    public function setSubAccountId($subAccountId)
-    {
-        if (!is_numeric($subAccountId)) {
-            throw new InvalidRequestException('Sub Account ID must be numeric.');
-        }
-
-        return $this->setParameter('subAccountId', $subAccountId);
-    }
-
-    public function getSubAccountId()
-    {
-        return $this->getParameter('subAccountId');
     }
 
     /**
@@ -901,20 +775,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * The payment clearing type.
-     * See AbstractShopGateway::CLEARING_TYPE_* for permitted values.
-     */
-    public function setClearingType($value)
-    {
-        return $this->setParameter('clearingtype', $value);
-    }
-
-    public function getClearingType()
-    {
-        return $this->getParameter('clearingtype');
-    }
-
-    /**
      * The financing type for clearing type AbstractShopGateway::CLEARING_TYPE_FNC
      */
     public function setFinancingtype($financingtype)
@@ -946,8 +806,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setEcommerceMode($ecommerceMode)
     {
-        if (
-            isset($ecommerceMode)
+        if (isset($ecommerceMode)
             && $ecommerceMode != static::ECOMMERCE_MODE_INTERNET
             && $ecommerceMode != static::ECOMMERCE_MODE_3DSECURE
             && $ecommerceMode != static::ECOMMERCE_MODE_MOTO

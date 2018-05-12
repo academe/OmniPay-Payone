@@ -35,16 +35,16 @@ class ShopServerAuthorizeRequest extends AbstractRequest
     protected function getBaseData()
     {
         $data = array(
-            'request' => $this->request_code,
             'mid' => $this->getMerchantId(),
             'portalid' => $this->getPortalId(),
-            'api_version' => AbstractShopGateway::API_VERSION,
             // Only md5 is used to encode the key for the Server API (no hashing is
             // needed over the secure server-to-server connection).
             'key' => md5($this->getPortalKey()),
+            'api_version' => AbstractShopGateway::API_VERSION,
             'mode' => (bool)$this->getTestMode()
                 ? AbstractShopGateway::MODE_TEST
                 : AbstractShopGateway::MODE_LIVE,
+            'request' => $this->request_code,
             'encoding' => $this->getEncoding(),
             'language' => $this->getLanguage(),
         );

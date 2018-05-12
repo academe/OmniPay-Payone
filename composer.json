@@ -1,7 +1,7 @@
 {
     "name": "academe/omnipay-payone",
     "type": "library",
-    "description": "PAYONE gateway for the Omnipay 2.x payment processing library",
+    "description": "PAYONE gateway for the Omnipay 3.x payment processing library",
     "keywords": [
         "payone",
         "gateway",
@@ -28,14 +28,18 @@
         }
     },
     "require": {
-        "omnipay/common": "~2.4"
+        "omnipay/common": "~3.0",
+        "moneyphp/money": "^3.1"
     },
     "require-dev": {
-        "omnipay/tests": "~2.0"
+        "omnipay/tests": "~3.0",
+        "squizlabs/php_codesniffer": "^2.8"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "3.0.x-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

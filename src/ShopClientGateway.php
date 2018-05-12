@@ -61,7 +61,7 @@ class ShopClientGateway extends AbstractShopGateway
      */
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopClientAuthorizeRequest', $parameters);
+        return $this->createRequest(Message\ShopClientAuthorizeRequest::class, $parameters);
     }
 
     /**
@@ -69,7 +69,7 @@ class ShopClientGateway extends AbstractShopGateway
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopClientPurchaseRequest', $parameters);
+        return $this->createRequest(Message\ShopClientPurchaseRequest::class, $parameters);
     }
 
     /**
@@ -77,7 +77,7 @@ class ShopClientGateway extends AbstractShopGateway
      */
     public function completeAuthorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopClientCompleteAuthorizeRequest', $parameters);
+        return $this->createRequest(Message\ShopClientCompleteAuthorizeRequest::class, $parameters);
     }
 
     /**
@@ -85,7 +85,7 @@ class ShopClientGateway extends AbstractShopGateway
      */
     public function completePurchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopClientCompleteAuthorizeRequest', $parameters);
+        return $this->createRequest(Message\ShopClientCompleteAuthorizeRequest::class, $parameters);
     }
 
     /**
@@ -93,7 +93,7 @@ class ShopClientGateway extends AbstractShopGateway
      */
     public function creditCardCheck(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopClientCardCheckRequest', $parameters);
+        return $this->createRequest(Message\ShopClientCardCheckRequest::class, $parameters);
     }
 
     /**
@@ -103,6 +103,6 @@ class ShopClientGateway extends AbstractShopGateway
      */
     public function acceptNotification(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
+        return $this->createRequest(Message\ShopTransactionStatusServerRequest::class, $parameters);
     }
 }

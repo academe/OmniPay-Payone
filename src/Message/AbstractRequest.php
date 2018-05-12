@@ -12,7 +12,8 @@ use Omnipay\Payone\Extend\Item as ExtendItem;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\CreditCard;
-use Omnipay\Common\Currency;
+//use Omnipay\Common\Currency;
+use Money\Currency;
 use Omnipay\Omnipay;
 use Guzzle\Http\Url;
 
@@ -519,21 +520,18 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         $items = $this->getItems();
         if (! empty($items)) {
-            // Find the number of decimal digits the currency uses.
-            $currency_digits = Currency::find($this->getCurrency())->getDecimals();
-
             foreach ($this->getItems() as $item) {
                 $item_count++;
 
                 if ($item instanceof ExtendItemInterface) {
                     $id = $item->getId();
                     $vat = $item->getVat();
-                    $price = $item->getPriceInteger($currency_digits);
+                    $price = $item->getPriceInteger($this->getCurrency());
                     $item_type = $item->getItemType();
                 } else {
                     $id = $this->defaultItemId;
                     $vat = null;
-                    $price = ExtendItem::convertPriceInteger($item->getPrice(), $currency_digits);
+                    $price = ExtendItem::convertPriceInteger($item->getPrice(), $this->getCurrency());
                     $item_type = null;
                 }
 
@@ -563,10 +561,17 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function sendData($data)
     {
-        $httpRequest = $this->httpClient->post($this->getEndpoint(), null, $data);
+        //$httpRequest = $this->httpClient->request(
+        $httpResponse = $this->httpClient->request(
+            'POST',
+            $this->getEndpoint(),
+            [],
+            http_build_query($data)
+        );
+
         // CURL_SSLVERSION_TLSv1_2 for libcurl < 7.35
-        $httpRequest->getCurlOptions()->set(CURLOPT_SSLVERSION, 6);
-        $httpResponse = $httpRequest->send();
+        //$httpRequest->getCurlOptions()->set(CURLOPT_SSLVERSION, 6);
+        //$httpResponse = $httpRequest->send();
 
         // The body returned will be text of multiple lines, each containing {name}={value}
         // TODO: also check $httpResponse->getContentType() to make sure we are getting a
@@ -602,7 +607,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setMerchantId($merchantId)
     {
-        if (!is_numeric($merchantId)) {
+        if (! is_numeric($merchantId)) {
             throw new InvalidRequestException('Merchant Account ID must be numeric.');
         }
 

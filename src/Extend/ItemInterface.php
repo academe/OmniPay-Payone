@@ -8,6 +8,7 @@ namespace Omnipay\Payone\Extend;
  */
 
 use Omnipay\Common\ItemInterface as CommonItemInterface;
+use Money\Currency;
 
 interface ItemInterface extends CommonItemInterface
 {
@@ -58,6 +59,8 @@ interface ItemInterface extends CommonItemInterface
 
     /**
      * Get the price in minor units, making some assumptions.
+     *
+     * @param string|Currency Used only if converting from string or float.
      */
-    public function getPriceInteger();
+    public function getPriceInteger($currency = null);
 }

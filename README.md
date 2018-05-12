@@ -50,6 +50,9 @@ This package implements PAYONE support for [OmniPay](https://github.com/thephple
 
 ## Installation
 
+**This is for the older Omnipay 3.x branch.**
+**The older [2.x branch can be found here](https://github.com/academe/OmniPay-Payone/tree/2.x)**
+
 Omnipay is installed via [Composer](http://getcomposer.org/). To install, add it
 to your `composer.json` file:
 

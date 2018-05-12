@@ -22,6 +22,7 @@ Table of Contents
     * [The Shop Front End API Gateway](#the-shop-front-end-api-gateway)
       * [Front End Authorize](#front-end-authorize)
       * [Front End Purchase](#front-end-purchase)
+      * [Front End Credit Card Check](#front-end-credit-card-check)
     * [The Shop Client API Gateway](#the-shop-client-api-gateway)
       * [Client API Credit Card Check](#client-api-credit-card-check)
       * [Client API Authorize](#client-api-authorize)
@@ -606,6 +607,18 @@ the notification back-channel.
 ### Front End Purchase
 
 Works the same as Front End Authorize, but will require a separate `Server` API Capture.
+
+### Front End Credit Card Check
+
+Set this up the same way as the Client API Credit Card Check.
+The response is then used to generate the data you will need for the JSON
+to configure the form you will use to tokenise the card:
+
+    $jsonForJavaScript = json_encode($request->send()->getData());
+
+Setting up the card tokenisation form and JavaScript to process it, is out of scope
+for this guide. The official documentation provides good examples. Just replace the
+sample request config data with the contents of `$jsonForJavaScript`.
 
 ## The Shop Client API Gateway
 

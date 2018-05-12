@@ -22,7 +22,7 @@ class ShopFrontendGateway extends AbstractShopGateway
      */
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopFrontendAuthorizeRequest', $parameters);
+        return $this->createRequest(Message\ShopFrontendAuthorizeRequest::class, $parameters);
     }
 
     /**
@@ -30,7 +30,15 @@ class ShopFrontendGateway extends AbstractShopGateway
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopFrontendPurchaseRequest', $parameters);
+        return $this->createRequest(Message\ShopFrontendPurchaseRequest::class, $parameters);
+    }
+
+    /**
+     * Helper for generating the hidden fields in a credit card tokenisation AJAX form.
+     */
+    public function creditCardCheck(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopClientCardCheckRequest::class, $parameters);
     }
 
     /**
@@ -39,6 +47,6 @@ class ShopFrontendGateway extends AbstractShopGateway
      */
     public function acceptNotification(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\Payone\Message\ShopTransactionStatusServerRequest', $parameters);
+        return $this->createRequest(Message\ShopTransactionStatusServerRequest::class, $parameters);
     }
 }

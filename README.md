@@ -50,7 +50,7 @@ This package implements PAYONE support for [OmniPay](https://github.com/thephple
 
 ## Installation
 
-**This is the `master` branch for the current Omnipay 3.x branch (teste against 3.0-beta.1).**
+**This is the `master` branch for the current Omnipay 3.x branch (tested against 3.0-beta.1).**
 **The older [2.x branch can be found here](https://github.com/academe/OmniPay-Payone/tree/2.x)**
 
 Omnipay is installed via [Composer](http://getcomposer.org/). To install, add it
@@ -59,34 +59,14 @@ to your `composer.json` file:
 ```json
 {
     "require": {
-        "academe/omnipay-payone": "~2.0"
+        "academe/omnipay-payone": "~3.0"
     }
 }
 ```
 
 or direct from [packagist](https://packagist.org/packages/academe/omnipay-payone)
 
-    composer require "academe/omnipay-payone: ~2.0"
-
-While in development, it can be obtained from this repository:
-
-```json
-{
-    "require": {
-        "academe/omnipay-payone": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/academe/OmniPay-Payone.git"
-        }
-    ]
-}
-```
-
-or
-
-    composer require "academe/omnipay-payone: dev-master"
+    composer require "academe/omnipay-payone: ~3.0"
 
 And run composer to update your dependencies:
 

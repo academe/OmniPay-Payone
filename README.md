@@ -67,26 +67,6 @@ or direct from [packagist](https://packagist.org/packages/academe/omnipay-payone
 
     composer require "academe/omnipay-payone: ~2.0"
 
-While in development, it can be obtained from this repository:
-
-```json
-{
-    "require": {
-        "academe/omnipay-payone": "dev-master"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/academe/OmniPay-Payone.git"
-        }
-    ]
-}
-```
-
-or
-
-    composer require "academe/omnipay-payone: dev-master"
-
 And run composer to update your dependencies:
 
     $ curl -s http://getcomposer.org/installer | php

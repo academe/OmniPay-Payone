@@ -8,6 +8,7 @@ namespace Omnipay\Payone\Traits;
  */
 
 use Omnipay\Payone\AbstractShopGateway;
+use Omnipay\Common\Exception\InvalidRequestException;
 
 trait HasGatewayParams
 {

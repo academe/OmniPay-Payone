@@ -3,6 +3,7 @@
 namespace Omnipay\Payone;
 
 use Omnipay\Tests\GatewayTestCase;
+//use Omnipay\Common\Exception\InvalidRequestException;
 
 class ShopServerGatewayTest extends GatewayTestCase
 {
@@ -219,5 +220,16 @@ class ShopServerGatewayTest extends GatewayTestCase
         $this->assertSame('Expiry date invalid, incorrect or in the past', $response->getMessage());
         $this->assertSame('Invalid card expiry date. Please verify your card data.', $response->getCustomerMessage());
         $this->assertNull($response->getTransactionReference());
+    }
+
+    /**
+     * See https://github.com/academe/OmniPay-Payone/issues/31
+     * @expectedException Omnipay\Common\Exception\InvalidRequestException
+     */
+    public function testInvalidMerchantId()
+    {
+        $this->gateway->initialize([
+            'merchantId' => 'abcdef',
+        ]);
     }
 }

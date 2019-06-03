@@ -436,13 +436,13 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $expiryYear = $card->getExpiryYear();
             $expiryMonth = $card->getExpiryMonth();
 
+            if ($this->getEcommerceMode()) {
+                $data['ecommercemode'] = $this->getEcommerceMode();
+            }
+
             if (empty($expiryYear) && empty($expiryMonth) && $card->getCvv() === null) {
                 $data['pseudocardpan'] = $card->getNumber();
             } elseif ($card->getNumber()) {
-                if ($this->getEcommerceMode()) {
-                    $data['ecommercemode'] = $this->getEcommerceMode();
-                }
-
                 $data['cardpan'] = $card->getNumber();
 
                 $data['cardtype'] = $this->getCardType();

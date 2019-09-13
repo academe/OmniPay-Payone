@@ -31,6 +31,23 @@ class ShopServerGateway extends AbstractShopGateway
         return $this->createRequest(Message\ShopServerPurchaseRequest::class, $parameters);
     }
 
+
+    /**
+     * The complete authorization transaction (capturing data retuned with the user).
+     */
+    public function completeAuthorize(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopServerCompleteAuthorizeRequest::class, $parameters);
+    }
+
+    /**
+     * The complete purchase transaction (capturing data retuned with the user).
+     */
+    public function completePurchase(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopServerCompleteAuthorizeRequest::class, $parameters);
+    }
+
     /**
      * For handling a capture action.
      */

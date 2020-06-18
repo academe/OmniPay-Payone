@@ -225,7 +225,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $hash_data = $this->filterHashFields($data);
 
         // Sort the data alphanbetically by key.
-        ksort($hash_data);
+        ksort($hash_data, SORT_NATURAL);
 
         return $this->hashString(implode('', $hash_data));
     }

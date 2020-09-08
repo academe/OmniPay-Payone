@@ -40,6 +40,14 @@ class ShopServerGateway extends AbstractShopGateway
     }
 
     /**
+     * For handling a capture action.
+     */
+    public function refund(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopServerRefundRequest::class, $parameters);
+    }
+
+    /**
      * Check a credit card detail for "plausability" and get a card token in response.
      * This would normally be done client-side, but is available server side too for
      * development and testing.

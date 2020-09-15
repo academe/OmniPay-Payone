@@ -58,6 +58,14 @@ class ShopServerGateway extends AbstractShopGateway
     }
 
     /**
+     * Helper for managing Sepa Direct Debit Mandate
+     */
+    public function managemandate(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopServerManageMandateRequest::class, $parameters);
+    }
+
+    /**
      * For handling a void action.
      */
     public function void(array $parameters = array())

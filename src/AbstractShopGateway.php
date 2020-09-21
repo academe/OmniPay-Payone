@@ -136,4 +136,13 @@ abstract class AbstractShopGateway extends AbstractGateway
     {
         return $this->getParameter('wallettype');
     }
+    public function getMandateId()
+    {
+        return $this->getParameter('mandateId');
+    }
+
+    public function setMandateId($id)
+    {
+        return $this->setParameter('mandateId', $id);
+    }
 }

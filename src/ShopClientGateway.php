@@ -97,6 +97,14 @@ class ShopClientGateway extends AbstractShopGateway
     }
 
     /**
+     * Helper for generating the hidden fields in a credit card tokenisation AJAX form.
+     */
+    public function managemandate(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopServerManageMandateRequest::class, $parameters);
+    }
+
+    /**
      * Accept an incoming notification (a ServerRequest).
      * This API supports the notification responses as well as the complete* responses.
      * However, only the notification responses are signed and so can be trusted.

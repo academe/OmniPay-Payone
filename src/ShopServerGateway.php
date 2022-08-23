@@ -6,8 +6,6 @@ namespace Omnipay\Payone;
  * ONEPAY Shop (single payments) driver for Omnipay
  */
 
-use Omnipay\Common\Exception\InvalidRequestException;
-
 class ShopServerGateway extends AbstractShopGateway
 {
     public function getName()
@@ -40,6 +38,14 @@ class ShopServerGateway extends AbstractShopGateway
     }
 
     /**
+     * For handling a capture action.
+     */
+    public function refund(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopServerRefundRequest::class, $parameters);
+    }
+
+    /**
      * Check a credit card detail for "plausability" and get a card token in response.
      * This would normally be done client-side, but is available server side too for
      * development and testing.
@@ -47,6 +53,14 @@ class ShopServerGateway extends AbstractShopGateway
     public function creditCardCheck(array $parameters = array())
     {
         return $this->createRequest(Message\ShopServerCardCheckRequest::class, $parameters);
+    }
+
+    /**
+     * Helper for managing Sepa Direct Debit Mandate
+     */
+    public function managemandate(array $parameters = array())
+    {
+        return $this->createRequest(Message\ShopServerManageMandateRequest::class, $parameters);
     }
 
     /**

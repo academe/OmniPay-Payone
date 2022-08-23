@@ -6,8 +6,6 @@ namespace Omnipay\Payone;
  * ONEPAY Shop (single payments) driver for Omnipay
  */
 
-use Omnipay\Common\Exception\InvalidRequestException;
-
 class ShopServerGateway extends AbstractShopGateway
 {
     public function getName()

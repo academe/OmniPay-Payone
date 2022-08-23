@@ -6,6 +6,8 @@ namespace Omnipay\Payone\Message;
 * PAYONE Shop Capture Request
 */
 
+use Omnipay\Common\Exception\InvalidRequestException;
+
 class ShopServerRefundRequest extends ShopServerAuthorizeRequest
 {
     /**
@@ -152,5 +154,4 @@ class ShopServerRefundRequest extends ShopServerAuthorizeRequest
     {
         return $this->setParameter('txid', $txid);
     }
-
 }

@@ -7,8 +7,6 @@ namespace Omnipay\Payone;
  * driver for Omnipay
  */
 
-use Omnipay\Common\Exception\InvalidRequestException;
-
 class ShopClientGateway extends AbstractShopGateway
 {
     /**
@@ -19,7 +17,6 @@ class ShopClientGateway extends AbstractShopGateway
 
     protected $javascript_url = 'https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js';
     protected $endpoint = 'https://secure.pay1.de/client-api/';
-
 
     public function getName()
     {
@@ -35,7 +32,7 @@ class ShopClientGateway extends AbstractShopGateway
 
         $params['responseType'] = array(
             static::RETURN_TYPE_JSON,
-            static::RETURN_TYPE_REDIRECT,
+            static::RETURN_TYPE_REDIRECT
         );
 
         return $params;

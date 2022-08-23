@@ -34,7 +34,7 @@ class ShopServerAuthorizeRequest extends AbstractRequest
      */
     protected function getBaseData()
     {
-        $data = array(
+        $data = [
             'mid' => $this->getMerchantId(),
             'portalid' => $this->getPortalId(),
             // Only md5 is used to encode the key for the Server API (no hashing is
@@ -47,7 +47,7 @@ class ShopServerAuthorizeRequest extends AbstractRequest
             'request' => $this->request_code,
             'encoding' => $this->getEncoding(),
             'language' => $this->getLanguage(),
-        );
+        ];
 
         return $data;
     }

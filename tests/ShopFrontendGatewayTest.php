@@ -6,31 +6,31 @@ use Omnipay\Tests\GatewayTestCase;
 
 class ShopFrontendGatewayTest extends GatewayTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->gateway = new ShopFrontendGateway($this->getHttpClient(), $this->getHttpRequest());
 
-        $this->options = array(
+        $this->options = [
             'merchantId' => 12345678,
             'subAccountId' => 12345,
             'amount' => '10.00',
             'card' => $this->getValidCard(),
-        );
+        ];
 
-        $this->purchaseOptions = array(
+        $this->purchaseOptions = [
             'amount' => '10.00',
             'currency' => 'GBP',
             'transactionId' => '123',
             'card' => $this->getValidCard(),
-        );
+        ];
 
-        $this->captureOptions = array(
+        $this->captureOptions = [
             'amount' => '10.00',
             'transactionId' => '123',
             'transactionReference' => '????',
-        );
+        ];
     }
 
     /**
@@ -39,6 +39,7 @@ class ShopFrontendGatewayTest extends GatewayTestCase
      * the default parameter value.
      *
      * @parame mixed $default
+     *
      * @return mixed
      */
     protected function makeUnique($default)
@@ -180,7 +181,11 @@ class ShopFrontendGatewayTest extends GatewayTestCase
         // The redirect is for redirecting the full page OR into an iframe
         $this->assertTrue($response->isRedirect());
 
-        $this->assertInternalType('array', $response->getRedirectData());
+        if (method_exists($this, 'assertInternalType')) {
+            $this->assertInternalType('array', $response->getRedirectData());
+        } else {
+            $this->assertIsArray($response->getRedirectData());
+        }
 
         // TODO: validate the full $response->getRedirectData() array.
     }
@@ -196,7 +201,7 @@ class ShopFrontendGatewayTest extends GatewayTestCase
 
         $redirectData = $response->getRedirectData();
 
-        // 
+        //
         $this->assertArrayHasKey('hash', $redirectData);
 
         // An MD5 hash is generated.
@@ -211,7 +216,7 @@ class ShopFrontendGatewayTest extends GatewayTestCase
 
         $redirectData = $response->getRedirectData();
 
-        // 
+        //
         $this->assertArrayHasKey('hash', $redirectData);
 
         // An SHA2-384 hash is generated.

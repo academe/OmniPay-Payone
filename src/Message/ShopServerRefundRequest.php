@@ -3,8 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Capture Request
-*/
+ * PAYONE Shop Capture Request
+ */
 
 use Omnipay\Common\Exception\InvalidRequestException;
 
@@ -14,14 +14,18 @@ class ShopServerRefundRequest extends ShopServerAuthorizeRequest
      * Values for the settleAccount parameter.
      */
     const SETTLE_ACCOUNT_YES = 'yes';
+
     const SETTLE_ACCOUNT_NO = 'no';
+
     const SETTLE_ACCOUNT_AUTO = 'auto';
 
     /**
      * Values for the invoiceDeliveryMode parameter.
      */
     const INVOICE_DELIVERY_MODE_POST = 'M'; // aka Mail
+
     const INVOICE_DELIVERY_MODE_PDF = 'P';  // via email
+
     const INVOICE_DELIVERY_MODE_NONE = 'N'; // no delivery
 
     /**
@@ -100,7 +104,7 @@ class ShopServerRefundRequest extends ShopServerAuthorizeRequest
      */
     public function setSequenceNumber($sequenceNumber)
     {
-        if (!is_numeric($sequenceNumber)) {
+        if (! is_numeric($sequenceNumber)) {
             throw new InvalidRequestException('Sequence Number must be numeric.');
         }
 
@@ -120,7 +124,6 @@ class ShopServerRefundRequest extends ShopServerAuthorizeRequest
         return $this->getParameter('txid');
     }
 
-
     /**
      * Sets whether you want to settle the account or not.
      */
@@ -131,7 +134,7 @@ class ShopServerRefundRequest extends ShopServerAuthorizeRequest
             $settleAccount = static::SETTLE_ACCOUNT_YES;
         } elseif ($settleAccount === false) {
             $settleAccount = static::SETTLE_ACCOUNT_NO;
-        } elseif (!isset($settleAccount)) {
+        } elseif (! isset($settleAccount)) {
             $settleAccount = static::SETTLE_ACCOUNT_AUTO;
         }
 

@@ -3,8 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Authorize Request
-*/
+ * PAYONE Shop Authorize Request
+ */
 
 use Omnipay\Payone\AbstractShopGateway;
 
@@ -17,10 +17,13 @@ class ShopServerAuthorizeRequest extends AbstractRequest
 
     // Payolution-Invoicing
     const FINANCING_TYPE_PYV = 'PYV';
+
     // Payolution-Monthly
     const FINANCING_TYPE_PYM = 'PYM';
+
     // Payolution-Installment
     const FINANCING_TYPE_PYS = 'PYS';
+
     // Payolution-Debit
     const FINANCING_TYPE_PYD = 'PYD';
 
@@ -41,7 +44,7 @@ class ShopServerAuthorizeRequest extends AbstractRequest
             // needed over the secure server-to-server connection).
             'key' => md5($this->getPortalKey()),
             'api_version' => AbstractShopGateway::API_VERSION,
-            'mode' => (bool)$this->getTestMode()
+            'mode' => (bool) $this->getTestMode()
                 ? AbstractShopGateway::MODE_TEST
                 : AbstractShopGateway::MODE_LIVE,
             'request' => $this->request_code,
@@ -175,7 +178,7 @@ class ShopServerAuthorizeRequest extends AbstractRequest
     }
 
     /**
-     * @param string $deliveryEndDate Format YYYYMMDD
+     * @param  string  $deliveryEndDate Format YYYYMMDD
      */
     public function setInvoiceDeliveryEndDate($deliveryEndDate)
     {

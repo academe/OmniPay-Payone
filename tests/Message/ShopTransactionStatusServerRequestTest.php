@@ -3,7 +3,6 @@
 namespace Omnipay\Payone\Message;
 
 use Omnipay\Tests\TestCase;
-use Mockery as m;
 
 class ShopTransactionStatusServerRequestTest extends TestCase
 {

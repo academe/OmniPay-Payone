@@ -6,7 +6,6 @@ namespace Omnipay\Payone\Message;
  * Complete Authorize, shop mode, client payment gateway (AJAX card tokens or redirect).
  * There is nothing to "send" in this message. (Actually there is, to handle all the result methods and 3DS redirects)
  */
-
 class ShopClientCompleteAuthorizeRequest extends AbstractRequest
 {
     /**

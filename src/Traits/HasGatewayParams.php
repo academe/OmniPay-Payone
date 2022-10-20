@@ -7,8 +7,8 @@ namespace Omnipay\Payone\Traits;
  * and the message classes.
  */
 
-use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Payone\AbstractShopGateway;
 
 trait HasGatewayParams
 {
@@ -17,7 +17,7 @@ trait HasGatewayParams
      */
     public function setMerchantId($merchantId)
     {
-        if (!is_numeric($merchantId)) {
+        if (! is_numeric($merchantId)) {
             throw new InvalidRequestException('Merchant Account ID must be numeric.');
         }
 
@@ -34,7 +34,7 @@ trait HasGatewayParams
      */
     public function setPortalId($portalId)
     {
-        if (!is_numeric($portalId)) {
+        if (! is_numeric($portalId)) {
             throw new InvalidRequestException('Payment Portal ID must be numeric.');
         }
 
@@ -64,7 +64,7 @@ trait HasGatewayParams
      */
     public function setSubAccountId($subAccountId)
     {
-        if (!is_numeric($subAccountId)) {
+        if (! is_numeric($subAccountId)) {
             throw new InvalidRequestException('Sub Account ID must be numeric.');
         }
 

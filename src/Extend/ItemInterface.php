@@ -7,8 +7,8 @@ namespace Omnipay\Payone\Extend;
  * required by PAYONE.
  */
 
-use Omnipay\Common\ItemInterface as CommonItemInterface;
 use Money\Currency;
+use Omnipay\Common\ItemInterface as CommonItemInterface;
 
 interface ItemInterface extends CommonItemInterface
 {
@@ -18,7 +18,9 @@ interface ItemInterface extends CommonItemInterface
 
     // For BSV/KLV/KLS financing type and PPE wallet type
     const ITEM_TYPE_GOODS = 'goods';
+
     const ITEM_TYPE_SHIPMENT = 'shipment';
+
     const ITEM_TYPE_HANDLING = 'handling';
 
     // For BSV/KLV/KLS financing type
@@ -42,19 +44,19 @@ interface ItemInterface extends CommonItemInterface
      */
     public function setId($value);
 
-   /**
-    * The stock item ID.
-    */
+    /**
+     * The stock item ID.
+     */
     public function getId();
 
-   /**
-    * The item type, for PPE.
-    */
+    /**
+     * The item type, for PPE.
+     */
     public function setItemType($value);
 
-   /**
-    * The item type, for PPE.
-    */
+    /**
+     * The item type, for PPE.
+     */
     public function getItemType();
 
     /**

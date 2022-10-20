@@ -5,7 +5,6 @@ namespace Omnipay\Payone\Message;
 /**
  * Purchase, shop mode, client payment gateway (AJAX card tokens or redirect).
  */
-
 class ShopClientPurchaseRequest extends ShopClientAuthorizeRequest
 {
     /**

@@ -5,38 +5,50 @@ namespace Omnipay\Payone\Message;
 /**
  * Capture the incoming Transaction Status message from ONEPAY.
  */
- 
+
+use DateTime;
+use Omnipay\Common\Currency;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
-use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\NotificationInterface;
 use Omnipay\Payone\AbstractShopGateway;
-use Omnipay\Common\Currency;
-use DateTime;
 
 class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implements NotificationInterface
 {
     /**
      * Transaction status values.
      */
-    const TRANSACTION_STATUS_COMPLETED  = 'completed';
-    const TRANSACTION_STATUS_PENDING    = 'pending';
+    const TRANSACTION_STATUS_COMPLETED = 'completed';
+
+    const TRANSACTION_STATUS_PENDING = 'pending';
 
     /**
      * Event (txaction) values.
      */
-    const EVENT_APPOINTED       = 'appointed';
-    const EVENT_CAPTURE         = 'capture';
-    const EVENT_UNDERPAID       = 'underpaid';
-    const EVENT_PAID            = 'paid';
-    const EVENT_CANCELATION     = 'cancelation';
-    const EVENT_REFUND          = 'refund';
-    const EVENT_DEBIT           = 'debit';
-    const EVENT_REMINDER        = 'reminder';
-    const EVENT_VAUTHORIZATION  = 'vauthorization';
-    const EVENT_VSETTLEMENT     = 'vsettlement';
-    const EVENT_TRANSFER        = 'transfer';
-    const EVENT_INVOICE         = 'invoice';
-    const EVENT_FAILED          = 'failed';
+    const EVENT_APPOINTED = 'appointed';
+
+    const EVENT_CAPTURE = 'capture';
+
+    const EVENT_UNDERPAID = 'underpaid';
+
+    const EVENT_PAID = 'paid';
+
+    const EVENT_CANCELATION = 'cancelation';
+
+    const EVENT_REFUND = 'refund';
+
+    const EVENT_DEBIT = 'debit';
+
+    const EVENT_REMINDER = 'reminder';
+
+    const EVENT_VAUTHORIZATION = 'vauthorization';
+
+    const EVENT_VSETTLEMENT = 'vsettlement';
+
+    const EVENT_TRANSFER = 'transfer';
+
+    const EVENT_INVOICE = 'invoice';
+
+    const EVENT_FAILED = 'failed';
 
     protected $data;
 
@@ -65,7 +77,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
             // We want UTF-8 back, so the ISO-8859 needs to be converted.
 
             array_walk($data, function (&$item) {
-                if (!empty($item)) {
+                if (! empty($item)) {
                     if (is_array($item)) {
                         $item = json_decode(utf8_encode(json_encode($item)), true);
                     } else {
@@ -238,9 +250,6 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         return $this->getValue('notify_version');
     }
 
-    /**
-     *
-     */
     protected function getParam()
     {
         return $this->getValue('param');
@@ -279,6 +288,7 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
     public function getTxTime()
     {
         $date = new DateTime();
+
         return $date->setTimestamp($this->getTxTimestamp());
     }
 
@@ -384,17 +394,11 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         return $this->getValue('cardholder');
     }
 
-    /**
-     *
-     */
     public function getFirstName()
     {
         return $this->getValue('firstname');
     }
 
-    /**
-     *
-     */
     public function getLastName()
     {
         return $this->getValue('lastname');
@@ -405,36 +409,24 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
      */
     public function getName()
     {
-        return trim($this->getFirstName() . ' ' . $this->getLastName());
+        return trim($this->getFirstName().' '.$this->getLastName());
     }
 
-    /**
-     *
-     */
     public function getStreet()
     {
         return $this->getValue('street');
     }
 
-    /**
-     *
-     */
     public function getAddress1()
     {
         return $this->getStreet();
     }
 
-    /**
-     *
-     */
     public function getCity()
     {
         return $this->getValue('city');
     }
 
-    /**
-     *
-     */
     public function getPostcode()
     {
         return $this->getValue('zip');
@@ -448,9 +440,6 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
         return $this->getValue('country');
     }
 
-    /**
-     *
-     */
     public function getEmail()
     {
         return $this->getValue('email');
@@ -548,25 +537,16 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
 
     // Delivery data (name, address)
 
-    /**
-     *
-     */
     public function getShippingFirstName()
     {
         return $this->getValue('shipping_firstname');
     }
 
-    /**
-     *
-     */
     public function getShippingLastName()
     {
         return $this->getValue('shipping_lastname');
     }
 
-    /**
-     *
-     */
     public function getShippingCompany()
     {
         return $this->getValue('shipping_company');
@@ -577,36 +557,24 @@ class ShopTransactionStatusServerRequest extends OmnipayAbstractRequest implemen
      */
     public function getShippingName()
     {
-        return trim($this->getShippingFirstName() . ' ' . $this->getShippingLastName());
+        return trim($this->getShippingFirstName().' '.$this->getShippingLastName());
     }
 
-    /**
-     *
-     */
     public function getShippingStreet()
     {
         return $this->getValue('shipping_street');
     }
 
-    /**
-     *
-     */
     public function getShippingAddress1()
     {
         return $this->getShippingStreet();
     }
 
-    /**
-     *
-     */
     public function getShippingCity()
     {
         return $this->getValue('shipping_city');
     }
 
-    /**
-     *
-     */
     public function getShippingPostcode()
     {
         return $this->getValue('shipping_zip');

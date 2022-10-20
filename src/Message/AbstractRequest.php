@@ -6,17 +6,15 @@ namespace Omnipay\Payone\Message;
  * PAYONE Abstract Request.
  */
 
-use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
-use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
-use Omnipay\Payone\Extend\Item as ExtendItem;
-use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Payone\AbstractShopGateway;
-use Omnipay\Common\CreditCard;
-//use Omnipay\Common\Currency;
-use Money\Currency;
-use Omnipay\Omnipay;
 use Guzzle\Http\Url;
-
+use Omnipay\Common\CreditCard;
+use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
+use Omnipay\Omnipay;
+use Omnipay\Payone\AbstractShopGateway;
+//use Omnipay\Common\Currency;
+use Omnipay\Payone\Extend\Item as ExtendItem;
+use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
 use Omnipay\Payone\Traits\HasGatewayParams;
 
 abstract class AbstractRequest extends OmnipayAbstractRequest
@@ -29,20 +27,24 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     // Goods
     const ITEM_TYPE_GOODS = 'goods';
+
     // Shipping charges
     const ITEM_TYPE_SHIPMENT = 'shipment';
+
     // Handling fee
     // "handling" only available after assignment by BillSAFE
     const ITEM_TYPE_HANDLING = 'handling';
+
     // Voucher / discount
     const ITEM_TYPE_VOUCHER = 'voucher';
-    
+
     /**
      * recurring method for PAYONE.
      *
      * https://docs.payone.com/display/public/PLATFORM/Special+remarks+-+Recurring+transactions+credit+card#expand-SampleInitialRequest
      */
     const RECURRENCE_TYPE_RECURRING = 'recurring';
+
     const RECURRENCE_TYPE_ONECLICK = 'oneclick';
 
     /**
@@ -51,7 +53,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * There seems to be no one complete list defined anywhere, so these
      * field names come from a number of sources.
      */
-    protected $hash_fields = array(
+    protected $hash_fields = [
         // From the SDK
         'mid',
         'amount',
@@ -150,7 +152,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         'de_trail[x]',
         'va_trail[x]',
         'no_trail[x]',
-    );
+    ];
 
     /**
      * Default ID for the auto-created Item if none are supplied.
@@ -170,21 +172,21 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * non-constant cards are an extension.
      * Note: Switch is now Maestro UK
      */
-    protected static $cardtypes = array(
-        CreditCard::BRAND_VISA          => 'V',
-        CreditCard::BRAND_MASTERCARD    => 'M',
-        CreditCard::BRAND_DISCOVER      => 'C',
-        CreditCard::BRAND_AMEX          => 'A',
-        CreditCard::BRAND_DINERS_CLUB   => 'D',
-        CreditCard::BRAND_JCB           => 'J',
-        CreditCard::BRAND_SWITCH        => 'U',
-        CreditCard::BRAND_SOLO          => null,
-        CreditCard::BRAND_DANKORT       => null,
-        CreditCard::BRAND_MAESTRO       => 'O', // International
+    protected static $cardtypes = [
+        CreditCard::BRAND_VISA => 'V',
+        CreditCard::BRAND_MASTERCARD => 'M',
+        CreditCard::BRAND_DISCOVER => 'C',
+        CreditCard::BRAND_AMEX => 'A',
+        CreditCard::BRAND_DINERS_CLUB => 'D',
+        CreditCard::BRAND_JCB => 'J',
+        CreditCard::BRAND_SWITCH => 'U',
+        CreditCard::BRAND_SOLO => null,
+        CreditCard::BRAND_DANKORT => null,
+        CreditCard::BRAND_MAESTRO => 'O', // International
         //CreditCard::BRAND_FORBRUGSFORENINGEN => null, // No details available
-        CreditCard::BRAND_LASER         => null,
-        'cartebleue'                    => 'B',
-    );
+        CreditCard::BRAND_LASER => null,
+        'cartebleue' => 'B',
+    ];
 
     /**
      * The credit card e-commerce mode.
@@ -192,16 +194,18 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * 3dsecure = enables 3D Secure where cards support it
      * moto = mail or telephone (card not present)
      */
-    const ECOMMERCE_MODE_INTERNET   = 'internet';
-    const ECOMMERCE_MODE_3DSECURE   = '3dsecure';
-    const ECOMMERCE_MODE_MOTO       = 'moto';
+    const ECOMMERCE_MODE_INTERNET = 'internet';
+
+    const ECOMMERCE_MODE_3DSECURE = '3dsecure';
+
+    const ECOMMERCE_MODE_MOTO = 'moto';
 
     /**
      * A list of countries for which state codes may be given.
      */
-    protected $countries_with_states = array(
+    protected $countries_with_states = [
         'US', 'CA', 'CN', 'JP', 'MX', 'BR', 'AR', 'ID', 'TH', 'IN',
-    );
+    ];
 
     /**
      * Filter an array of data to just return fields that need to be hashed.
@@ -251,7 +255,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
         // The key is concatenated to the string for md5.
         if ($this->getHashMethod() == AbstractShopGateway::HASH_MD5) {
-            return strtolower(md5($string . $key));
+            return strtolower(md5($string.$key));
         }
 
         // The key is a separate parameter for SHA2 384
@@ -324,7 +328,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
             if ($card->getBillingCountry()) {
                 // Some very dirty validation.
-                if (!preg_match('/^[A-Z]{2}$/', $card->getBillingCountry())) {
+                if (! preg_match('/^[A-Z]{2}$/', $card->getBillingCountry())) {
                     throw new InvalidRequestException('Billing country must be an ISO-3166 two-digit code.');
                 }
 
@@ -337,7 +341,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             if ($card->getBillingState() && in_array($card->getBillingCountry(), $this->countries_with_states)) {
                 // Some very dirty validation.
                 // 1, 2 or 3 upper-case letters, or two digits.
-                if (!preg_match('/^([A-Z]{1,3}|[0-9]{2})$/', $card->getBillingState())) {
+                if (! preg_match('/^([A-Z]{1,3}|[0-9]{2})$/', $card->getBillingState())) {
                     throw new InvalidRequestException('Billing state must be an ISO-3166-2 subdivision code.');
                 }
 
@@ -413,7 +417,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
             if ($card->getShippingCountry()) {
                 // Some very dirty validation.
-                if (!preg_match('/^[A-Z]{2}$/', $card->getShippingCountry())) {
+                if (! preg_match('/^[A-Z]{2}$/', $card->getShippingCountry())) {
                     throw new InvalidRequestException('Shipping country must be an ISO-3166 two-digit code.');
                 }
 
@@ -425,7 +429,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
             if ($card->getShippingState() && in_array($card->getShippingCountry(), $this->countries_with_states)) {
                 // Some very dirty validation.
-                if (!preg_match('/^([A-Z]{1,3}|[0-9]{2})$/', $card->getShippingState())) {
+                if (! preg_match('/^([A-Z]{1,3}|[0-9]{2})$/', $card->getShippingState())) {
                     throw new InvalidRequestException('Shipping state must be an ISO-3166-2 subdivision code.');
                 }
 
@@ -579,7 +583,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             'POST',
             $this->getEndpoint(),
             [
-                "Content-Type" => "application/x-www-form-urlencoded",
+                'Content-Type' => 'application/x-www-form-urlencoded',
             ],
             http_build_query($data)
         );
@@ -593,7 +597,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // sane response and not "application/javascript" or something else.
         // The normal response seems to be "text/plain; charset=UTF-8".
 
-        $body = (string)$httpResponse->getBody();
+        $body = (string) $httpResponse->getBody();
 
         // Experiments show the lines are separated by \n only.
         // The documentation does not specify this to be the case, so we will split
@@ -610,7 +614,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                 continue;
             }
 
-            list($name, $value) = explode('=', $line, 2);
+            [$name, $value] = explode('=', $line, 2);
             $data[$name] = $value;
         }
 
@@ -631,7 +635,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     public function setCardType($cardType)
     {
         // Validate
-        if (!in_array($cardType, $this->getCardTypes())) {
+        if (! in_array($cardType, $this->getCardTypes())) {
             throw new InvalidRequestException(sprintf(
                 'Unrecognised card type "%s".',
                 $cardType
@@ -649,7 +653,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // Has a cardType already been set manually?
         $cardType = $this->getParameter('cardType');
 
-        if (!isset($cardType)) {
+        if (! isset($cardType)) {
             // No card type supplied, so we will try to derive it.
 
             $card = $this->getCard();
@@ -664,11 +668,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                 $card->addSupportedBrand(
                     'discover',
                     '^6('
-                    . '?:011\d{12}'
-                    . '|5\d{14}'
-                    . '|4[4-9]\d{13}'
-                    . '|22(?:1(?:2[6-9]|[3-9]\d)|[2-8]\d{2}|9(?:[01]\d|2[0-5]))\d{10}'
-                    . ')$'
+                    .'?:011\d{12}'
+                    .'|5\d{14}'
+                    .'|4[4-9]\d{13}'
+                    .'|22(?:1(?:2[6-9]|[3-9]\d)|[2-8]\d{2}|9(?:[01]\d|2[0-5]))\d{10}'
+                    .')$'
                 );
 
                 // No regex found for Carte Bleue cards.
@@ -704,7 +708,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setDebtorId($debtorId)
     {
-        if (!is_numeric($debtorId)) {
+        if (! is_numeric($debtorId)) {
             throw new InvalidRequestException('Debtor ID must be numeric.');
         }
 
@@ -715,7 +719,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     {
         return $this->getParameter('debtorId');
     }
-    
+
     public function getCustomerIsPresent()
     {
         return $this->getParameter('customer_is_present');
@@ -726,9 +730,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function setCustomerIsPresent($isPresent)
     {
-        if (!is_bool($isPresent)) {
+        if (! is_bool($isPresent)) {
             throw new InvalidRequestException('"customer_is_present" must be boolean.');
         }
+
         return $this->setParameter('customer_is_present', $isPresent ? 'yes' : 'no');
     }
 
@@ -747,6 +752,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         if ($recurrence !== self::RECURRENCE_TYPE_ONECLICK && $recurrence !== self::RECURRENCE_TYPE_RECURRING) {
             throw new InvalidRequestException('"recurrence" must have a value of "oneclick" or "recurring".');
         }
+
         return $this->setParameter('recurrence', $recurrence);
     }
 
@@ -879,15 +885,15 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * An alternative way to set the 3D Secure mode.
      *
-     * @param boolean $value True/False to enforce 3D Secure on/off
+     * @param  bool  $value True/False to enforce 3D Secure on/off
      */
     public function set3dSecure($value)
     {
-        if ((bool)$value === true) {
+        if ((bool) $value === true) {
             $this->setEcommerceMode(static::ECOMMERCE_MODE_3DSECURE);
         }
 
-        if ((bool)$value === false) {
+        if ((bool) $value === false) {
             $this->setEcommerceMode(static::ECOMMERCE_MODE_INTERNET);
         }
     }

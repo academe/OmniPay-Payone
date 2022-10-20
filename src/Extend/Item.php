@@ -2,11 +2,11 @@
 
 namespace Omnipay\Payone\Extend;
 
-use Omnipay\Common\Item as CommonItem;
 use Money\Currencies\ISOCurrencies;
-use Money\Parser\DecimalMoneyParser;
 use Money\Currency;
 use Money\Money;
+use Money\Parser\DecimalMoneyParser;
+use Omnipay\Common\Item as CommonItem;
 
 /**
  * Extends the Item class to support properties
@@ -14,7 +14,7 @@ use Money\Money;
  */
 class Item extends CommonItem implements ItemInterface
 {
-   /**
+    /**
      * {@inheritDoc}
      */
     public function getVat()
@@ -30,9 +30,9 @@ class Item extends CommonItem implements ItemInterface
         return $this->setParameter('vat', $value);
     }
 
-   /**
+    /**
      * {@inheritDoc}
-        */
+     */
     public function getId()
     {
         return $this->getParameter('id');
@@ -46,9 +46,9 @@ class Item extends CommonItem implements ItemInterface
         return $this->setParameter('itemType', $value);
     }
 
-   /**
+    /**
      * {@inheritDoc}
-        */
+     */
     public function getItemType()
     {
         return $this->getParameter('itemType');
@@ -84,14 +84,14 @@ class Item extends CommonItem implements ItemInterface
     {
         // An integer provided as the price, so assume it is for minor units.
 
-        if (is_integer($price)) {
+        if (is_int($price)) {
             return $price;
         }
 
         // An integer in a string, so assume it referesents minor units.
 
         if (is_string($price) && strpos($price, '.') === false) {
-            $price = (integer)$price;
+            $price = (int) $price;
         }
 
         // A float or a decimal in a string are assumed to be major units.
@@ -112,7 +112,7 @@ class Item extends CommonItem implements ItemInterface
             $currencies = new ISOCurrencies();
             $moneyParser = new DecimalMoneyParser($currencies);
 
-            if (!($currency instanceof Currency)) {
+            if (! ($currency instanceof Currency)) {
                 $currency = new Currency((string) $currency);
             }
 
@@ -122,7 +122,7 @@ class Item extends CommonItem implements ItemInterface
         // A money object supplied. We should use this all the time.
 
         if ($price instanceof Money) {
-            return (integer)$price->getAmount();
+            return (int) $price->getAmount();
         }
 
         // Don't know what to do with it.

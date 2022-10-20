@@ -5,7 +5,6 @@ namespace Omnipay\Payone;
 /**
  * ONEPAY Shop (single payments) driver for Omnipay
  */
-
 class ShopServerGateway extends AbstractShopGateway
 {
     public function getName()
@@ -16,7 +15,7 @@ class ShopServerGateway extends AbstractShopGateway
     /**
      * The authorization transaction.
      */
-    public function authorize(array $parameters = array())
+    public function authorize(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerAuthorizeRequest::class, $parameters);
     }
@@ -24,7 +23,7 @@ class ShopServerGateway extends AbstractShopGateway
     /**
      * For handling a purchase (athorisation with capture).
      */
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerPurchaseRequest::class, $parameters);
     }
@@ -32,7 +31,7 @@ class ShopServerGateway extends AbstractShopGateway
     /**
      * For handling a capture action.
      */
-    public function capture(array $parameters = array())
+    public function capture(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerCaptureRequest::class, $parameters);
     }
@@ -40,7 +39,7 @@ class ShopServerGateway extends AbstractShopGateway
     /**
      * For handling a capture action.
      */
-    public function refund(array $parameters = array())
+    public function refund(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerRefundRequest::class, $parameters);
     }
@@ -50,7 +49,7 @@ class ShopServerGateway extends AbstractShopGateway
      * This would normally be done client-side, but is available server side too for
      * development and testing.
      */
-    public function creditCardCheck(array $parameters = array())
+    public function creditCardCheck(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerCardCheckRequest::class, $parameters);
     }
@@ -58,7 +57,7 @@ class ShopServerGateway extends AbstractShopGateway
     /**
      * Helper for managing Sepa Direct Debit Mandate
      */
-    public function managemandate(array $parameters = array())
+    public function managemandate(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerManageMandateRequest::class, $parameters);
     }
@@ -66,7 +65,7 @@ class ShopServerGateway extends AbstractShopGateway
     /**
      * For handling a void action.
      */
-    public function void(array $parameters = array())
+    public function void(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerVoidRequest::class, $parameters);
     }
@@ -75,7 +74,7 @@ class ShopServerGateway extends AbstractShopGateway
      * Accept an incoming notification (a ServerRequest).
      * This API supports the notification responses as a suplement to the direct server responses.
      */
-    public function acceptNotification(array $parameters = array())
+    public function acceptNotification(array $parameters = [])
     {
         return $this->createRequest(Message\ShopTransactionStatusServerRequest::class, $parameters);
     }

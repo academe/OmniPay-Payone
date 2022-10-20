@@ -2,10 +2,9 @@
 
 namespace Omnipay\Payone\Extend;
 
-use Omnipay\Tests\TestCase;
-use Mockery as m;
-use Money\Money;
 use Money\Currency;
+use Money\Money;
+use Omnipay\Tests\TestCase;
 
 class ItemTest extends TestCase
 {
@@ -24,9 +23,9 @@ class ItemTest extends TestCase
         $this->assertSame(12300, Item::convertPriceInteger('123.0', 'EUR'));
 
         // Other currencies: 0, 2 and 3 decimal digits.
-        $this->assertSame(123,      Item::convertPriceInteger('123.0', 'JPY'));
-        $this->assertSame(12300,    Item::convertPriceInteger('123.0', 'EUR'));
-        $this->assertSame(123000,   Item::convertPriceInteger('123.0', 'IQD'));
+        $this->assertSame(123, Item::convertPriceInteger('123.0', 'JPY'));
+        $this->assertSame(12300, Item::convertPriceInteger('123.0', 'EUR'));
+        $this->assertSame(123000, Item::convertPriceInteger('123.0', 'IQD'));
 
         // Money.
         $this->assertSame(123, Item::convertPriceInteger(Money::EUR(123)));

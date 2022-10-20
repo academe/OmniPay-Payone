@@ -7,26 +7,26 @@ namespace Omnipay\Payone\Message;
  */
 
 use Omnipay\Common\Message\AbstractResponse as OmnipayAbstractResponse;
-use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Omnipay;
-use Guzzle\Http\Url;
 
 abstract class AbstractResponse extends OmnipayAbstractResponse
 {
     /**
      * Status codes shared by all responses.
      */
-    const STATUS_APPROVED   = 'APPROVED';
-    const STATUS_REDIRECT   = 'REDIRECT';
-    const STATUS_PENDING    = 'PENDING';
-    const STATUS_ERROR      = 'ERROR';
+    const STATUS_APPROVED = 'APPROVED';
+
+    const STATUS_REDIRECT = 'REDIRECT';
+
+    const STATUS_PENDING = 'PENDING';
+
+    const STATUS_ERROR = 'ERROR';
 
     /**
      * Get a data item, or default if not present.
      */
     protected function getDataItem($name, $default = null)
     {
-        if (!isset($this->data)) {
+        if (! isset($this->data)) {
             $this->data = $this->getData();
         }
 

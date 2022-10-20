@@ -51,7 +51,7 @@ class ShopFrontendAuthorizeResponse extends AbstractResponse implements Redirect
     public function getRedirectUrl()
     {
         if ($this->getRedirectMethod() == 'GET') {
-            return $this->getEndpoint() . '?' . http_build_query($this->getRedirectData(), '', '&');
+            return $this->getEndpoint().'?'.http_build_query($this->getRedirectData(), '', '&');
         } else {
             return $this->getEndpoint();
         }

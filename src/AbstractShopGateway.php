@@ -6,9 +6,7 @@ namespace Omnipay\Payone;
  * PAYONE Shop (single payments) driver for Omnipay
  */
 
-use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\AbstractGateway;
-
 use Omnipay\Payone\Traits\HasGatewayParams;
 
 abstract class AbstractShopGateway extends AbstractGateway
@@ -19,18 +17,21 @@ abstract class AbstractShopGateway extends AbstractGateway
      * Mode enumeration.
      */
     const MODE_TEST = 'test';
+
     const MODE_LIVE = 'live';
 
     /**
      * API encoding.
      */
     const ENCODING_ISO8859 = 'ISO-8859-1';
+
     const ENCODING_UTF8 = 'UTF-8';
 
     /**
      * Hash type to use.
      */
     const HASH_MD5 = 'MD5';
+
     const HASH_SHA2_384 = 'SHA2_384';
 
     /**
@@ -38,18 +39,25 @@ abstract class AbstractShopGateway extends AbstractGateway
      */
     // Debit payment
     const CLEARING_TYPE_ELV = 'elv';
+
     // Credit card
-    const CLEARING_TYPE_CC  = 'cc';
+    const CLEARING_TYPE_CC = 'cc';
+
     // Prepayment
     const CLEARING_TYPE_VOR = 'vor';
+
     // Invoice
     const CLEARING_TYPE_REC = 'rec';
+
     // Cash on delivery
     const CLEARING_TYPE_COD = 'cod';
+
     // Online bank transfer
-    const CLEARING_TYPE_SB  = 'sb';
+    const CLEARING_TYPE_SB = 'sb';
+
     // e-Wallet
     const CLEARING_TYPE_WLT = 'wlt';
+
     // Financing
     const CLEARING_TYPE_FNC = 'fnc';
 
@@ -59,8 +67,10 @@ abstract class AbstractShopGateway extends AbstractGateway
 
     // BillSAFE Invoice
     const FINANCING_TYPE_BSV = 'BSV';
+
     // Klarna Invoice
     const FINANCING_TYPE_KLV = 'KLV';
+
     // Klarna installment
     const FINANCING_TYPE_KLS = 'KLS';
 
@@ -92,7 +102,7 @@ abstract class AbstractShopGateway extends AbstractGateway
      */
     public function getDefaultParameters()
     {
-        return array(
+        return [
             // Required
             'merchantId' => 0,
             'portalId' => 0,
@@ -100,17 +110,17 @@ abstract class AbstractShopGateway extends AbstractGateway
             'portalKey' => '',
             // Optional
             'testMode' => false,
-            'encoding' => array(
+            'encoding' => [
                 static::ENCODING_UTF8,
-                static::ENCODING_ISO8859
-            ),
+                static::ENCODING_ISO8859,
+            ],
             'language' => 'en',
             'endpoint' => $this->endpoint,
-            'hashMethod' => array(
+            'hashMethod' => [
                 static::HASH_MD5,
                 static::HASH_SHA2_384,
-            ),
-            'clearingType' => array(
+            ],
+            'clearingType' => [
                 static::CLEARING_TYPE_CC,
                 static::CLEARING_TYPE_ELV,
                 static::CLEARING_TYPE_VOR,
@@ -119,14 +129,13 @@ abstract class AbstractShopGateway extends AbstractGateway
                 static::CLEARING_TYPE_SB,
                 static::CLEARING_TYPE_WLT,
                 static::CLEARING_TYPE_FNC,
-            ),
-        );
+            ],
+        ];
     }
 
     /**
      * *** Global Settings ***
      */
-
     public function setWalletType($value)
     {
         return $this->setParameter('wallettype', $value);
@@ -136,6 +145,7 @@ abstract class AbstractShopGateway extends AbstractGateway
     {
         return $this->getParameter('wallettype');
     }
+
     public function getMandateId()
     {
         return $this->getParameter('mandateId');

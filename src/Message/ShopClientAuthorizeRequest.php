@@ -7,7 +7,6 @@ namespace Omnipay\Payone\Message;
  */
 
 use Omnipay\Payone\AbstractShopGateway;
-use Omnipay\Common\Currency;
 
 class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 {
@@ -26,7 +25,7 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 
     protected function getBaseData()
     {
-        return array(
+        return [
             'mid' => $this->getMerchantId(),
             'portalid' => $this->getPortalId(),
             'api_version' => AbstractShopGateway::API_VERSION,
@@ -36,7 +35,7 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
             'request' => $this->getRequestCode(),
             'responsetype' => $this->getResponseType(),
             'encoding' => $this->getEncoding(),
-        );
+        ];
     }
 
     /**
@@ -125,16 +124,12 @@ class ShopClientAuthorizeRequest extends ShopServerAuthorizeRequest
 
         $data = array_merge(
             $this->filterHashFields($data),
-            array('hash' => $data['hash'])
+            ['hash' => $data['hash']]
         );
 
         return $this->createResponse($data);
     }
 
-
-    /**
-     *
-     */
     protected function createResponse($data)
     {
         return $this->response = new ShopClientAuthorizeResponse($this, $data);

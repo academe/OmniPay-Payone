@@ -3,9 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Authorize Request
-*/
-
+ * PAYONE Shop Authorize Request
+ */
 class ShopServerManageMandateRequest extends ShopServerAuthorizeRequest
 {
     /**

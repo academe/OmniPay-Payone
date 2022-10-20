@@ -3,23 +3,26 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Capture Request
-*/
-
+ * PAYONE Shop Capture Request
+ */
 class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
 {
     /**
      * Values for the settleAccount parameter.
      */
     const SETTLE_ACCOUNT_YES = 'yes';
+
     const SETTLE_ACCOUNT_NO = 'no';
+
     const SETTLE_ACCOUNT_AUTO = 'auto';
 
     /**
      * Values for the invoiceDeliveryMode parameter.
      */
     const INVOICE_DELIVERY_MODE_POST = 'M'; // aka Mail
+
     const INVOICE_DELIVERY_MODE_PDF = 'P';  // via email
+
     const INVOICE_DELIVERY_MODE_NONE = 'N'; // no delivery
 
     /**
@@ -96,7 +99,7 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
      */
     public function setSequenceNumber($sequenceNumber)
     {
-        if (!is_numeric($sequenceNumber)) {
+        if (! is_numeric($sequenceNumber)) {
             throw new InvalidRequestException('Sequence Number must be numeric.');
         }
 
@@ -108,7 +111,6 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
         return $this->getParameter('sequenceNumber');
     }
 
-
     /**
      * Sets whether you want to settle the account or not.
      */
@@ -119,7 +121,7 @@ class ShopServerCaptureRequest extends ShopServerAuthorizeRequest
             $settleAccount = static::SETTLE_ACCOUNT_YES;
         } elseif ($settleAccount === false) {
             $settleAccount = static::SETTLE_ACCOUNT_NO;
-        } elseif (!isset($settleAccount)) {
+        } elseif (! isset($settleAccount)) {
             $settleAccount = static::SETTLE_ACCOUNT_AUTO;
         }
 

@@ -2,35 +2,37 @@
 
 namespace Omnipay\Payone;
 
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Tests\GatewayTestCase;
+
 //use Omnipay\Common\Exception\InvalidRequestException;
 
 class ShopServerGatewayTest extends GatewayTestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->gateway = new ShopServerGateway($this->getHttpClient(), $this->getHttpRequest());
 
-        $this->options = array(
+        $this->options = [
             'merchantId' => 12345678,
             'subAccountId' => 12345,
             'amount' => '10.00',
             'card' => $this->getValidCard(),
-        );
+        ];
 
-        $this->purchaseOptions = array(
+        $this->purchaseOptions = [
             'amount' => '10.00',
             'transactionId' => '123',
             'card' => $this->getValidCard(),
-        );
+        ];
 
-        $this->captureOptions = array(
+        $this->captureOptions = [
             'amount' => '10.00',
             'transactionId' => '123',
             'transactionReference' => '????',
-        );
+        ];
     }
 
     /**
@@ -39,6 +41,7 @@ class ShopServerGatewayTest extends GatewayTestCase
      * the default parameter value.
      *
      * @parame mixed $default
+     *
      * @return mixed
      */
     protected function makeUnique($default)
@@ -169,7 +172,6 @@ class ShopServerGatewayTest extends GatewayTestCase
         }
     }
 
-
     public function testAuthorizeSuccess()
     {
         // TransactionReference = 196569999
@@ -224,12 +226,22 @@ class ShopServerGatewayTest extends GatewayTestCase
 
     /**
      * See https://github.com/academe/OmniPay-Payone/issues/31
-     * @expectedException Omnipay\Common\Exception\InvalidRequestException
+     *
+     * @expectedException InvalidRequestException
      */
     public function testInvalidMerchantId()
     {
+        if (method_exists($this, 'expectException')) {
+            $this->expectException(InvalidRequestException::class);
+        }
+
         $this->gateway->initialize([
             'merchantId' => 'abcdef',
         ]);
+    }
+
+    public function testRefundParameters()
+    {
+        $this->expectNotToPerformAssertions();
     }
 }

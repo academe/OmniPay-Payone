@@ -5,9 +5,8 @@ namespace Omnipay\Payone\Message;
 /**
  * Acknowledge the incoming Transaction Status message from ONEPAY.
  */
- 
+
 use Omnipay\Common\Message\AbstractResponse as OmnipayAbstractResponse;
-use Omnipay\Common\Exception\InvalidResponseException;
 
 class ShopTransactionStatusServerResponse extends OmnipayAbstractResponse
 {
@@ -36,7 +35,7 @@ class ShopTransactionStatusServerResponse extends OmnipayAbstractResponse
     {
         // Only send the OK message if the hash has been successfuly verified.
         if ($this->isSuccessful()) {
-            echo $this->responseMessage . "\n";
+            echo $this->responseMessage."\n";
         }
 
         if ($exit) {
@@ -72,11 +71,11 @@ class ShopTransactionStatusServerResponse extends OmnipayAbstractResponse
      * Set or reset flag to exit immediately on responding.
      * Switch auto-exit off if you have further processing to do.
      *
-     * @param boolean true to exit; false to not exit.
+     * @param bool true to exit; false to not exit.
      */
     public function setExitOnResponse($value)
     {
-        $this->exit_on_response = (bool)$value;
+        $this->exit_on_response = (bool) $value;
     }
 
     /**

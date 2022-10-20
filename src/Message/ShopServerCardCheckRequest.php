@@ -3,9 +3,8 @@
 namespace Omnipay\Payone\Message;
 
 /**
-* PAYONE Shop Server Credit Card Check Request
-*/
-
+ * PAYONE Shop Server Credit Card Check Request
+ */
 class ShopServerCardCheckRequest extends ShopServerAuthorizeRequest
 {
     /**

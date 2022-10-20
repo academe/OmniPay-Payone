@@ -17,13 +17,13 @@ class ShopClientAuthorizeResponse extends AbstractResponse implements RedirectRe
      * These are just for convenience, so check out their use in the documentation.
      * TODO: move this more central.
      */
-    const CREDIT_CARD_FIELDS = array(
+    const CREDIT_CARD_FIELDS = [
         'cardpan',
         'cardtype',
         'cardexpiredate', // Format: 'YYMM'
         'cardholder',
         'cardcvc2',
-    );
+    ];
 
     /**
      * This is a transparent redirect transaction type, where a local form

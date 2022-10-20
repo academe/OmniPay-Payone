@@ -6,16 +6,17 @@ namespace Omnipay\Payone;
  * ONEPAY Shop (single payments) Client (CC detailshashing form, local or iframe)
  * driver for Omnipay
  */
-
 class ShopClientGateway extends AbstractShopGateway
 {
     /**
      * The response type when making a POST.
      */
     const RETURN_TYPE_JSON = 'JSON';
+
     const RETURN_TYPE_REDIRECT = 'REDIRECT';
 
     protected $javascript_url = 'https://secure.pay1.de/client-api/js/v1/payone_hosted_min.js';
+
     protected $endpoint = 'https://secure.pay1.de/client-api/';
 
     public function getName()
@@ -30,10 +31,10 @@ class ShopClientGateway extends AbstractShopGateway
     {
         $params = parent::getDefaultParameters();
 
-        $params['responseType'] = array(
+        $params['responseType'] = [
             static::RETURN_TYPE_JSON,
-            static::RETURN_TYPE_REDIRECT
-        );
+            static::RETURN_TYPE_REDIRECT,
+        ];
 
         return $params;
     }
@@ -56,7 +57,7 @@ class ShopClientGateway extends AbstractShopGateway
     /**
      * The authorization transaction.
      */
-    public function authorize(array $parameters = array())
+    public function authorize(array $parameters = [])
     {
         return $this->createRequest(Message\ShopClientAuthorizeRequest::class, $parameters);
     }
@@ -64,7 +65,7 @@ class ShopClientGateway extends AbstractShopGateway
     /**
      * The purchase transaction.
      */
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = [])
     {
         return $this->createRequest(Message\ShopClientPurchaseRequest::class, $parameters);
     }
@@ -72,7 +73,7 @@ class ShopClientGateway extends AbstractShopGateway
     /**
      * The complete authorization transaction (capturing data retuned with the user).
      */
-    public function completeAuthorize(array $parameters = array())
+    public function completeAuthorize(array $parameters = [])
     {
         return $this->createRequest(Message\ShopClientCompleteAuthorizeRequest::class, $parameters);
     }
@@ -80,7 +81,7 @@ class ShopClientGateway extends AbstractShopGateway
     /**
      * The complete purchase transaction (capturing data retuned with the user).
      */
-    public function completePurchase(array $parameters = array())
+    public function completePurchase(array $parameters = [])
     {
         return $this->createRequest(Message\ShopClientCompleteAuthorizeRequest::class, $parameters);
     }
@@ -88,7 +89,7 @@ class ShopClientGateway extends AbstractShopGateway
     /**
      * Helper for generating the hidden fields in a credit card tokenisation AJAX form.
      */
-    public function creditCardCheck(array $parameters = array())
+    public function creditCardCheck(array $parameters = [])
     {
         return $this->createRequest(Message\ShopClientCardCheckRequest::class, $parameters);
     }
@@ -96,7 +97,7 @@ class ShopClientGateway extends AbstractShopGateway
     /**
      * Helper for generating the hidden fields in a credit card tokenisation AJAX form.
      */
-    public function managemandate(array $parameters = array())
+    public function managemandate(array $parameters = [])
     {
         return $this->createRequest(Message\ShopServerManageMandateRequest::class, $parameters);
     }
@@ -106,7 +107,7 @@ class ShopClientGateway extends AbstractShopGateway
      * This API supports the notification responses as well as the complete* responses.
      * However, only the notification responses are signed and so can be trusted.
      */
-    public function acceptNotification(array $parameters = array())
+    public function acceptNotification(array $parameters = [])
     {
         return $this->createRequest(Message\ShopTransactionStatusServerRequest::class, $parameters);
     }

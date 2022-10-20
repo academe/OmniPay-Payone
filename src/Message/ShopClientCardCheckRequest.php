@@ -31,9 +31,6 @@ class ShopClientCardCheckRequest extends ShopClientAuthorizeRequest
         return $data;
     }
 
-    /**
-     *
-     */
     protected function createResponse($data)
     {
         return $this->response = new ShopClientCardCheckResponse($this, $data);

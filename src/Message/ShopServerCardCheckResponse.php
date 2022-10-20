@@ -5,15 +5,16 @@ namespace Omnipay\Payone\Message;
 /**
  * Shop Server Check Credit Card Response
  */
-
 class ShopServerCardCheckResponse extends AbstractResponse
 {
     /**
      * Expected status values.
      */
-    const STATUS_VALID      = 'VALID';
-    const STATUS_INVALID    = 'INVALID';
-    const STATUS_ERROR      = 'ERROR';
+    const STATUS_VALID = 'VALID';
+
+    const STATUS_INVALID = 'INVALID';
+
+    const STATUS_ERROR = 'ERROR';
 
     public function isSuccessful()
     {

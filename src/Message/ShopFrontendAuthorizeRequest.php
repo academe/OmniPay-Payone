@@ -7,10 +7,9 @@ namespace Omnipay\Payone\Message;
  * the PAYONE site).
  */
 
-use Omnipay\Payone\Extend\ItemInterface as ExtendItemInterface;
-use Omnipay\Payone\Extend\Item as ExtendItem;
-use Omnipay\Payone\AbstractShopGateway;
 use Omnipay\Common\ItemBag;
+use Omnipay\Payone\AbstractShopGateway;
+use Omnipay\Payone\Extend\Item as ExtendItem;
 
 class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
 {
@@ -18,44 +17,55 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
      * Required access method to the ONEPAY credit card form.
      */
     const ACCESS_METHOD_CLASSIC = 'classic';
+
     const ACCESS_METHOD_IFRAME = 'iframe';
 
     /**
      * Redirect method.
      */
     const REDIRECT_METHOD_POST = 'POST';
+
     const REDIRECT_METHOD_GET = 'GET';
 
     const ENDPOINT_CLASSIC = 'https://secure.pay1.de/frontend/';
+
     const ENDPOINT_IFRAME = 'https://frontend.pay1.de/frontend/v2/';
 
     /**
      * Permitted values for targetWindow.
      * This is for breaking out of the iframe.
      */
-    const TARGET_WINDOW_WINDOW  = 'window';
-    const TARGET_WINDOW_OPENER  = 'opener';
-    const TARGET_WINDOW_TOP     = 'top';
-    const TARGET_WINDOW_PARENT  = 'parent';
-    const TARGET_WINDOW_BLANK   = 'blank';
-    const TARGET_WINDOW_SELF    = 'self';
+    const TARGET_WINDOW_WINDOW = 'window';
+
+    const TARGET_WINDOW_OPENER = 'opener';
+
+    const TARGET_WINDOW_TOP = 'top';
+
+    const TARGET_WINDOW_PARENT = 'parent';
+
+    const TARGET_WINDOW_BLANK = 'blank';
+
+    const TARGET_WINDOW_SELF = 'self';
 
     /**
      * The display_name values.
      */
     const DISPLAY_NAME_YES = 'yes';
+
     const DISPLAY_NAME_NO = 'no';
 
     /**
      * The display_address values.
      */
     const DISPLAY_ADDRESS_YES = 'yes';
+
     const DISPLAY_ADDRESS_NO = 'no';
 
     /**
      * The autosubmit values.
      */
     const AUTOSUBMIT_YES = 'yes';
+
     const AUTOSUBMIT_NO = 'no';
 
     /**
@@ -63,11 +73,11 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
      */
     protected function getBaseData()
     {
-        $data = array(
+        $data = [
             'portalid' => $this->getPortalId(),
             'api_version' => AbstractShopGateway::API_VERSION,
             'aid' => $this->getSubAccountId(),
-            'mode' => (bool)$this->getTestMode()
+            'mode' => (bool) $this->getTestMode()
                 ? AbstractShopGateway::MODE_TEST
                 : AbstractShopGateway::MODE_LIVE,
             'request' => $this->getRequestCode(),
@@ -76,7 +86,7 @@ class ShopFrontendAuthorizeRequest extends ShopServerAuthorizeRequest
             'amount' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),
             'encoding' => $this->getEncoding(),
-        );
+        ];
 
         return $data;
     }

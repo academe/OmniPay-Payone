@@ -81,7 +81,7 @@ class ShopClientCompleteAuthorizeResponse extends AbstractResponse implements Re
      */
     public function getRedirectData()
     {
-        return array();
+        return [];
     }
 
     public function isRedirect()

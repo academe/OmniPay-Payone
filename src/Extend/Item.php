@@ -2,16 +2,16 @@
 
 namespace Omnipay\Payone\Extend;
 
-/**
- * Extends the Item class to support properties
- * required by PAYONE.
- */
-
+use Money\Currency;
 use Omnipay\Common\Item as CommonItem;
 use Money\Currencies\ISOCurrencies;
 use Money\Parser\DecimalMoneyParser;
 use Money\Money;
 
+/**
+ * Extends the Item class to support properties
+ * required by PAYONE.
+ */
 class Item extends CommonItem implements ItemInterface
 {
    /**
@@ -112,7 +112,10 @@ class Item extends CommonItem implements ItemInterface
             $currencies = new ISOCurrencies();
             $moneyParser = new DecimalMoneyParser($currencies);
 
-            $price = $moneyParser->parse($price, $currency);
+            if(!($currency instanceof Currency)) {
+				$currency = new Currency((string) $currency);
+			}
+			$price = $moneyParser->parse($price, $currency);
         }
 
         // A money object supplied. We should use this all the time.
